@@ -16,6 +16,7 @@ import java.util.Map;
 
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.SearchSettingHelper;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Command;
@@ -133,8 +134,14 @@ public class DataService extends Service {
             } else if (action.equals(ACTION_LOGIN)) {
                 Settings settings = SettingsHelper.getSettings(getApplicationContext());
 
-                SetSearchParametersRequest setSearchParametersRequest = new SetSearchParametersRequest(session, settings.getSearchParameters(), createSearchParametersListener(), createErrorListener());
-                queue.add(setSearchParametersRequest);
+                session.setSearch(SearchSettingHelper.generate(settings.getSearchParameters()));
+
+                Log.e("xxx", "set settings =" + session.getSearch());
+                GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
+                queue.add(getUidRequest);
+
+//                SetSearchParametersRequest setSearchParametersRequest = new SetSearchParametersRequest(session, settings.getSearchParameters(), createSearchParametersListener(), createErrorListener());
+//                queue.add(setSearchParametersRequest);
 
             }
         }
@@ -146,6 +153,7 @@ public class DataService extends Service {
             @Override
             public void onResponse(Success success) {
                 Log.e("xxx", "set settings =" + success);
+                Log.e("xxx", "set settings =" + session.getSearch());
                 GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
                 queue.add(getUidRequest);
             }
