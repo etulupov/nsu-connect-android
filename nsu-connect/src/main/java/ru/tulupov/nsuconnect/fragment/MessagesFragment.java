@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
@@ -49,7 +51,32 @@ public class MessagesFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean isTyping = intent.getBooleanExtra(DatabaseConstants.EXTRA_IS_TYPING, false);
-            footer.findViewById(R.id.container).setVisibility(isTyping ? View.VISIBLE : View.INVISIBLE);
+            final View container = footer.findViewById(R.id.container);
+            if (isTyping) {
+                Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+                container.setVisibility(View.VISIBLE);
+                container.startAnimation(animation);
+            } else {
+                Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        container.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                container.startAnimation(animation);
+            }
+
         }
     };
     private Chat chat;
