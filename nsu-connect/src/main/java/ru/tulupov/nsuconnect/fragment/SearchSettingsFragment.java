@@ -101,6 +101,15 @@ public abstract class SearchSettingsFragment extends Fragment {
         return selected;
     }
 
+    public void clearSelection() {
+        list.clearChoices();
+        for (int i = 0; i < list.getChildCount(); i++) {
+            list.setItemChecked(i, false);
+        }
+
+        saveState();
+    }
+
 
     private void saveState() {
         SharedPreferences preferences = getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);

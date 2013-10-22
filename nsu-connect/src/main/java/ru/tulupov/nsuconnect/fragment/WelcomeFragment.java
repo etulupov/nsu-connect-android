@@ -68,6 +68,7 @@ public class WelcomeFragment extends BaseFragment {
                 int position = selected.get(0);
                 if (position == 0) {
                     navigate(PAGE_YOUR_AGE);
+                    targetGenderFragment.clearSelection();
                 } else {
                     navigate(PAGE_TARGET_GENDER);
                 }
@@ -85,6 +86,7 @@ public class WelcomeFragment extends BaseFragment {
                 int position = selected.get(0);
                 if (position == 0) {
                     navigate(PAGE_FINISH);
+                    targetAgeFragment.clearSelection();
                 } else {
                     navigate(PAGE_TARGET_AGE);
                 }
