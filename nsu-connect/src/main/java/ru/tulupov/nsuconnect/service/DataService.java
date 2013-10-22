@@ -10,11 +10,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 
+import ru.tulupov.nsuconnect.database.DatabaseConstants;
+import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.SettingsHelper;
+import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Command;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.Session;
+import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.model.Status;
 import ru.tulupov.nsuconnect.model.Uid;
 import ru.tulupov.nsuconnect.request.CommandRequest;
@@ -28,6 +35,7 @@ public class DataService extends Service {
     public static final String ACTION_SEND_MESSAGE = "send_message";
     public static final String ACTION_LOGIN = "login";
     public static final String EXTRA_MESSAGE = "message";
+    private static final String TAG = DataService.class.getSimpleName();
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -36,6 +44,7 @@ public class DataService extends Service {
     private Session session = new Session();
 
     private RequestQueue queue;
+    private Chat chat;
 
     @Override
     public void onCreate() {
@@ -50,8 +59,22 @@ public class DataService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
         if (action.equals(ACTION_SEND_MESSAGE)) {
-            String message = intent.getStringExtra(EXTRA_MESSAGE);
-            SendMessageRequest sendMessageRequest = new SendMessageRequest(session, message, new Response.Listener<Message>() {
+            String text = intent.getStringExtra(EXTRA_MESSAGE);
+//
+            Message message = new Message();
+            message.setMessage(text);
+            message.setDate(new Date());
+            message.setChat(chat);
+            try {
+                HelperFactory.getHelper().getMessageDao().create(message);
+                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
+
+            } catch (SQLException e) {
+                Log.e(TAG, "cannot create message entity", e);
+            }
+
+
+            SendMessageRequest sendMessageRequest = new SendMessageRequest(session, text, new Response.Listener<Message>() {
                 @Override
                 public void onResponse(Message message) {
                     Log.e("xxx", message.toString());
@@ -63,6 +86,18 @@ public class DataService extends Service {
 
             GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
             queue.add(getUidRequest);
+
+            chat = new Chat();
+            chat.setName("test");
+            chat.setDate(new Date());
+            try {
+                HelperFactory.getHelper().getChatDao().create(chat);
+
+                SettingsHelper.setChat(getApplicationContext(), chat);
+            } catch (SQLException e) {
+                Log.e(TAG, "cannot create chat entity", e);
+            }
+
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -107,16 +142,36 @@ public class DataService extends Service {
                             Status status = command.getStatus();
 
                             if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
-                                SendMessageRequest sendMessageRequest = new SendMessageRequest(session, "Привет :)", new Response.Listener<Message>() {
-                                    @Override
-                                    public void onResponse(Message message) {
-                                        Log.e("xxx", message.toString());
-                                    }
-                                }, createErrorListener());
-                                queue.add(sendMessageRequest);
+//                                SendMessageRequest sendMessageRequest = new SendMessageRequest(session, "Привет :)", new Response.Listener<Message>() {
+//                                    @Override
+//                                    public void onResponse(Message message) {
+//                                        Log.e("xxx", message.toString());
+//                                    }
+//                                }, createErrorListener());
+//                                queue.add(sendMessageRequest);
                                 Log.e("xxx", "add SendMessageRequest");
                             }
 
+                            if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
+                                Message message = new Message();
+                                message.setMessage(status.getMsg());
+                                message.setDate(new Date());
+                                message.setChat(chat);
+                                try {
+                                    HelperFactory.getHelper().getMessageDao().create(message);
+                                    sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
+
+                                } catch (SQLException e) {
+                                    Log.e(TAG, "cannot create message entity", e);
+                                }
+                            }
+
+                            if (status.getStatus().equals(Constants.STATUS_START_TYPING)) {
+                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, true));
+                            }
+                            if (status.getStatus().equals(Constants.STATUS_STOP_TYPING)) {
+                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
+                            }
 
                         }
                         Log.e("xxx", "status=" + command.getStatus().toString());

@@ -38,6 +38,13 @@ public class MessagesFragment extends Fragment {
 
         }
     };
+    private BroadcastReceiver updateTypingStatusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isTyping = intent.getBooleanExtra(DatabaseConstants.EXTRA_IS_TYPING, false);
+            footer.findViewById(R.id.container).setVisibility(isTyping ? View.VISIBLE : View.INVISIBLE);
+        }
+    };
 
     public static MessagesFragment newInstance(final Context context) {
         return (MessagesFragment) MessagesFragment.instantiate(context, MessagesFragment.class.getName());
@@ -119,11 +126,15 @@ public class MessagesFragment extends Fragment {
         update();
         IntentFilter updateListFilter = new IntentFilter(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST);
         getActivity().registerReceiver(updateListReceiver, updateListFilter);
+
+        IntentFilter updateTypingStatusFilter = new IntentFilter(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS);
+        getActivity().registerReceiver(updateTypingStatusReceiver, updateTypingStatusFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(updateListReceiver);
+        getActivity().unregisterReceiver(updateTypingStatusReceiver);
     }
 }

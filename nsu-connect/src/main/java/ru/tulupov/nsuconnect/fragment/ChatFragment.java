@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.MessageLoader;
 import ru.tulupov.nsuconnect.model.Message;
+import ru.tulupov.nsuconnect.service.DataService;
 import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 
 
@@ -43,20 +45,29 @@ public class ChatFragment extends Fragment {
                     .add(R.id.message_container, MessagesFragment.newInstance(getActivity()))
                     .commit();
         }
+        getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_LOGIN));
 
+//        view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Message message = new Message();
+//                message.setMessage("fff " + System.currentTimeMillis());
+//                try {
+//                    HelperFactory.getHelper().getMessageDao().create(message);
+//
+//                    getActivity().sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
+//                } catch (SQLException e) {
+//                    Log.e("xxx", e.getLocalizedMessage());
+//                }
+//            }
+//        });
 
+        final EditText edit = (EditText) view.findViewById(R.id.edit);
         view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Message message = new Message();
-                message.setMessage("fff " + System.currentTimeMillis());
-                try {
-                    HelperFactory.getHelper().getMessageDao().create(message);
-
-                    getActivity().sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
-                } catch (SQLException e) {
-                    Log.e("xxx", e.getLocalizedMessage());
-                }
+                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE).putExtra(DataService.EXTRA_MESSAGE, edit.getText().toString()));
+                edit.setText(null);
             }
         });
     }
