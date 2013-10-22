@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:padding="10dp" android:background="#eee">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#eee"
+    android:orientation="vertical"
+    android:padding="10dp"
+
+    android:id="@+id/container">
+
     <TextView
+        android:id="@+id/author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Author"
-        android:id="@+id/author" android:textColor="#000" />
+        android:textColor="#000" />
+
     <TextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Text"
-        android:id="@+id/text" />
+        android:text="Text" />
 </LinearLayout>

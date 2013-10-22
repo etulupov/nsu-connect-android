@@ -5,8 +5,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="typing_message">набирается сообщение...</string>
-    <string name="send_button">отправить</string>
-    <string name="send_hint">Введите сообщение...</string>
+    <string name="send_button">Отправить</string>
+    <string name="send_hint">Введите сообщение</string>
     <string name="search_enter_your_age">Выберете Ваш возраст</string>
     <string name="search_enter_your_gender">Выберете Ваш пол</string>
     <string name="search_enter_target_gender">Выберете искомый пол</string>

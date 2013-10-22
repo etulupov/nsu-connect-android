@@ -76,13 +76,14 @@ public class DataService extends Service {
 
         myUser = new User();
         myUser.setName("Вы");
-
+        myUser.setType(User.TYPE_YOUR);
         anonymousUser = new User();
         anonymousUser.setName("Аноним");
-
+        anonymousUser.setType(User.TYPE_OTHER);
 
         systemUser = new User();
         systemUser.setName("Система");
+        systemUser.setType(User.TYPE_SYSTEM);
         try {
             HelperFactory.getHelper().getUserDao().create(myUser);
             HelperFactory.getHelper().getUserDao().create(anonymousUser);
@@ -240,6 +241,7 @@ public class DataService extends Service {
                             }
                             if (status.getStatus().equals(Constants.STATUS_DISCONNECTED)) {
                                 writeSystem("Отключено");
+                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
                             }
                         }
                         Log.e("xxx", "status=" + command.getStatus().toString());

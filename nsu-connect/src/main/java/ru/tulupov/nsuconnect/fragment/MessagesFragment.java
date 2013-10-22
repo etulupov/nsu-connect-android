@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -35,6 +36,7 @@ import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 public class MessagesFragment extends Fragment {
     private static final int UPDATE_LIST_LOADER_ID = 0;
     private static final String TAG = MessagesFragment.class.getSimpleName();
+    private static final long UPDATE_TIMEOUT = 3000;
     private MessageAdapter adapter;
     private ListView list;
     private View footer;
@@ -51,34 +53,45 @@ public class MessagesFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean isTyping = intent.getBooleanExtra(DatabaseConstants.EXTRA_IS_TYPING, false);
-            final View container = footer.findViewById(R.id.container);
+
+            updateTypingStatus(isTyping);
             if (isTyping) {
-                Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-                container.setVisibility(View.VISIBLE);
-                container.startAnimation(animation);
+                handler.removeCallbacks(updateTypingStatus);
+                handler.postDelayed(updateTypingStatus, UPDATE_TIMEOUT);
             } else {
-                Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        container.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                container.startAnimation(animation);
+                handler.removeCallbacks(updateTypingStatus);
             }
-
         }
     };
+
+    private void updateTypingStatus(boolean isTyping) {
+        final View container = footer.findViewById(R.id.container);
+        if (isTyping) {
+            Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+            container.setVisibility(View.VISIBLE);
+            container.startAnimation(animation);
+        } else {
+            Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    container.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            container.startAnimation(animation);
+        }
+    }
+
     private Chat chat;
 
     public static MessagesFragment newInstance(final Context context) {
@@ -178,4 +191,13 @@ public class MessagesFragment extends Fragment {
         getActivity().unregisterReceiver(updateListReceiver);
         getActivity().unregisterReceiver(updateTypingStatusReceiver);
     }
+
+    private Runnable updateTypingStatus = new Runnable() {
+        @Override
+        public void run() {
+            updateTypingStatus(false);
+        }
+    };
+
+    private Handler handler = new Handler();
 }

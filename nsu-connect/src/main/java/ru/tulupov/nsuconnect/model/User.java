@@ -7,15 +7,24 @@ import com.j256.ormlite.field.DatabaseField;
 import java.util.Date;
 
 
-import static ru.tulupov.nsuconnect.database.DatabaseContract.User.ID;
-import static ru.tulupov.nsuconnect.database.DatabaseContract.User.NAME;
+import static ru.tulupov.nsuconnect.database.DatabaseContract.User.*;
+
 
 public class User {
+    public static final int TYPE_SYSTEM = 0;
+    public static final int TYPE_YOUR = 1;
+    public static final int TYPE_OTHER = 2;
+
+
     @DatabaseField(generatedId = true, columnName = ID)
     private int id;
 
     @DatabaseField(columnName = NAME)
     private String name;
+
+    @DatabaseField(columnName = TYPE)
+
+    private int type;
 
 
     public int getId() {
@@ -34,5 +43,11 @@ public class User {
         this.name = name;
     }
 
+    public int getType() {
+        return type;
+    }
 
+    public void setType(int type) {
+        this.type = type;
+    }
 }

@@ -22,6 +22,7 @@ public interface DatabaseContract {
     interface User {
         String ID = "id";
         String NAME = "name";
+        String TYPE = "type";
 
     }
 }
