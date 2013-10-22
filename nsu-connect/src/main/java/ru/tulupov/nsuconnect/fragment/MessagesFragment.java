@@ -8,24 +8,31 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.adapter.MessageAdapter;
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
+import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.MessageLoader;
+import ru.tulupov.nsuconnect.helper.SettingsHelper;
+import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
+import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 
 
 public class MessagesFragment extends Fragment {
     private static final int UPDATE_LIST_LOADER_ID = 0;
+    private static final String TAG = MessagesFragment.class.getSimpleName();
     private MessageAdapter adapter;
     private ListView list;
     private View footer;
@@ -45,6 +52,7 @@ public class MessagesFragment extends Fragment {
             footer.findViewById(R.id.container).setVisibility(isTyping ? View.VISIBLE : View.INVISIBLE);
         }
     };
+    private Chat chat;
 
     public static MessagesFragment newInstance(final Context context) {
         return (MessagesFragment) MessagesFragment.instantiate(context, MessagesFragment.class.getName());
@@ -59,6 +67,12 @@ public class MessagesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        try {
+            chat = HelperFactory.getHelper().getChatDao().getLast();
+
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot create chat entity", e);
+        }
         footer = View.inflate(getActivity(), R.layout.footer_messages, null);
 
         list = (ListView) view.findViewById(R.id.list);
@@ -89,7 +103,7 @@ public class MessagesFragment extends Fragment {
             loaderManager.initLoader(UPDATE_LIST_LOADER_ID, null, new AdapterLoaderCallback<Message>(adapter) {
                 @Override
                 public Loader<List<Message>> onCreateLoader(int i, Bundle bundle) {
-                    return new MessageLoader(getActivity());
+                    return new MessageLoader(getActivity(), chat);
                 }
 
                 @Override

@@ -24,6 +24,7 @@ import ru.tulupov.nsuconnect.model.Session;
 import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.model.Status;
 import ru.tulupov.nsuconnect.model.Uid;
+import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.request.CommandRequest;
 import ru.tulupov.nsuconnect.request.Constants;
 import ru.tulupov.nsuconnect.request.GetUidRequest;
@@ -49,6 +50,9 @@ public class DataService extends Service {
 
     private RequestQueue queue;
     private Chat chat;
+    private User myUser;
+    private User anonymousUser;
+    private User systemUser;
 
     @Override
     public void onCreate() {
@@ -57,57 +61,80 @@ public class DataService extends Service {
 
         session.setSearch("nsu_department=0; search_nsu_department=0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0; age=0; gender=1; search_age=0%2C0%2C0%2C0%2C0; search_gender=0%2C0;");
 
+
+        try {
+            chat = HelperFactory.getHelper().getChatDao().getLast();
+
+            SettingsHelper.setChat(getApplicationContext(), chat);
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot create chat entity", e);
+        }
+
+
+        myUser = new User();
+        myUser.setName("Вы");
+
+        anonymousUser = new User();
+        anonymousUser.setName("Аноним");
+
+
+        systemUser = new User();
+        systemUser.setName("Система");
+        try {
+            HelperFactory.getHelper().getUserDao().create(myUser);
+            HelperFactory.getHelper().getUserDao().create(anonymousUser);
+            HelperFactory.getHelper().getUserDao().create(systemUser);
+
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot create chat entity", e);
+        }
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getAction();
-        if (action.equals(ACTION_START_TYPING)) {
-            StartTypingRequest startTypingRequest = new StartTypingRequest(session, createErrorListener());
-            queue.add(startTypingRequest);
-        } else if (action.equals(ACTION_STOP_TYPING)) {
-            StopTypingRequest stopTypingRequest = new StopTypingRequest(session, createErrorListener());
-            queue.add(stopTypingRequest);
-        } else if (action.equals(ACTION_SEND_MESSAGE)) {
-            String text = intent.getStringExtra(EXTRA_MESSAGE);
-//
-            Message message = new Message();
-            message.setMessage(text);
-            message.setDate(new Date());
-            message.setChat(chat);
-            try {
-                HelperFactory.getHelper().getMessageDao().create(message);
-                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
 
-            } catch (SQLException e) {
-                Log.e(TAG, "cannot create message entity", e);
-            }
+        if (intent != null && intent.getAction() != null) {
+            String action = intent.getAction();
 
+            if (action.equals(ACTION_START_TYPING)) {
+                StartTypingRequest startTypingRequest = new StartTypingRequest(session, createErrorListener());
+                queue.add(startTypingRequest);
+            } else if (action.equals(ACTION_STOP_TYPING)) {
+                StopTypingRequest stopTypingRequest = new StopTypingRequest(session, createErrorListener());
+                queue.add(stopTypingRequest);
+            } else if (action.equals(ACTION_SEND_MESSAGE)) {
+                String text = intent.getStringExtra(EXTRA_MESSAGE);
 
-            SendMessageRequest sendMessageRequest = new SendMessageRequest(session, text, new Response.Listener<Message>() {
-                @Override
-                public void onResponse(Message message) {
-                    Log.e("xxx", message.toString());
+                Message message = new Message();
+                message.setMessage(text);
+                message.setDate(new Date());
+                message.setChat(chat);
+                message.setUser(myUser);
+                try {
+                    HelperFactory.getHelper().getMessageDao().create(message);
+                    sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
+
+                } catch (SQLException e) {
+                    Log.e(TAG, "cannot create message entity", e);
                 }
-            }, createErrorListener());
-            queue.add(sendMessageRequest);
-            Log.e("xxx", "add SendMessageRequest");
-        } else if (action.equals(ACTION_LOGIN)) {
 
-            GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
-            queue.add(getUidRequest);
 
-            chat = new Chat();
-            chat.setName("test");
-            chat.setDate(new Date());
-            try {
-                HelperFactory.getHelper().getChatDao().create(chat);
+                SendMessageRequest sendMessageRequest = new SendMessageRequest(session, text, new Response.Listener<Message>() {
+                    @Override
+                    public void onResponse(Message message) {
+                        Log.e("xxx", message.toString());
+                    }
+                }, createErrorListener());
+                queue.add(sendMessageRequest);
+                Log.e("xxx", "add SendMessageRequest");
+            } else if (action.equals(ACTION_LOGIN)) {
 
-                SettingsHelper.setChat(getApplicationContext(), chat);
-            } catch (SQLException e) {
-                Log.e(TAG, "cannot create chat entity", e);
+                GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
+                queue.add(getUidRequest);
+
+
             }
-
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -167,6 +194,7 @@ public class DataService extends Service {
                                 message.setMessage(status.getMsg());
                                 message.setDate(new Date());
                                 message.setChat(chat);
+                                message.setUser(anonymousUser);
                                 try {
                                     HelperFactory.getHelper().getMessageDao().create(message);
                                     sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
@@ -183,6 +211,15 @@ public class DataService extends Service {
                                 sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
                             }
 
+                            if (status.getStatus().equals(Constants.STATUS_WAITING)) {
+                                writeSystem("Ожидание подключения");
+                            }
+                            if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
+                                writeSystem("Подключено");
+                            }
+                            if (status.getStatus().equals(Constants.STATUS_DISCONNECTED)) {
+                                writeSystem("Отключено");
+                            }
                         }
                         Log.e("xxx", "status=" + command.getStatus().toString());
                         queryNextCommand();
@@ -194,6 +231,21 @@ public class DataService extends Service {
         }
 
                 ;
+    }
+
+    private void writeSystem(String text) {
+        Message message = new Message();
+        message.setMessage(text);
+        message.setDate(new Date());
+        message.setChat(chat);
+        message.setUser(systemUser);
+        try {
+            HelperFactory.getHelper().getMessageDao().create(message);
+            sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
+
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot create message entity", e);
+        }
     }
 
     private void queryNextCommand() {

@@ -8,6 +8,7 @@ public interface DatabaseContract {
         String TEXT = "text";
         String DATE = "date";
         String CHAT = "chat";
+        String USER = "user";
 
     }
 
@@ -15,6 +16,12 @@ public interface DatabaseContract {
         String ID = "id";
         String NAME = "name";
         String DATE = "date";
+
+    }
+
+    interface User {
+        String ID = "id";
+        String NAME = "name";
 
     }
 }

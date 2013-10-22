@@ -17,6 +17,12 @@ public class StopTypingRequest extends BaseRequest {
     protected Map<String, String> getParams() throws AuthFailureError {
         Map<String, String> params = new HashMap<String, String>();
         params.put(Constants.ACTION, Constants.ACTION_STOP_TYPING);
+        params.put(Constants.UID, session.getUid().getUid());
         return params;
+    }
+
+    @Override
+    protected void deliverResponse(String response) {
+        // ignore
     }
 }

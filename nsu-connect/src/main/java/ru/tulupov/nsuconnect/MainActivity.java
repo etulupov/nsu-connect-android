@@ -21,21 +21,38 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import ru.tulupov.nsuconnect.database.DatabaseHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.fragment.ChatFragment;
 import ru.tulupov.nsuconnect.fragment.MessagesFragment;
+import ru.tulupov.nsuconnect.helper.SettingsHelper;
+import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.Uid;
 import ru.tulupov.nsuconnect.service.DataService;
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Chat  chat = new Chat();
+        chat.setName("test");
+        chat.setDate(new Date());
+        try {
+               HelperFactory.getHelper().getChatDao().create(chat);
+
+            SettingsHelper.setChat(getApplicationContext(), chat);
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot create chat entity", e);
+        }
+
 
         if (savedInstanceState == null) {
 //            getSupportFragmentManager().beginTransaction()
@@ -47,15 +64,8 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
-//        Message message = new Message();
-//        message.setMessage("fff");
-//        try {
-//            HelperFactory.getHelper().getMessageDao().create(message);
-//
-//
-//        } catch (SQLException e) {
-//             Log.e("xxx", e.getLocalizedMessage());
-//        }
+
+
     }
 
 

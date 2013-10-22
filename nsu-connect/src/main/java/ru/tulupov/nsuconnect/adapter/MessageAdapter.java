@@ -15,6 +15,9 @@ public class MessageAdapter extends BeanHolderAdapter<Message, MessageAdapter.Ho
     public static class Holder {
         @FindViewById(R.id.text)
         public TextView text;
+
+        @FindViewById(R.id.author)
+        public TextView author;
     }
 
     public MessageAdapter() {
@@ -24,6 +27,10 @@ public class MessageAdapter extends BeanHolderAdapter<Message, MessageAdapter.Ho
     @Override
     protected void updateHolder(Context context, Holder holder, Message item, int position) {
         holder.text.setText(item.getMessage());
+
+        holder.author.setText(item.getUser().getName());
+
+
     }
 
 
