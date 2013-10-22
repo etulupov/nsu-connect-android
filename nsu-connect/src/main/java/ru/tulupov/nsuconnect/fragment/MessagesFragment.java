@@ -82,7 +82,7 @@ public class MessagesFragment extends Fragment {
     private Chat chat;
 
     public static MessagesFragment newInstance(final Context context) {
-        return (MessagesFragment) MessagesFragment.instantiate(context, MessagesFragment.class.getName());
+        return (MessagesFragment) Fragment.instantiate(context, MessagesFragment.class.getName());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.tulupov.nsuconnect;
+package ru.tulupov.nsuconnect.activity;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -12,41 +12,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-
 import java.sql.SQLException;
 import java.util.Date;
 
-import ru.tulupov.nsuconnect.database.DatabaseHelper;
+import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.database.HelperFactory;
-import ru.tulupov.nsuconnect.fragment.ChatFragment;
-import ru.tulupov.nsuconnect.fragment.MessagesFragment;
+import ru.tulupov.nsuconnect.fragment.BaseFragment;
+import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.model.Chat;
-import ru.tulupov.nsuconnect.model.Message;
-import ru.tulupov.nsuconnect.model.Uid;
 import ru.tulupov.nsuconnect.service.DataService;
 
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private BaseFragment baseFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Chat  chat = new Chat();
+        Chat chat = new Chat();
         chat.setName("test");
         chat.setDate(new Date());
         try {
-               HelperFactory.getHelper().getChatDao().create(chat);
+            HelperFactory.getHelper().getChatDao().create(chat);
 
             SettingsHelper.setChat(getApplicationContext(), chat);
         } catch (SQLException e) {
@@ -58,16 +50,22 @@ public class MainActivity extends ActionBarActivity {
 //            getSupportFragmentManager().beginTransaction()
 //                    .add(R.id.container, new PlaceholderFragment())
 //                    .commit();
-
+            baseFragment = WelcomeFragment.newInstance(getApplicationContext());
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, ChatFragment.newInstance(getApplicationContext()))
+                    .add(R.id.container, baseFragment)
                     .commit();
         }
 
 
-
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!baseFragment.onBackPressed()) {
+            super.onBackPressed();
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

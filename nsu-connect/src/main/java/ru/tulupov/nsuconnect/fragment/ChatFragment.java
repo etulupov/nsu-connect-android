@@ -30,7 +30,7 @@ import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 
 public class ChatFragment extends Fragment {
     public static ChatFragment newInstance(final Context context) {
-        return (ChatFragment) ChatFragment.instantiate(context, ChatFragment.class.getName());
+        return (ChatFragment) Fragment.instantiate(context, ChatFragment.class.getName());
     }
 
     @Override

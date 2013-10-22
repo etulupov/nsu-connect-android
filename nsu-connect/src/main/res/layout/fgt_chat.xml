@@ -26,13 +26,13 @@
             android:textColor="@color/btn_selector" />
 
         <EditText
-
             android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/send"
             android:background="@null"
+            android:hint="@string/send_hint"
             android:maxLines="4"
             android:padding="10dp" />
     </RelativeLayout>
@@ -41,7 +41,7 @@
         android:id="@+id/message_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/send_container"/>
+        android:layout_above="@id/send_container" />
 
     <View
         android:id="@+id/shadow"
