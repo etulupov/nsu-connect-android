@@ -29,6 +29,10 @@ public abstract class BaseRequest<T> extends StringRequest {
         this.session = session;
     }
 
+    public BaseRequest(int method, Uri uri, Session session, final Response.Listener<String> listener, Response.ErrorListener errorListener) {
+        super(method, uri.toString(), listener, errorListener);
+        this.session = session;
+    }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {

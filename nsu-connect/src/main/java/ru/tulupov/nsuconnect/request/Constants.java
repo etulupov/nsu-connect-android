@@ -12,7 +12,9 @@ public interface Constants {
     String STATUS_DISCONNECTED = "#__disconnected";
     String STATUS_START_TYPING = "#__typing_started";
     String STATUS_STOP_TYPING = "#__typing_stopped";
-    String STATUS_MESSAGE= "#__message";
+    String STATUS_MESSAGE = "#__message";
     String MESSAGE = "message";
     String ACTION_GET_ONLINE = "get_online";
+    String ACTION_START_TYPING = "start_typing";
+    String ACTION_STOP_TYPING = "stop_typing";
 }

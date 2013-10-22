@@ -3,8 +3,11 @@ package ru.tulupov.nsuconnect.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,5 +73,34 @@ public class ChatFragment extends Fragment {
                 edit.setText(null);
             }
         });
+
+        edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_START_TYPING));
+                handler.removeCallbacks(stopTypingRunnable);
+                handler.postDelayed(stopTypingRunnable, TYPING_TIMEOUT);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
+
+    private Runnable stopTypingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_START_TYPING));
+        }
+    };
+
+    private static final long TYPING_TIMEOUT = 1000;
+    private Handler handler = new Handler();
 }

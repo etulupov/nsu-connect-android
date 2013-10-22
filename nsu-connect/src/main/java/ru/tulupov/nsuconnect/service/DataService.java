@@ -29,11 +29,15 @@ import ru.tulupov.nsuconnect.request.Constants;
 import ru.tulupov.nsuconnect.request.GetUidRequest;
 import ru.tulupov.nsuconnect.request.SendMessageRequest;
 import ru.tulupov.nsuconnect.request.StartSearchRequest;
+import ru.tulupov.nsuconnect.request.StartTypingRequest;
+import ru.tulupov.nsuconnect.request.StopTypingRequest;
 
 
 public class DataService extends Service {
     public static final String ACTION_SEND_MESSAGE = "send_message";
     public static final String ACTION_LOGIN = "login";
+    public static final String ACTION_START_TYPING = "start_typing";
+    public static final String ACTION_STOP_TYPING = "stop_typing";
     public static final String EXTRA_MESSAGE = "message";
     private static final String TAG = DataService.class.getSimpleName();
 
@@ -58,7 +62,13 @@ public class DataService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
-        if (action.equals(ACTION_SEND_MESSAGE)) {
+        if (action.equals(ACTION_START_TYPING)) {
+            StartTypingRequest startTypingRequest = new StartTypingRequest(session, createErrorListener());
+            queue.add(startTypingRequest);
+        } else if (action.equals(ACTION_STOP_TYPING)) {
+            StopTypingRequest stopTypingRequest = new StopTypingRequest(session, createErrorListener());
+            queue.add(stopTypingRequest);
+        } else if (action.equals(ACTION_SEND_MESSAGE)) {
             String text = intent.getStringExtra(EXTRA_MESSAGE);
 //
             Message message = new Message();

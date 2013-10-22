@@ -9,13 +9,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
 
 
 public class MessageLoader extends AsyncTaskLoader<List<Message>> {
     private static final String TAG = MessageLoader.class.getSimpleName();
 
-    public MessageLoader(Context context) {
+    public MessageLoader(Context context, Chat chat) {
         super(context);
     }
 
