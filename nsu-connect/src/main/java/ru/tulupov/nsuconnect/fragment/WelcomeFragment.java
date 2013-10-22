@@ -16,7 +16,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.activity.MainActivity;
 import ru.tulupov.nsuconnect.adapter.PagerAdapter;
+import ru.tulupov.nsuconnect.helper.SettingsHelper;
+import ru.tulupov.nsuconnect.model.SearchParameters;
+import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.widget.CustomViewPager;
 
 
@@ -48,10 +52,10 @@ public class WelcomeFragment extends BaseFragment {
         pager.setPagingEnabled(false);
         PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
 
-        SearchSettingsFragment yourGenderFragment = YourGenderSettingsFragment.newInstance(getActivity());
-        SearchSettingsFragment targetGenderFragment = TargetGenderSettingsFragment.newInstance(getActivity());
-        SearchSettingsFragment yourAgeFragment = YourAgeSettingsFragment.newInstance(getActivity());
-        SearchSettingsFragment targetAgeFragment = TargetAgeSettingsFragment.newInstance(getActivity());
+        final SearchSettingsFragment yourGenderFragment = YourGenderSettingsFragment.newInstance(getActivity());
+        final SearchSettingsFragment targetGenderFragment = TargetGenderSettingsFragment.newInstance(getActivity());
+        final SearchSettingsFragment yourAgeFragment = YourAgeSettingsFragment.newInstance(getActivity());
+        final SearchSettingsFragment targetAgeFragment = TargetAgeSettingsFragment.newInstance(getActivity());
         SearchSettingFinishFragment finishFragment = SearchSettingFinishFragment.newInstance(getActivity());
 
         adapter.setFragments(Arrays.asList(yourGenderFragment, targetGenderFragment, yourAgeFragment, targetAgeFragment, finishFragment));
@@ -90,6 +94,24 @@ public class WelcomeFragment extends BaseFragment {
             @Override
             public void onSelect(List<Integer> selected) {
                 navigate(PAGE_FINISH);
+            }
+        });
+
+        finishFragment.setOnClickListener(new SearchSettingFinishFragment.OnClickListener() {
+            @Override
+            public void onClick() {
+                SearchParameters searchParameters = new SearchParameters();
+
+                searchParameters.setYourGender(yourGenderFragment.getSelectedItems());
+                searchParameters.setTargetGender(targetGenderFragment.getSelectedItems());
+                searchParameters.setYourAge(yourAgeFragment.getSelectedItems());
+                searchParameters.setTargetAge(targetAgeFragment.getSelectedItems());
+
+                Settings settings = SettingsHelper.getSettings(getActivity());
+                settings.setSearchParameters(searchParameters);
+                SettingsHelper.setSettings(getActivity(), settings);
+
+                ((MainActivity) getActivity()).addFragment(ChatFragment.newInstance(getActivity()));
             }
         });
     }

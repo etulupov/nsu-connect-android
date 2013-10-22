@@ -6,12 +6,14 @@
     <string name="action_settings">Settings</string>
     <string name="typing_message">набирается сообщение...</string>
     <string name="send_button">отправить</string>
-    <string name="send_hint">Введите текст сообщения...</string>
+    <string name="send_hint">Введите сообщение...</string>
     <string name="search_enter_your_age">Выберете Ваш возраст</string>
     <string name="search_enter_your_gender">Выберете Ваш пол</string>
     <string name="search_enter_target_gender">Выберете искомый пол</string>
     <string name="search_enter_target_age">Выберете искомый возраст</string>
     <string name="search_next">Продолжить</string>
+    <string name="search_finish">Готово</string>
+    <string name="search_finish_hint">Теперь можно приступить к общению</string>
     <string name="search_nothing_selected">Пожалуйста выберите какой-либо вариант</string>
     <string-array name="search_your_gender">
         <item>Не важно</item>

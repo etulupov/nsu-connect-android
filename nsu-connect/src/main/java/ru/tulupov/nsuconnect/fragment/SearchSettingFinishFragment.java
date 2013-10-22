@@ -18,23 +18,19 @@ import java.util.List;
 import ru.tulupov.nsuconnect.R;
 
 
-public   class SearchSettingFinishFragment extends Fragment {
+public class SearchSettingFinishFragment extends Fragment {
     public static SearchSettingFinishFragment newInstance(final Context context) {
         return (SearchSettingFinishFragment) Fragment.instantiate(context, SearchSettingFinishFragment.class.getName());
     }
 
-    public interface OnSelectListener {
-        void onSelect(List<Integer> selected);
+    public interface OnClickListener {
+        void onClick();
     }
 
-    private OnSelectListener onSelectListener;
+    private OnClickListener onClickListener;
 
-    public OnSelectListener getOnSelectListener() {
-        return onSelectListener;
-    }
-
-    public void setOnSelectListener(OnSelectListener onSelectListener) {
-        this.onSelectListener = onSelectListener;
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -45,37 +41,14 @@ public   class SearchSettingFinishFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-//
-//        TextView title = (TextView) view.findViewById(R.id.title);
-//        title.setText(getTitleTextId());
-//
-//        final ListView list = (ListView) view.findViewById(R.id.list);
-//
-//        String[] sports = getResources().getStringArray(getItemsArrayId());
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, sports);
-//        list.setChoiceMode(getListChoiceMode());
-//        list.setAdapter(adapter);
-//
-//        view.findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                SparseBooleanArray checked = list.getCheckedItemPositions();
-//                List<Integer> selected = new ArrayList<Integer>();
-//                for (int i = 0; i < checked.size(); i++) {
-//                    int position = checked.keyAt(i);
-//                    if (checked.valueAt(i)) {
-//                        selected.add(position);
-//                    }
-//                }
-//                if (selected.isEmpty()) {
-//                    Toast.makeText(getActivity(), getErrorTextId(), Toast.LENGTH_LONG).show();
-//                } else if (onSelectListener != null) {
-//                    onSelectListener.onSelect(selected);
-//                }
-//            }
-//        });
+        view.findViewById(R.id.finish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onClickListener != null) {
+                    onClickListener.onClick();
+                }
+            }
+        });
     }
 
 

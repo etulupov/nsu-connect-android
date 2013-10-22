@@ -15,6 +15,9 @@ public interface Constants {
     String STATUS_MESSAGE = "#__message";
     String MESSAGE = "message";
     String ACTION_GET_ONLINE = "get_online";
+    String ACTION_SET_SETTINGS = "set_settings";
     String ACTION_START_TYPING = "start_typing";
     String ACTION_STOP_TYPING = "stop_typing";
+
+
 }

@@ -23,12 +23,14 @@ import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.Session;
 import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.model.Status;
+import ru.tulupov.nsuconnect.model.Success;
 import ru.tulupov.nsuconnect.model.Uid;
 import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.request.CommandRequest;
 import ru.tulupov.nsuconnect.request.Constants;
 import ru.tulupov.nsuconnect.request.GetUidRequest;
 import ru.tulupov.nsuconnect.request.SendMessageRequest;
+import ru.tulupov.nsuconnect.request.SetSearchParametersRequest;
 import ru.tulupov.nsuconnect.request.StartSearchRequest;
 import ru.tulupov.nsuconnect.request.StartTypingRequest;
 import ru.tulupov.nsuconnect.request.StopTypingRequest;
@@ -129,14 +131,25 @@ public class DataService extends Service {
                 queue.add(sendMessageRequest);
                 Log.e("xxx", "add SendMessageRequest");
             } else if (action.equals(ACTION_LOGIN)) {
+                Settings settings = SettingsHelper.getSettings(getApplicationContext());
 
-                GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
-                queue.add(getUidRequest);
-
+                SetSearchParametersRequest setSearchParametersRequest = new SetSearchParametersRequest(session, settings.getSearchParameters(), createSearchParametersListener(), createErrorListener());
+                queue.add(setSearchParametersRequest);
 
             }
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private Response.Listener<Success> createSearchParametersListener() {
+        return new Response.Listener<Success>() {
+            @Override
+            public void onResponse(Success success) {
+                Log.e("xxx", "set settings =" + success);
+                GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
+                queue.add(getUidRequest);
+            }
+        };
     }
 
     private Response.Listener<Uid> createGetUidListener() {

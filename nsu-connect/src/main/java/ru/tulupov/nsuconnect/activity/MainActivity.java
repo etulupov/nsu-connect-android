@@ -59,6 +59,12 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void addFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+    }
+
     @Override
     public void onBackPressed() {
         if (!baseFragment.onBackPressed()) {
