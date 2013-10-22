@@ -48,7 +48,7 @@ public abstract class HolderAdapter<T, Holder> extends SimpleAdapter<T> {
     protected View getView(Context context, int position, T item, View convertView, ViewGroup parent) {
         Holder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(layoutResourceId, parent, false);
+            convertView = LayoutInflater.from(context).inflate(getLayoutResourceId(position), parent, false);
             holder = initHolder(context, convertView);
             convertView.setTag(holder);
         } else {
@@ -62,6 +62,10 @@ public abstract class HolderAdapter<T, Holder> extends SimpleAdapter<T> {
         updateHolder(context, holder, item, position);
 
         return convertView;
+    }
+
+    protected int getLayoutResourceId(int position) {
+        return layoutResourceId;
     }
 
 }
