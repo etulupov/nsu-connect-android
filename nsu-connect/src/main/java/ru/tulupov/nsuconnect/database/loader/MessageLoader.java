@@ -32,7 +32,11 @@ public class MessageLoader extends AsyncTaskLoader<List<Message>> {
             QueryBuilder<Message, Integer> queryBuilder = HelperFactory.getHelper().getMessageDao().queryBuilder();
             queryBuilder.where().eq(DatabaseContract.Message.CHAT, chat.getId());
             PreparedQuery<Message> preparedQuery = queryBuilder.prepare();
-            return HelperFactory.getHelper().getMessageDao().query(preparedQuery);
+            List<Message> messages = HelperFactory.getHelper().getMessageDao().query(preparedQuery);
+            for (Message m : messages) {
+                HelperFactory.getHelper().getUserDao().refresh(m.getUser());
+            }
+            return messages;
         } catch (SQLException e) {
             Log.e(TAG, "Error", e);
         }

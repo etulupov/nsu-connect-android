@@ -11,11 +11,15 @@ import ru.tulupov.nsuconnect.model.Message;
 
 public class MessageDao extends BaseDaoImpl<Message, Integer> {
     public MessageDao(ConnectionSource connectionSource,
-                         Class<Message> dataClass) throws SQLException {
+                      Class<Message> dataClass) throws SQLException {
         super(connectionSource, dataClass);
     }
 
     public List<Message> getAllRoles() throws SQLException {
-        return this.queryForAll();
+        List<Message> list = queryForAll();
+        for (Message m : list) {
+            refresh(m);
+        }
+        return list;
     }
 }
