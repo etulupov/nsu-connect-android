@@ -55,12 +55,7 @@ public class MessagesFragment extends Fragment {
             boolean isTyping = intent.getBooleanExtra(DatabaseConstants.EXTRA_IS_TYPING, false);
 
             updateTypingStatus(isTyping);
-            if (isTyping) {
-                handler.removeCallbacks(updateTypingStatus);
-                handler.postDelayed(updateTypingStatus, UPDATE_TIMEOUT);
-            } else {
-                handler.removeCallbacks(updateTypingStatus);
-            }
+
         }
     };
 
@@ -192,12 +187,6 @@ public class MessagesFragment extends Fragment {
         getActivity().unregisterReceiver(updateTypingStatusReceiver);
     }
 
-    private Runnable updateTypingStatus = new Runnable() {
-        @Override
-        public void run() {
-            updateTypingStatus(false);
-        }
-    };
 
-    private Handler handler = new Handler();
+
 }

@@ -206,6 +206,7 @@ public class DataService extends Service {
 
 
                             if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
+                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
                                 Message message = new Message();
                                 message.setMessage(status.getMsg());
                                 message.setDate(new Date());
