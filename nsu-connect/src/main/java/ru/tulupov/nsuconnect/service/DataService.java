@@ -18,6 +18,7 @@ import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.helper.SearchSettingHelper;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
+import ru.tulupov.nsuconnect.helper.SoundHelper;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Command;
 import ru.tulupov.nsuconnect.model.Message;
@@ -212,6 +213,7 @@ public class DataService extends Service {
 
 
             if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
+                SoundHelper.beep(getApplicationContext());
                 sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
                 Message message = new Message();
                 message.setMessage(status.getMsg());
@@ -235,12 +237,15 @@ public class DataService extends Service {
             }
 
             if (status.getStatus().equals(Constants.STATUS_WAITING)) {
+                SoundHelper.beep(getApplicationContext());
                 writeSystem("Ожидание подключения");
             }
             if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
+                SoundHelper.beep(getApplicationContext());
                 writeSystem("Подключено");
             }
             if (status.getStatus().equals(Constants.STATUS_DISCONNECTED)) {
+                SoundHelper.beep(getApplicationContext());
                 writeSystem("Отключено");
                 sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
             }
