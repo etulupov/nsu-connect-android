@@ -1,1 +1,2 @@
+include ':sliding-menu-library'
 include ':nsu-connect'
