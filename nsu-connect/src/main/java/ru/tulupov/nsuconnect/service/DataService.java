@@ -147,17 +147,7 @@ public class DataService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private Response.Listener<Success> createSearchParametersListener() {
-        return new Response.Listener<Success>() {
-            @Override
-            public void onResponse(Success success) {
-                Log.e("xxx", "set settings =" + success);
-                Log.e("xxx", "set settings =" + session.getSearch());
-                GetUidRequest getUidRequest = new GetUidRequest(session, createGetUidListener(), createErrorListener());
-                queue.add(getUidRequest);
-            }
-        };
-    }
+
 
     private Response.Listener<Uid> createGetUidListener() {
         return new Response.Listener<Uid>() {
@@ -177,6 +167,8 @@ public class DataService extends Service {
             public void onResponse(Status status) {
                 session.setLastId(session.getUid().getUid());
                 Log.e("xxx", status.toString());
+
+                processCommand(status);
                 queryNextCommand();
             }
 
@@ -200,45 +192,7 @@ public class DataService extends Service {
 
                         session.setLastId(session.getUid().getUid());
 
-                        if (command.getStatus() != null) {
-                            Status status = command.getStatus();
-
-
-
-                            if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
-                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-                                Message message = new Message();
-                                message.setMessage(status.getMsg());
-                                message.setDate(new Date());
-                                message.setChat(chat);
-                                message.setUser(anonymousUser);
-                                try {
-                                    HelperFactory.getHelper().getMessageDao().create(message);
-                                    sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
-
-                                } catch (SQLException e) {
-                                    Log.e(TAG, "cannot create message entity", e);
-                                }
-                            }
-
-                            if (status.getStatus().equals(Constants.STATUS_START_TYPING)) {
-                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, true));
-                            }
-                            if (status.getStatus().equals(Constants.STATUS_STOP_TYPING)) {
-                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-                            }
-
-                            if (status.getStatus().equals(Constants.STATUS_WAITING)) {
-                                writeSystem("Ожидание подключения");
-                            }
-                            if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
-                                writeSystem("Подключено");
-                            }
-                            if (status.getStatus().equals(Constants.STATUS_DISCONNECTED)) {
-                                writeSystem("Отключено");
-                                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-                            }
-                        }
+                       processCommand(command.getStatus());
                         Log.e("xxx", "status=" + command.getStatus().toString());
                         queryNextCommand();
                     }
@@ -249,6 +203,48 @@ public class DataService extends Service {
         }
 
                 ;
+    }
+
+    private void processCommand(Status status) {
+        if (status!= null) {
+
+
+
+
+            if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
+                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
+                Message message = new Message();
+                message.setMessage(status.getMsg());
+                message.setDate(new Date());
+                message.setChat(chat);
+                message.setUser(anonymousUser);
+                try {
+                    HelperFactory.getHelper().getMessageDao().create(message);
+                    sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
+
+                } catch (SQLException e) {
+                    Log.e(TAG, "cannot create message entity", e);
+                }
+            }
+
+            if (status.getStatus().equals(Constants.STATUS_START_TYPING)) {
+                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, true));
+            }
+            if (status.getStatus().equals(Constants.STATUS_STOP_TYPING)) {
+                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
+            }
+
+            if (status.getStatus().equals(Constants.STATUS_WAITING)) {
+                writeSystem("Ожидание подключения");
+            }
+            if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
+                writeSystem("Подключено");
+            }
+            if (status.getStatus().equals(Constants.STATUS_DISCONNECTED)) {
+                writeSystem("Отключено");
+                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
+            }
+        }
     }
 
     private void writeSystem(String text) {
