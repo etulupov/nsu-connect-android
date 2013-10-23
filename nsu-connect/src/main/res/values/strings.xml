@@ -29,14 +29,14 @@
         <item>До 16</item>
         <item>От 16 до 18</item>
         <item>От 19 до 21</item>
-        <item>От 22 до 15</item>
+        <item>От 22 до 25</item>
         <item>От 26 и выше</item>
     </string-array>
     <string-array name="search_target_age">
         <item>До 16</item>
         <item>От 16 до 18</item>
         <item>От 19 до 21</item>
-        <item>От 22 до 15</item>
+        <item>От 22 до 25</item>
         <item>От 26 и выше</item>
     </string-array>
 </resources>
