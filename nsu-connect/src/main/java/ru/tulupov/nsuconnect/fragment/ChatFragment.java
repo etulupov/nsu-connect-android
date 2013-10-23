@@ -38,6 +38,8 @@ public class ChatFragment extends Fragment {
         return inflater.inflate(R.layout.fgt_chat, container, false);
     }
 
+    private boolean isTyping;
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -82,9 +84,19 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_START_TYPING));
-                handler.removeCallbacks(stopTypingRunnable);
-                handler.postDelayed(stopTypingRunnable, TYPING_TIMEOUT);
+                if (edit.getText().length() == 0) {
+                    isTyping = false;
+                    handler.removeCallbacks(stopTypingRunnable);
+                    getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_STOP_TYPING));
+                } else {
+                    if (!isTyping) {
+                        getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_START_TYPING));
+                        handler.removeCallbacks(stopTypingRunnable);
+                        handler.postDelayed(stopTypingRunnable, TYPING_TIMEOUT);
+                        isTyping = true;
+                    }
+                }
+
             }
 
             @Override
@@ -97,10 +109,11 @@ public class ChatFragment extends Fragment {
     private Runnable stopTypingRunnable = new Runnable() {
         @Override
         public void run() {
-            getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_START_TYPING));
+            isTyping = false;
+            getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_STOP_TYPING));
         }
     };
 
-    private static final long TYPING_TIMEOUT = 1000;
+    private static final long TYPING_TIMEOUT = 1500;
     private Handler handler = new Handler();
 }
