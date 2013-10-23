@@ -62,8 +62,6 @@ public class DataService extends Service {
         super.onCreate();
         queue = Volley.newRequestQueue(this);
 
-        session.setSearch("nsu_department=0; search_nsu_department=0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C0; age=0; gender=1; search_age=0%2C0%2C0%2C0%2C0; search_gender=0%2C0;");
-
 
         try {
             chat = HelperFactory.getHelper().getChatDao().getLast();
@@ -192,24 +190,20 @@ public class DataService extends Service {
             public void onResponse(Command[] commands) {
                 if (commands != null) {
                     for (Command command : commands) {
-                        if (command.getIds() != null) {
-                            for (Map.Entry<String, String> entry : command.getIds().entrySet()) {
-                                session.setLastId(String.format("%s:%s", entry.getValue(), entry.getKey()));
-                            }
-                        }
+
+                        // TODO fix commands id, now its ignore
+//                        if (command.getIds() != null) {
+//                            for (Map.Entry<String, String> entry : command.getIds().entrySet()) {
+//                                session.setLastId(String.format("%s:%s", entry.getValue(), entry.getKey()));
+//                            }
+//                        }
+
+                        session.setLastId(session.getUid().getUid());
+
                         if (command.getStatus() != null) {
                             Status status = command.getStatus();
 
-                            if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
-//                                SendMessageRequest sendMessageRequest = new SendMessageRequest(session, "Привет :)", new Response.Listener<Message>() {
-//                                    @Override
-//                                    public void onResponse(Message message) {
-//                                        Log.e("xxx", message.toString());
-//                                    }
-//                                }, createErrorListener());
-//                                queue.add(sendMessageRequest);
-                                Log.e("xxx", "add SendMessageRequest");
-                            }
+
 
                             if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
                                 Message message = new Message();
