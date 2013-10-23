@@ -1,7 +1,6 @@
-package ru.tulupov.nsuconnect.activity.slidingmenu;
+package ru.tulupov.nsuconnect.slidingmenu;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.Menu;
 import android.view.MenuItem;

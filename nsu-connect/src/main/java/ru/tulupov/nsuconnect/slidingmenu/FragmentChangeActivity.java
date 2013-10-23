@@ -1,4 +1,4 @@
-package ru.tulupov.nsuconnect.activity.slidingmenu;
+package ru.tulupov.nsuconnect.slidingmenu;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,10 +36,11 @@ public class FragmentChangeActivity extends BaseActivity {
 		setBehindContentView(R.layout.menu_frame);
 		getSupportFragmentManager()
 		.beginTransaction()
-		.replace(R.id.menu_frame, new ColorMenuFragment())
+		.replace(R.id.menu_frame, new SlidingMenuFragment())
 		.commit();
 
 		// customize the SlidingMenu
+
 		getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 	}
 
