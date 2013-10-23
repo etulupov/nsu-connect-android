@@ -62,28 +62,32 @@ public class MessagesFragment extends Fragment {
     private void updateTypingStatus(boolean isTyping) {
         final View container = footer.findViewById(R.id.container);
         if (isTyping) {
-            Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-            container.setVisibility(View.VISIBLE);
-            container.startAnimation(animation);
+            if (container.getVisibility() == View.GONE) {
+                Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+                container.setVisibility(View.VISIBLE);
+                container.startAnimation(animation);
+            }
         } else {
-            Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-            animation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
+            if (container.getVisibility() == View.VISIBLE) {
+                Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    container.setVisibility(View.GONE);
-                }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        container.setVisibility(View.GONE);
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
 
-                }
-            });
-            container.startAnimation(animation);
+                    }
+                });
+                container.startAnimation(animation);
+            }
         }
     }
 
@@ -186,7 +190,6 @@ public class MessagesFragment extends Fragment {
         getActivity().unregisterReceiver(updateListReceiver);
         getActivity().unregisterReceiver(updateTypingStatusReceiver);
     }
-
 
 
 }
