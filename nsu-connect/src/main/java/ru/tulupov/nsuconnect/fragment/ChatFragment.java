@@ -5,27 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
-
-import java.sql.SQLException;
-import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
-import ru.tulupov.nsuconnect.adapter.MessageAdapter;
-import ru.tulupov.nsuconnect.database.DatabaseConstants;
-import ru.tulupov.nsuconnect.database.HelperFactory;
-import ru.tulupov.nsuconnect.database.loader.MessageLoader;
-import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.service.DataService;
-import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 
 
 public class ChatFragment extends BaseFragment {
@@ -47,7 +35,7 @@ public class ChatFragment extends BaseFragment {
         if (savedInstanceState == null) {
 
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.message_container, MessagesFragment.newInstance(getActivity()))
+                    .add(R.id.message_container, MessConversationFragment.newInstance(getActivity()))
                     .commit();
         }
         getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_LOGIN));

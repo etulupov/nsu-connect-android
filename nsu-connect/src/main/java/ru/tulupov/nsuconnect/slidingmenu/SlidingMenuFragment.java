@@ -1,5 +1,6 @@
 package ru.tulupov.nsuconnect.slidingmenu;
 
+import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -21,6 +21,12 @@ import ru.tulupov.nsuconnect.R;
 
 public class SlidingMenuFragment extends ListFragment {
 
+
+    public static SlidingMenuFragment newInstance(final Context context) {
+        return (SlidingMenuFragment) Fragment.instantiate(context, SlidingMenuFragment.class.getName());
+    }
+
+
     private SlidingMenuAdapter adapter;
 
     public interface OnItemClickListener {
@@ -29,6 +35,7 @@ public class SlidingMenuFragment extends ListFragment {
 
     private OnItemClickListener onItemClickListener;
     private List<SlidingMenuItem> menuItems;
+    private int resourceId;
 
     public void setOnItemClickListener(SlidingMenuFragment.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -36,18 +43,21 @@ public class SlidingMenuFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list, null);
+        return inflater.inflate(R.layout.fgt_sliding_menu, null);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         adapter = new SlidingMenuAdapter();
         setListAdapter(adapter);
-
-        parseXml(R.menu.main);
+        parseXml(resourceId);
         adapter.updateList(menuItems);
+    }
+
+    public void setMenuItems(int resourceId) {
+        this.resourceId = resourceId;
     }
 
     @Override
@@ -56,8 +66,6 @@ public class SlidingMenuFragment extends ListFragment {
             onItemClickListener.onClick(menuItems.get(position).id);
         }
     }
-
-
 
 
     private void parseXml(int menu) {

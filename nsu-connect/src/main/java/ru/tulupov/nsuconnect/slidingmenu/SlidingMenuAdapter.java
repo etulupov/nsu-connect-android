@@ -5,7 +5,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.tulupov.nsuconnect.R;
-import ru.tulupov.nsuconnect.adapter.MessageAdapter;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 import ru.tulupov.nsuconnect.util.adapter.FindViewById;
 

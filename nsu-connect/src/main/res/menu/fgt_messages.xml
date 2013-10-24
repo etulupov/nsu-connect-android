@@ -4,11 +4,11 @@
 
         android:id="@+id/menu_messages"
         android:icon="@drawable/ic_left_messages_normal"
-        android:title="@string/menu_messages" />
+        android:title="@string/menu_messages"   android:showAsAction="ifRoom" />
 
     <item
 
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_left_settings_normal"
-        android:title="@string/menu_settings" />
+        android:title="@string/menu_settings"   android:showAsAction="never"/>
 </menu>

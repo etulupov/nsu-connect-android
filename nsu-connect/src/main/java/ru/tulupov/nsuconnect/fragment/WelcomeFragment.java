@@ -47,7 +47,7 @@ public class WelcomeFragment extends BaseFragment {
 
     @Override
     public int getMenuItemId() {
-        return R.id.menu_home;
+        return R.id.menu_settings;
     }
 
     private CustomViewPager pager;

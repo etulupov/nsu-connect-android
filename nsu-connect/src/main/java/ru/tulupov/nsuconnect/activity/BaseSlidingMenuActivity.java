@@ -10,7 +10,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.fragment.BaseFragment;
-import ru.tulupov.nsuconnect.fragment.ConversationsFragment;
+import ru.tulupov.nsuconnect.fragment.MessagesFragment;
 import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
 import ru.tulupov.nsuconnect.slidingmenu.SlidingMenuFragment;
 
@@ -57,7 +57,9 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
             }
         });
 
-        showFragment(WelcomeFragment.newInstance(getApplicationContext()));
+        slidingMenuFragment.setMenuItems(R.menu.main);
+
+
     }
 
     @Override
@@ -73,11 +75,12 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
     protected void onMenuItemClick(int id) {
         switch (id) {
-            case R.id.menu_home:
-                showFragment(WelcomeFragment.newInstance(getApplicationContext()));
+
+            case R.id.menu_messages:
+                showFragment(MessagesFragment.newInstance(getApplicationContext()));
                 return;
-            case R.id.menu_converstions:
-                showFragment(ConversationsFragment.newInstance(getApplicationContext()));
+            case R.id.menu_settings:
+                showFragment(WelcomeFragment.newInstance(getApplicationContext()));
                 return;
         }
     }

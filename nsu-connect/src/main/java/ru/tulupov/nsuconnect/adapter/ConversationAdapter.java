@@ -2,9 +2,6 @@ package ru.tulupov.nsuconnect.adapter;
 
 
 import android.content.Context;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 
@@ -17,7 +14,7 @@ import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 import ru.tulupov.nsuconnect.util.adapter.FindViewById;
 
-public class MessageAdapter extends BeanHolderAdapter<Message, MessageAdapter.Holder> {
+public class ConversationAdapter extends BeanHolderAdapter<Message, ConversationAdapter.Holder> {
     public static class Holder {
         @FindViewById(R.id.text)
         public TextView text;
@@ -30,7 +27,7 @@ public class MessageAdapter extends BeanHolderAdapter<Message, MessageAdapter.Ho
 
     private DateFormat dateFormat;
 
-    public MessageAdapter() {
+    public ConversationAdapter() {
         super(0, Holder.class);
 
         dateFormat = new SimpleDateFormat("HH:mm");
