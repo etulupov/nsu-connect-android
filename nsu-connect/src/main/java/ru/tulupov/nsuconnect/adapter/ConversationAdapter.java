@@ -2,6 +2,7 @@ package ru.tulupov.nsuconnect.adapter;
 
 
 import android.content.Context;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -21,7 +22,8 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
 
         @FindViewById(R.id.date)
         public TextView date;
-
+        @FindViewById(R.id.container)
+        public View container;
 
     }
 
@@ -63,17 +65,8 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
 
         holder.date.setText(dateFormat.format(item.getDate()));
 
-//        switch (item.getUser().getType()) {
-//            case User.TYPE_OTHER:
-//                holder.container.setBackgroundColor(0xff0000);
-//                break;
-//            case User.TYPE_YOUR:
-//                holder.container.setBackgroundColor(0x00ff00);
-//                break;
-//            case User.TYPE_SYSTEM:
-//                holder.container.setBackgroundColor(0x0000ff);
-//                break;
-//        }
+        holder.container.setBackgroundResource(item.isSentFlag()?android.R.color.transparent:R.color.light_gray);
+
 
     }
 

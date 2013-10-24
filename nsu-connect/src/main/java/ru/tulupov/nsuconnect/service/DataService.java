@@ -2,6 +2,8 @@ package ru.tulupov.nsuconnect.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -12,8 +14,10 @@ import com.android.volley.toolbox.Volley;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.helper.SearchSettingHelper;
@@ -92,7 +96,81 @@ public class DataService extends Service {
             Log.e(TAG, "cannot create chat entity", e);
         }
 
+        getContentResolver().registerContentObserver(ContentUriHelper.getConversationUri(chat.getId()), false, messageContentObserver);
+        sendMessage();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        getContentResolver().unregisterContentObserver(messageContentObserver);
+    }
+
+    private ContentObserver messageContentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+
+            if (sendEnabled) {
+                sendMessage();
+            } else {
+                wasUpdated = true;
+            }
+        }
+    };
+    boolean sendEnabled = true;
+    boolean wasUpdated = false;
+
+    private void sendMessage() {
+        try {
+            sendEnabled = false;
+            List<Message> messages = HelperFactory.getHelper().getMessageDao().getUnsetMessagesByChat(chat);
+            sendMessage(messages);
+
+        } catch (SQLException e) {
+            Log.e(TAG, "error", e);
+        }
+    }
+
+    private void sendMessage(final List<Message> messages) {
+        if (messages.isEmpty()) {
+            sendEnabled = true;
+            if (wasUpdated) {
+                wasUpdated = false;
+
+                sendMessage();
+            }
+
+            return;
+        }
+
+
+        final Message messageToSend = messages.remove(0);
+        SendMessageRequest sendMessageRequest = new SendMessageRequest(session, messageToSend.getMessage(), new Response.Listener<Message>() {
+            @Override
+            public void onResponse(Message message) {
+                Log.e("xxx", message.toString());
+                messageToSend.setSentFlag(true);
+                try {
+                    HelperFactory.getHelper().getMessageDao().update(messageToSend);
+                    ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
+
+                } catch (SQLException e) {
+                    Log.e(TAG, "error", e);
+                }
+
+                sendMessage(messages);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                createErrorListener().onErrorResponse(volleyError);
+                sendEnabled = true;
+            }
+        });
+        queue.add(sendMessageRequest);
+    }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -116,21 +194,20 @@ public class DataService extends Service {
                 message.setUser(myUser);
                 try {
                     HelperFactory.getHelper().getMessageDao().create(message);
-                    sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
-
+                    ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
                 } catch (SQLException e) {
                     Log.e(TAG, "cannot create message entity", e);
                 }
 
 
-                SendMessageRequest sendMessageRequest = new SendMessageRequest(session, text, new Response.Listener<Message>() {
-                    @Override
-                    public void onResponse(Message message) {
-                        Log.e("xxx", message.toString());
-                    }
-                }, createErrorListener());
-                queue.add(sendMessageRequest);
-                Log.e("xxx", "add SendMessageRequest");
+//                SendMessageRequest sendMessageRequest = new SendMessageRequest(session, text, new Response.Listener<Message>() {
+//                    @Override
+//                    public void onResponse(Message message) {
+//                        Log.e("xxx", message.toString());
+//                    }
+//                }, createErrorListener());
+//                queue.add(sendMessageRequest);
+//                Log.e("xxx", "add SendMessageRequest");
             } else if (action.equals(ACTION_LOGIN)) {
                 Settings settings = SettingsHelper.getSettings(getApplicationContext());
 
@@ -147,7 +224,6 @@ public class DataService extends Service {
         }
         return super.onStartCommand(intent, flags, startId);
     }
-
 
 
     private Response.Listener<Uid> createGetUidListener() {
@@ -193,7 +269,7 @@ public class DataService extends Service {
 
                         session.setLastId(session.getUid().getUid());
 
-                       processCommand(command.getStatus());
+                        processCommand(command.getStatus());
                         Log.e("xxx", "status=" + command.getStatus().toString());
                         queryNextCommand();
                     }
@@ -207,9 +283,7 @@ public class DataService extends Service {
     }
 
     private void processCommand(Status status) {
-        if (status!= null) {
-
-
+        if (status != null) {
 
 
             if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
@@ -220,10 +294,10 @@ public class DataService extends Service {
                 message.setDate(new Date());
                 message.setChat(chat);
                 message.setUser(anonymousUser);
+                message.setSentFlag(true);
                 try {
                     HelperFactory.getHelper().getMessageDao().create(message);
-                    sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
-
+                    ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
                 } catch (SQLException e) {
                     Log.e(TAG, "cannot create message entity", e);
                 }
@@ -258,9 +332,10 @@ public class DataService extends Service {
         message.setDate(new Date());
         message.setChat(chat);
         message.setUser(systemUser);
+        message.setSentFlag(true);
         try {
             HelperFactory.getHelper().getMessageDao().create(message);
-            sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST));
+            ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
 
         } catch (SQLException e) {
             Log.e(TAG, "cannot create message entity", e);

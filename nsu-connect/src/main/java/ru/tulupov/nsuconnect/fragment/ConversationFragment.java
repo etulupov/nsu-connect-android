@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,30 +22,25 @@ import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.adapter.ConversationAdapter;
+import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.MessageLoader;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
-import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
+import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 
 
-public class ConversationFragment extends BaseFragment {
-    private static final int UPDATE_LIST_LOADER_ID = 0;
+public class ConversationFragment extends LoaderListFragment<Message> {
+
     private static final String TAG = ConversationFragment.class.getSimpleName();
-    private static final long UPDATE_TIMEOUT = 3000;
-    private ConversationAdapter adapter;
+
+
     private ListView list;
     private View footer;
     private boolean listAtTheEnd;
     private boolean firstTime = true;
-    private BroadcastReceiver updateListReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            update();
 
-        }
-    };
     private BroadcastReceiver updateTypingStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -55,6 +50,7 @@ public class ConversationFragment extends BaseFragment {
 
         }
     };
+    private ConversationAdapter adapter;
 
     private void updateTypingStatus(boolean isTyping) {
         final View container = footer.findViewById(R.id.container);
@@ -101,6 +97,10 @@ public class ConversationFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        list = (ListView) view.findViewById(R.id.list);
+        footer = View.inflate(getActivity(), R.layout.footer_messages, null);
+        list.addFooterView(footer);
+        adapter = new ConversationAdapter();
         super.onViewCreated(view, savedInstanceState);
 
         try {
@@ -109,12 +109,9 @@ public class ConversationFragment extends BaseFragment {
         } catch (SQLException e) {
             Log.e(TAG, "cannot create chat entity", e);
         }
-        footer = View.inflate(getActivity(), R.layout.footer_messages, null);
 
-        list = (ListView) view.findViewById(R.id.list);
-        list.addFooterView(footer);
-        adapter = new ConversationAdapter();
-        list.setAdapter(adapter);
+
+
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -132,50 +129,44 @@ public class ConversationFragment extends BaseFragment {
     }
 
 
-    private void update() {
-        LoaderManager loaderManager = getLoaderManager();
-        Loader loader = loaderManager.getLoader(UPDATE_LIST_LOADER_ID);
-        if (loader == null) {
-            loaderManager.initLoader(UPDATE_LIST_LOADER_ID, null, new AdapterLoaderCallback<Message>(adapter) {
-                @Override
-                public Loader<List<Message>> onCreateLoader(int i, Bundle bundle) {
-                    return new MessageLoader(getActivity(), chat);
-                }
+    @Override
+    protected void onLoadFinished() {
+        super.onLoadFinished();
+        if (listAtTheEnd && !firstTime) {
 
-                @Override
-                public void onLoadFinished(Loader<List<Message>> loader, List<Message> data) {
-                    super.onLoadFinished(loader, data);
-
-                    if (listAtTheEnd && !firstTime) {
-
-                        list.setSelection(adapter.getCount() - 1);
-                    }
-
-                    if (firstTime) {
-                        firstTime = false;
-                        list.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                list.setSelection(adapter.getCount() - 1);
-                            }
-                        }, 1000);
-                    }
-
-
-                }
-            });
+            list.setSelection(adapter.getCount() - 1);
         }
-        loader = loaderManager.getLoader(UPDATE_LIST_LOADER_ID);
-        loader.forceLoad();
+
+        if (firstTime) {
+            firstTime = false;
+            list.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    list.setSelection(adapter.getCount() - 1);
+                }
+            }, 1000);
+        }
+    }
+
+    @Override
+    protected Loader<List<Message>> onCreateLoader() {
+        return new MessageLoader(getActivity(), chat);
+    }
+
+    @Override
+    protected Uri getContentUri() {
+        return ContentUriHelper.getConversationUri(chat.getId());
+    }
+
+    @Override
+    protected BeanHolderAdapter<Message, ?> getAdapter() {
+        return adapter;
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        update();
-        IntentFilter updateListFilter = new IntentFilter(DatabaseConstants.ACTION_UPDATE_MESSAGE_LIST);
-        getActivity().registerReceiver(updateListReceiver, updateListFilter);
 
         IntentFilter updateTypingStatusFilter = new IntentFilter(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS);
         getActivity().registerReceiver(updateTypingStatusReceiver, updateTypingStatusFilter);
@@ -184,7 +175,7 @@ public class ConversationFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().unregisterReceiver(updateListReceiver);
+
         getActivity().unregisterReceiver(updateTypingStatusReceiver);
     }
 

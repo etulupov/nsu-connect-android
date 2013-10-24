@@ -31,6 +31,10 @@ public class Message {
     @DatabaseField(columnName = USER, foreign = true)
     private transient User user;
 
+    @DatabaseField(columnName = SEND_FLAG, dataType = DataType.BOOLEAN)
+    private transient boolean sentFlag;
+
+
     public String getMessage() {
         return message;
     }
@@ -61,6 +65,18 @@ public class Message {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public boolean isSentFlag() {
+        return sentFlag;
+    }
+
+    public void setSentFlag(boolean sentFlag) {
+        this.sentFlag = sentFlag;
     }
 
     @Override

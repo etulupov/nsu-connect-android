@@ -77,8 +77,8 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
                 }
 
-                getActivity().getContentResolver().notifyChange(ContentUriHelper.getChatUri().buildUpon().appendPath("fffdsf").build(), null);
-//                addFragment(ChatFragment.newInstance(getActivity()));
+//                getActivity().getContentResolver().notifyChange(ContentUriHelper.getChatUri(), null);
+                addFragment(ChatFragment.newInstance(getActivity()));
                 break;
         }
         return super.onOptionsItemSelected(item);

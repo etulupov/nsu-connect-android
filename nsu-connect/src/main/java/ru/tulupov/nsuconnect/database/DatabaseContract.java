@@ -9,6 +9,7 @@ public interface DatabaseContract {
         String DATE = "date";
         String CHAT = "chat";
         String USER = "user";
+        String SEND_FLAG = "send_flag";
 
     }
 
