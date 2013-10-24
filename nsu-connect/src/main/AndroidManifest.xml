@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.HomeActivity"     android:screenOrientation="portrait"/>
+        <activity android:name=".activity.HomeActivity"     android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <service android:name=".service.DataService" />
     </application>

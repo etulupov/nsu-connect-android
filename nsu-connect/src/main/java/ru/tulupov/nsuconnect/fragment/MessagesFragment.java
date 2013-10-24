@@ -3,13 +3,21 @@ package ru.tulupov.nsuconnect.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.sql.SQLException;
+import java.util.Date;
+
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.SettingsHelper;
+import ru.tulupov.nsuconnect.model.Chat;
 
 
 public class MessagesFragment extends BaseFragment {
@@ -17,6 +25,12 @@ public class MessagesFragment extends BaseFragment {
 
     public static MessagesFragment newInstance(final Context context) {
         return (MessagesFragment) Fragment.instantiate(context, MessagesFragment.class.getName());
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -28,6 +42,7 @@ public class MessagesFragment extends BaseFragment {
     public int getTitleId() {
         return R.string.conversations_title;
     }
+
     @Override
     public int getMenuItemId() {
         return R.id.menu_messages;
@@ -40,5 +55,23 @@ public class MessagesFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_new_conversation:
+                Chat chat = new Chat();
+                chat.setName("test");
+                chat.setDate(new Date());
+                try {
+                    HelperFactory.getHelper().getChatDao().create(chat);
 
+                    SettingsHelper.setChat(getActivity(), chat);
+                } catch (SQLException e) {
+
+                }
+                addFragment(ChatFragment.newInstance(getActivity()));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

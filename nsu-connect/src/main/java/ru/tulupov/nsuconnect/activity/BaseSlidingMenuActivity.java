@@ -63,6 +63,13 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
     }
 
     @Override
+    public void setTitle(int titleId) {
+        if (titleId != 0) {
+            super.setTitle(titleId);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

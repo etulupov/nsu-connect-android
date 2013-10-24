@@ -123,7 +123,7 @@ public class WelcomeFragment extends BaseFragment {
                 settings.setSearchParameters(searchParameters);
                 SettingsHelper.setSettings(getActivity(), settings);
 
-                ((MainActivity) getActivity()).addFragment(ChatFragment.newInstance(getActivity()));
+//                ((MainActivity) getActivity()).addFragment(ChatFragment.newInstance(getActivity()));
             }
         });
     }
