@@ -52,38 +52,12 @@ public class SlidingMenuFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
-        Fragment newContent = null;
-        switch (position) {
-            case 0:
-                newContent = new ColorFragment(R.color.red);
-                break;
-            case 1:
-                newContent = new ColorFragment(R.color.green);
-                break;
-            case 2:
-                newContent = new ColorFragment(R.color.blue);
-                break;
-            case 3:
-                newContent = new ColorFragment(android.R.color.white);
-                break;
-            case 4:
-                newContent = new ColorFragment(android.R.color.black);
-                break;
-        }
-        if (newContent != null)
-            switchFragment(newContent);
-    }
-
-    // the meat of switching the above fragment
-    private void switchFragment(Fragment fragment) {
-        if (getActivity() == null)
-            return;
-
-        if (getActivity() instanceof FragmentChangeActivity) {
-            FragmentChangeActivity fca = (FragmentChangeActivity) getActivity();
-            fca.switchContent(fragment);
+        if (onItemClickListener != null) {
+            onItemClickListener.onClick(menuItems.get(position).id);
         }
     }
+
+
 
 
     private void parseXml(int menu) {

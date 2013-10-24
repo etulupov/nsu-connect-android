@@ -18,7 +18,7 @@ import java.util.List;
 import ru.tulupov.nsuconnect.R;
 
 
-public class SearchSettingFinishFragment extends Fragment {
+public class SearchSettingFinishFragment extends BaseFragment {
     public static SearchSettingFinishFragment newInstance(final Context context) {
         return (SearchSettingFinishFragment) Fragment.instantiate(context, SearchSettingFinishFragment.class.getName());
     }

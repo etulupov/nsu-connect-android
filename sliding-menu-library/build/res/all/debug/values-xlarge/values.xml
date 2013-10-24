@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/home/zheka/repo/nsu-connect-android/sliding-menu-library/build/exploded-bundles/ComAndroidSupportAppcompatV71800.aar/res/values-xlarge/values.xml -->
+    <!-- From: file:/home/admin2/repo/nsu-connect-android/sliding-menu-library/build/exploded-bundles/ComAndroidSupportAppcompatV71800.aar/res/values-xlarge/values.xml -->
     <eat-comment />
 
     <bool name="abc_action_bar_expanded_action_views_exclusive">false</bool>

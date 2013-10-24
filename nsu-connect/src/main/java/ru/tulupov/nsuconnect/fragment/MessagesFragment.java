@@ -33,7 +33,7 @@ import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 
 
-public class MessagesFragment extends Fragment {
+public class MessagesFragment extends BaseFragment {
     private static final int UPDATE_LIST_LOADER_ID = 0;
     private static final String TAG = MessagesFragment.class.getSimpleName();
     private static final long UPDATE_TIMEOUT = 3000;

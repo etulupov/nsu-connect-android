@@ -28,7 +28,7 @@ import ru.tulupov.nsuconnect.service.DataService;
 import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends BaseFragment {
     public static ChatFragment newInstance(final Context context) {
         return (ChatFragment) Fragment.instantiate(context, ChatFragment.class.getName());
     }

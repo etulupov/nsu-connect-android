@@ -24,7 +24,7 @@ import java.util.List;
 import ru.tulupov.nsuconnect.R;
 
 
-public abstract class SearchSettingsFragment extends Fragment {
+public abstract class SearchSettingsFragment extends BaseFragment {
 
     private static final String PREFS_STATE_FORMATTER = "state_%s";
 
@@ -111,10 +111,15 @@ public abstract class SearchSettingsFragment extends Fragment {
     }
 
 
+    private String getClassName() {
+        return ((Object) this).getClass().getSimpleName();
+    }
+
     private void saveState() {
         SharedPreferences preferences = getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        preferences.edit().putString(String.format(PREFS_STATE_FORMATTER, getClass().getSimpleName()), gson.toJson(getSelectedItems())).commit();
+        String className = ((Object) this).getClass().getSimpleName();
+        preferences.edit().putString(String.format(PREFS_STATE_FORMATTER, getClassName()), gson.toJson(getSelectedItems())).commit();
     }
 
     private void restoreState() {
@@ -122,7 +127,7 @@ public abstract class SearchSettingsFragment extends Fragment {
         Gson gson = new Gson();
         Type listType = new TypeToken<ArrayList<Integer>>() {
         }.getType();
-        List<Integer> selected = gson.fromJson(preferences.getString(String.format(PREFS_STATE_FORMATTER, getClass().getSimpleName()), ""), listType);
+        List<Integer> selected = gson.fromJson(preferences.getString(String.format(PREFS_STATE_FORMATTER, getClassName()), ""), listType);
         if (selected != null) {
             for (Integer position : selected) {
                 list.setItemChecked(position, true);

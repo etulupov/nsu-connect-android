@@ -8,11 +8,11 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import ru.tulupov.nsuconnect.R;
 
-public class FragmentChangeActivity extends BaseActivity {
+public class SlidingMenyActivity extends BaseActivity {
 
 	private Fragment mContent;
 
-	public FragmentChangeActivity() {
+	public SlidingMenyActivity() {
 		super(R.string.app_name);
 	}
 
