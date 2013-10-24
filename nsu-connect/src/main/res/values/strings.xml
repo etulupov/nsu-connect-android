@@ -4,6 +4,9 @@
     <string name="app_name">NSU connect</string>
 
     <string name="action_settings">Settings</string>
+    <string name="menu_home">menu_home</string>
+    <string name="fgt_welcome_title">fgt_welcome_title</string>
+    <string name="conversations_title">Диалоги</string>
     <string name="typing_message">набирается сообщение...</string>
     <string name="send_button">Отправить</string>
     <string name="send_hint">Введите сообщение</string>

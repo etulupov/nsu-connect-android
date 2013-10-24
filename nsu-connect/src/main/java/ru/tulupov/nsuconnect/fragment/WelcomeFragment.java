@@ -40,6 +40,11 @@ public class WelcomeFragment extends BaseFragment {
         return inflater.inflate(R.layout.fgt_welcome, container, false);
     }
 
+    @Override
+    public int getTitleId() {
+        return R.string.fgt_welcome_title;
+    }
+
     private CustomViewPager pager;
     private List<Integer> pagesBackStack;
 

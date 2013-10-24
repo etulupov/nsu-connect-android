@@ -11,20 +11,18 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import ru.tulupov.nsuconnect.R;
 
-public class BaseActivity extends SlidingFragmentActivity {
+public class BaseSlidingFragmentActivity extends SlidingFragmentActivity {
 
-	private int mTitleRes;
+
 	protected ListFragment mFrag;
 
-	public BaseActivity(int titleRes) {
-		mTitleRes = titleRes;
-	}
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setTitle(mTitleRes);
+
 
 		// set the Behind View
 		setBehindContentView(R.layout.menu_frame);

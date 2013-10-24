@@ -8,36 +8,39 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import ru.tulupov.nsuconnect.R;
 
-public class SlidingMenyActivity extends BaseActivity {
+public class SlidingMenyActivity extends BaseSlidingFragmentActivity {
 
 	private Fragment mContent;
 
 	public SlidingMenyActivity() {
-		super(R.string.app_name);
+
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// set the Above View
-		if (savedInstanceState != null)
-			mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
-		if (mContent == null)
-			mContent = new ColorFragment(R.color.red);
 
+        setContentView(R.layout.content_frame);
+        setBehindContentView(R.layout.menu_frame);
 		// set the Above View
-		setContentView(R.layout.content_frame);
-		getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.content_frame, mContent)
-		.commit();
-
-		// set the Behind View
-		setBehindContentView(R.layout.menu_frame);
-		getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.menu_frame, new SlidingMenuFragment())
-		.commit();
+//		if (savedInstanceState != null)
+//			mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+//		if (mContent == null)
+//			mContent = new ColorFragment(R.color.red);
+//
+//		// set the Above View
+//		setContentView(R.layout.content_frame);
+//		getSupportFragmentManager()
+//		.beginTransaction()
+//		.replace(R.id.content_frame, mContent)
+//		.commit();
+//
+//		// set the Behind View
+//		setBehindContentView(R.layout.menu_frame);
+//		getSupportFragmentManager()
+//		.beginTransaction()
+//		.replace(R.id.menu_frame, new SlidingMenuFragment())
+//		.commit();
 
 		// customize the SlidingMenu
 
