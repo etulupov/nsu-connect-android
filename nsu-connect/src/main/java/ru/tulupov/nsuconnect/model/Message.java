@@ -22,7 +22,7 @@ public class Message {
     @DatabaseField(columnName = TEXT)
     private String message;
 
-    @DatabaseField(columnName = DATE, dataType = DataType.JAVA_DATE)
+    @DatabaseField(columnName = DATE, dataType = DataType.JAVA_DATE_LONG)
     private transient Date date;
 
     @DatabaseField(columnName = CHAT, foreign = true)

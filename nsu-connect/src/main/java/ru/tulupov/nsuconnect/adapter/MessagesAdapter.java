@@ -28,7 +28,7 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
     private DateFormat dateFormat;
 
     public MessagesAdapter() {
-        super(0, Holder.class);
+        super(R.layout.item_message, Holder.class);
 
         dateFormat = new SimpleDateFormat("HH:mm");
     }

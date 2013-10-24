@@ -17,7 +17,7 @@ public class Chat {
     @DatabaseField(columnName = NAME)
     private String name;
 
-    @DatabaseField(columnName = DATE, dataType = DataType.JAVA_DATE)
+    @DatabaseField(columnName = DATE, dataType = DataType.JAVA_DATE_LONG)
     private Date date;
 
     public int getId() {

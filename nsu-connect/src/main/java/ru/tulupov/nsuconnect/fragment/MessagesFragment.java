@@ -1,8 +1,10 @@
 package ru.tulupov.nsuconnect.fragment;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,14 +15,19 @@ import android.view.ViewGroup;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.adapter.MessagesAdapter;
+import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.database.loader.ChatLoader;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.model.Chat;
+import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 
 
-public class MessagesFragment extends BaseFragment {
+public class MessagesFragment extends LoaderListFragment<Chat> {
 
 
     public static MessagesFragment newInstance(final Context context) {
@@ -35,7 +42,7 @@ public class MessagesFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fgt_welcome, container, false);
+        return inflater.inflate(R.layout.fgt_messages, container, false);
     }
 
     @Override
@@ -60,7 +67,7 @@ public class MessagesFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.menu_new_conversation:
                 Chat chat = new Chat();
-                chat.setName("test");
+                chat.setName("test-" + System.currentTimeMillis());
                 chat.setDate(new Date());
                 try {
                     HelperFactory.getHelper().getChatDao().create(chat);
@@ -69,9 +76,26 @@ public class MessagesFragment extends BaseFragment {
                 } catch (SQLException e) {
 
                 }
-                addFragment(ChatFragment.newInstance(getActivity()));
+
+                getActivity().getContentResolver().notifyChange(ContentUriHelper.getChatUri().buildUpon().appendPath("fffdsf").build(), null);
+//                addFragment(ChatFragment.newInstance(getActivity()));
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected Loader<List<Chat>> onCreateLoader() {
+        return new ChatLoader(getActivity());
+    }
+
+    @Override
+    protected Uri getContentUri() {
+        return ContentUriHelper.getChatUri();
+    }
+
+    @Override
+    protected BeanHolderAdapter<Chat, ?> getAdapter() {
+        return new MessagesAdapter();
     }
 }
