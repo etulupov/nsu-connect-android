@@ -30,9 +30,9 @@ import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.util.adapter.AdapterLoaderCallback;
 
 
-public class MessConversationFragment extends BaseFragment {
+public class ConversationFragment extends BaseFragment {
     private static final int UPDATE_LIST_LOADER_ID = 0;
-    private static final String TAG = MessConversationFragment.class.getSimpleName();
+    private static final String TAG = ConversationFragment.class.getSimpleName();
     private static final long UPDATE_TIMEOUT = 3000;
     private ConversationAdapter adapter;
     private ListView list;
@@ -90,8 +90,8 @@ public class MessConversationFragment extends BaseFragment {
 
     private Chat chat;
 
-    public static MessConversationFragment newInstance(final Context context) {
-        return (MessConversationFragment) Fragment.instantiate(context, MessConversationFragment.class.getName());
+    public static ConversationFragment newInstance(final Context context) {
+        return (ConversationFragment) Fragment.instantiate(context, ConversationFragment.class.getName());
     }
 
     @Override

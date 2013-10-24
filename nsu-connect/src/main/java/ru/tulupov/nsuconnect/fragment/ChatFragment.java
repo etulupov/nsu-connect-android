@@ -35,7 +35,7 @@ public class ChatFragment extends BaseFragment {
         if (savedInstanceState == null) {
 
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.message_container, MessConversationFragment.newInstance(getActivity()))
+                    .add(R.id.message_container, ConversationFragment.newInstance(getActivity()))
                     .commit();
         }
         getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_LOGIN));
