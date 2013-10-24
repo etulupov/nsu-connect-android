@@ -36,5 +36,8 @@ public class ConversationsFragment extends BaseFragment {
     public int getTitleId() {
         return R.string.conversations_title;
     }
-
+    @Override
+    public int getMenuItemId() {
+        return R.id.menu_converstions;
+    }
 }

@@ -24,11 +24,6 @@
 
         </activity>
         <activity
-            android:label="@string/app_name"
-            android:name=".slidingmenu.SlidingMenyActivity">
-
-        </activity>
-        <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle">
@@ -37,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.HomeActivity"     android:screenOrientation="portrait"/>
 
         <service android:name=".service.DataService" />
     </application>

@@ -45,6 +45,11 @@ public class WelcomeFragment extends BaseFragment {
         return R.string.fgt_welcome_title;
     }
 
+    @Override
+    public int getMenuItemId() {
+        return R.id.menu_home;
+    }
+
     private CustomViewPager pager;
     private List<Integer> pagesBackStack;
 

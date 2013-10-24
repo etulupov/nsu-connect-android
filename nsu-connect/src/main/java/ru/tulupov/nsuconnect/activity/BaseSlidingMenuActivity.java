@@ -2,27 +2,41 @@ package ru.tulupov.nsuconnect.activity;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.view.MenuItem;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.fragment.BaseFragment;
 import ru.tulupov.nsuconnect.fragment.ConversationsFragment;
 import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
 import ru.tulupov.nsuconnect.slidingmenu.SlidingMenuFragment;
-import ru.tulupov.nsuconnect.slidingmenu.SlidingMenyActivity;
 
 
-public class BaseSlidingMenuActivity extends SlidingMenyActivity implements BaseActivityInterface {
+public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements BaseActivityInterface {
 
 
-    private BaseFragment content;
+    private int currentItemId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.content_frame);
+        setBehindContentView(R.layout.menu_frame);
+
+        SlidingMenu sm = getSlidingMenu();
+        sm.setShadowWidthRes(R.dimen.shadow_width);
+        sm.setShadowDrawable(R.drawable.shadow);
+        sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        sm.setFadeDegree(0.35f);
+        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         SlidingMenuFragment slidingMenuFragment = new SlidingMenuFragment();
         setBehindContentView(R.layout.menu_frame);
         getSupportFragmentManager()
@@ -34,11 +48,27 @@ public class BaseSlidingMenuActivity extends SlidingMenyActivity implements Base
         slidingMenuFragment.setOnItemClickListener(new SlidingMenuFragment.OnItemClickListener() {
             @Override
             public void onClick(int id) {
-                onMenuItemClick(id);
+                if (currentItemId != id) {
+                    currentItemId = id;
+                    onMenuItemClick(id);
+                } else {
+                    showContent();
+                }
             }
         });
 
         showFragment(WelcomeFragment.newInstance(getApplicationContext()));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                toggle();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected void onMenuItemClick(int id) {
@@ -52,10 +82,16 @@ public class BaseSlidingMenuActivity extends SlidingMenyActivity implements Base
         }
     }
 
+
+    private void setCurrentItemId(int currentItemId) {
+        this.currentItemId = currentItemId;
+    }
+
     @Override
     public void addFragment(BaseFragment fragment) {
         String tag = ((Object) fragment).getClass().getSimpleName();
         setTitle(fragment.getTitleId());
+        setCurrentItemId(fragment.getMenuItemId());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment, tag)
@@ -66,34 +102,54 @@ public class BaseSlidingMenuActivity extends SlidingMenyActivity implements Base
 
     @Override
     public void showFragment(BaseFragment fragment) {
-        String tag = ((Object) fragment).getClass().getSimpleName();
-        setTitle(fragment.getTitleId());
+        clearBackStack();
+        addFragment(fragment);
+    }
+
+    private void clearBackStack() {
         for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
             getSupportFragmentManager().popBackStack();
         }
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, fragment, tag)
-                .addToBackStack(tag)
-                .commit();
+    }
 
-        getSlidingMenu().showContent();
+    private BaseFragment getTopFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() != 0) {
+            int last = fragmentManager.getBackStackEntryCount() - 1;
+
+            FragmentManager.BackStackEntry entry = fragmentManager.getBackStackEntryAt(last);
+            return (BaseFragment) fragmentManager.findFragmentByTag(entry.getName());
+        }
+        return null;
     }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
-            int last = getSupportFragmentManager().getBackStackEntryCount() - 1;
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
-            FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(last);
-            BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentByTag(entry.getName());
-            if (fragment != null) {
-                if (fragment.onBackPressed()) {
-                    return;
-                }
+        BaseFragment topFragment = getTopFragment();
+        if (topFragment != null) {
+            if (topFragment.onBackPressed()) {
+                return;
             }
         }
 
+
+        if (fragmentManager.getBackStackEntryCount() != 0) {
+
+            fragmentManager.popBackStack();
+
+            topFragment = getTopFragment();
+            setTitle(topFragment.getTitleId());
+            setCurrentItemId(topFragment.getMenuItemId());
+
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                finish();
+            }
+        }
+
+
         super.onBackPressed();
+
     }
 }
