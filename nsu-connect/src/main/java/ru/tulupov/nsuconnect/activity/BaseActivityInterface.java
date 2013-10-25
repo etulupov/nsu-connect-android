@@ -7,4 +7,5 @@ import ru.tulupov.nsuconnect.fragment.BaseFragment;
 public interface BaseActivityInterface {
     void addFragment(BaseFragment fragment);
     void showFragment(BaseFragment fragment);
+    void closeFragment();
 }

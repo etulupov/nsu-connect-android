@@ -146,18 +146,7 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         }
 
 
-        if (fragmentManager.getBackStackEntryCount() != 0) {
-
-            fragmentManager.popBackStack();
-
-            topFragment = getTopFragment();
-            setTitle(topFragment.getTitleId());
-            setCurrentItemId(topFragment.getMenuItemId());
-
-            if (fragmentManager.getBackStackEntryCount() == 0) {
-                finish();
-            }
-        }
+        closeFragment();
 
 
         super.onBackPressed();
@@ -176,5 +165,22 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         super.onPause();
 
         EasyTracker.getInstance(this).activityStop(this);
+    }
+
+    @Override
+    public void closeFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() != 0) {
+
+            fragmentManager.popBackStack();
+
+            BaseFragment topFragment = getTopFragment();
+            setTitle(topFragment.getTitleId());
+            setCurrentItemId(topFragment.getMenuItemId());
+
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                finish();
+            }
+        }
     }
 }

@@ -47,4 +47,11 @@ public abstract class BaseFragment extends Fragment implements BaseActivityInter
             getBaseActivity().showFragment(fragment);
         }
     }
+
+    @Override
+    public void closeFragment() {
+        if (getBaseActivity() != null) {
+            getBaseActivity().closeFragment();
+        }
+    }
 }

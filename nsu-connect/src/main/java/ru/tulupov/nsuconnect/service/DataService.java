@@ -104,6 +104,8 @@ public class DataService extends Service {
         super.onDestroy();
 
         getContentResolver().unregisterContentObserver(messageContentObserver);
+        queue.stop();
+
     }
 
     private ContentObserver messageContentObserver = new ContentObserver(new Handler()) {
