@@ -2,10 +2,21 @@ package ru.tulupov.nsuconnect.fragment;
 
 import android.support.v4.app.Fragment;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+
 import ru.tulupov.nsuconnect.activity.BaseActivityInterface;
 
 
 public abstract class BaseFragment extends Fragment implements BaseActivityInterface {
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EasyTracker.getInstance(getActivity()).send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, ((Object) this).getClass().getName()).build());
+    }
 
     public int getTitleId() {
         return 0;

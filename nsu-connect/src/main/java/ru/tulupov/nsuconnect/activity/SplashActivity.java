@@ -13,7 +13,7 @@ import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.helper.IntentActionHelper;
 
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends BaseActivity {
     private static final long DELAY = 1500;
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
@@ -37,9 +37,5 @@ public class SplashActivity extends Activity {
         handler.postDelayed(runnable, DELAY);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EasyTracker.getInstance(this).activityStart(this);
-    }
+
 }

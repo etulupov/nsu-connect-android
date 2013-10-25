@@ -31,9 +31,11 @@ public class Message {
     @DatabaseField(columnName = USER, foreign = true)
     private transient User user;
 
+    @DatabaseField(columnName = READ_FLAG, dataType = DataType.BOOLEAN)
+    private transient boolean readFlag;
+
     @DatabaseField(columnName = SEND_FLAG, dataType = DataType.BOOLEAN)
     private transient boolean sentFlag;
-
 
     public String getMessage() {
         return message;
@@ -77,6 +79,15 @@ public class Message {
 
     public void setSentFlag(boolean sentFlag) {
         this.sentFlag = sentFlag;
+    }
+
+
+    public boolean isReadFlag() {
+        return readFlag;
+    }
+
+    public void setReadFlag(boolean readFlag) {
+        this.readFlag = readFlag;
     }
 
     @Override

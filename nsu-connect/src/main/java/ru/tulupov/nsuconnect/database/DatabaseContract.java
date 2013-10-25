@@ -10,6 +10,7 @@ public interface DatabaseContract {
         String CHAT = "chat";
         String USER = "user";
         String SEND_FLAG = "send_flag";
+        String READ_FLAG = "send_flag";
 
     }
 

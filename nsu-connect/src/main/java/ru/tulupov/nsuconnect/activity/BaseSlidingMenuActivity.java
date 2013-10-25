@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -161,5 +162,19 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
         super.onBackPressed();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        EasyTracker.getInstance(this).activityStop(this);
     }
 }

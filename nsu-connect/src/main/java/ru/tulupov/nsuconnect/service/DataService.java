@@ -287,7 +287,7 @@ public class DataService extends Service {
 
 
             if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
-                SoundHelper.beep(getApplicationContext());
+                SoundHelper.beep();
                 sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
                 Message message = new Message();
                 message.setMessage(status.getMsg());
@@ -311,15 +311,15 @@ public class DataService extends Service {
             }
 
             if (status.getStatus().equals(Constants.STATUS_WAITING)) {
-                SoundHelper.beep(getApplicationContext());
+                SoundHelper.beep();
                 writeSystem("Ожидание подключения");
             }
             if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
-                SoundHelper.beep(getApplicationContext());
+                SoundHelper.beep();
                 writeSystem("Подключено");
             }
             if (status.getStatus().equals(Constants.STATUS_DISCONNECTED)) {
-                SoundHelper.beep(getApplicationContext());
+                SoundHelper.beep();
                 writeSystem("Отключено");
                 sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
             }
