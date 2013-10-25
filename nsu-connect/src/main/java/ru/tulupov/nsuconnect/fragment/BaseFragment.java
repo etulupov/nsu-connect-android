@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import ru.tulupov.nsuconnect.activity.BaseActivityInterface;
 
@@ -46,6 +47,14 @@ public abstract class BaseFragment extends Fragment implements BaseActivityInter
         if (getBaseActivity() != null) {
             getBaseActivity().showFragment(fragment);
         }
+    }
+
+    @Override
+    public SlidingMenu getSlidingMenu() {
+        if (getBaseActivity() != null) {
+            return getBaseActivity().getSlidingMenu();
+        }
+        return null;
     }
 
     @Override

@@ -9,13 +9,17 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.io.File;
 
@@ -50,6 +54,7 @@ public class ChatFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -138,6 +143,25 @@ public class ChatFragment extends BaseFragment {
 
             }
         });
+
+
+        final View rootView = getView();
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+                SlidingMenu slidingMenu = getSlidingMenu();
+                if(slidingMenu!=null) {
+                    if (heightDiff > 250) {
+                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+                    } else {
+                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                    }
+                }
+
+            }
+        });
+
     }
 
     private Runnable stopTypingRunnable = new Runnable() {
