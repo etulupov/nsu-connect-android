@@ -1,10 +1,12 @@
 package ru.tulupov.nsuconnect.request;
 
 public interface Constants {
+
     String ACTION = "action";
     String ACTION_GET_UID = "get_uid";
     String ACTION_START_SEARCH = "start_search";
     String ACTION_SEND_MESSAGE = "send";
+    String ACTION_UPLOAD = "upload";
     String UID = "uid";
     String IDENTIFIER = "identifier";
     String STATUS_CONNECTED = "#__connected";
@@ -15,6 +17,7 @@ public interface Constants {
     String STATUS_MESSAGE = "#__message";
     String STATUS_IAMGE_MESSAGE = "#__image_message";
     String MESSAGE = "message";
+    String IMAGE_FILE = "image_file";
     String ACTION_GET_ONLINE = "get_online";
     String ACTION_SET_SETTINGS = "set_settings";
     String ACTION_START_TYPING = "start_typing";

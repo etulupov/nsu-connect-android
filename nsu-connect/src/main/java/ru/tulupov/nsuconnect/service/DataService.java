@@ -39,6 +39,7 @@ import ru.tulupov.nsuconnect.request.SendMessageRequest;
 import ru.tulupov.nsuconnect.request.StartSearchRequest;
 import ru.tulupov.nsuconnect.request.StartTypingRequest;
 import ru.tulupov.nsuconnect.request.StopTypingRequest;
+import ru.tulupov.nsuconnect.request.UploadRequest;
 
 
 public class DataService extends Service {
@@ -47,6 +48,7 @@ public class DataService extends Service {
     public static final String ACTION_START_TYPING = "start_typing";
     public static final String ACTION_STOP_TYPING = "stop_typing";
     public static final String EXTRA_MESSAGE = "message";
+    public static final String EXTRA_FILE = "file";
     private static final String TAG = DataService.class.getSimpleName();
 
     public IBinder onBind(Intent intent) {
@@ -96,7 +98,7 @@ public class DataService extends Service {
         }
 
         getContentResolver().registerContentObserver(ContentUriHelper.getConversationUri(chat.getId()), false, messageContentObserver);
-        sendMessage();
+
     }
 
     @Override
@@ -147,30 +149,57 @@ public class DataService extends Service {
 
 
         final Message messageToSend = messages.remove(0);
-        SendMessageRequest sendMessageRequest = new SendMessageRequest(session, messageToSend.getMessage(), new Response.Listener<Message>() {
-            @Override
-            public void onResponse(Message message) {
-                Log.e("xxx", message.toString());
-                messageToSend.setSentFlag(true);
-                try {
-                    HelperFactory.getHelper().getMessageDao().update(messageToSend);
-                    ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
+        if (messageToSend.getUrl() != null) {
+            UploadRequest uploadRequest = new UploadRequest(session, messageToSend.getUrl(), new Response.Listener<Status>() {
+                @Override
+                public void onResponse(Status status) {
+                    messageToSend.setSentFlag(true);
+                    try {
+                        HelperFactory.getHelper().getMessageDao().update(messageToSend);
+                        ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
 
-                } catch (SQLException e) {
-                    Log.e(TAG, "error", e);
+                    } catch (SQLException e) {
+                        Log.e(TAG, "error", e);
+                    }
+
+                    sendMessage(messages);
                 }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    createErrorListener().onErrorResponse(volleyError);
+                    sendEnabled = true;
+                }
+            });
 
-                sendMessage(messages);
+            queue.add(uploadRequest);
+        } else {
+            SendMessageRequest sendMessageRequest = new SendMessageRequest(session, messageToSend.getMessage(), new Response.Listener<Message>() {
+                @Override
+                public void onResponse(Message message) {
+                    Log.e("xxx", message.toString());
+                    messageToSend.setSentFlag(true);
+                    try {
+                        HelperFactory.getHelper().getMessageDao().update(messageToSend);
+                        ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
+
+                    } catch (SQLException e) {
+                        Log.e(TAG, "error", e);
+                    }
+
+                    sendMessage(messages);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    createErrorListener().onErrorResponse(volleyError);
+                    sendEnabled = true;
+                }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                createErrorListener().onErrorResponse(volleyError);
-                sendEnabled = true;
-            }
+            );
+            queue.add(sendMessageRequest);
         }
-        );
-        queue.add(sendMessageRequest);
+
     }
 
 
@@ -188,10 +217,12 @@ public class DataService extends Service {
                 queue.add(stopTypingRequest);
             } else if (action.equals(ACTION_SEND_MESSAGE)) {
                 String text = intent.getStringExtra(EXTRA_MESSAGE);
+                String file = intent.getStringExtra(EXTRA_FILE);
 
                 Message message = new Message();
                 message.setMessage(text);
                 message.setDate(new Date());
+                message.setUrl(file);
                 message.setChat(chat);
                 message.setUser(myUser);
                 message.setReadFlag(true);
@@ -301,7 +332,6 @@ public class DataService extends Service {
             if (status.getStatus().equals(Constants.STATUS_IAMGE_MESSAGE)) {
 
                 sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-
 
 
                 Message message = new Message();

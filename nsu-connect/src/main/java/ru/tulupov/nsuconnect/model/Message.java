@@ -12,15 +12,13 @@ import static ru.tulupov.nsuconnect.database.DatabaseContract.Message.*;
 
 public class Message {
 
-    public enum Type {
-        SYSTEM, OWN, OTHER
-    }
+
 
     @DatabaseField(generatedId = true, columnName = ID)
     private transient int id;
 
     @SerializedName("msg")
-    @DatabaseField(columnName = TEXT)
+    @DatabaseField(columnName = TEXT, canBeNull = true)
     private String message;
 
     @SerializedName("url")

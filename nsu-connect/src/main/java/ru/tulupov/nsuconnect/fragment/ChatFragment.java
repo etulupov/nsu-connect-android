@@ -1,7 +1,9 @@
 package ru.tulupov.nsuconnect.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -15,11 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.io.File;
+
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.helper.BitmapHelper;
+import ru.tulupov.nsuconnect.helper.IntentActionHelper;
+import ru.tulupov.nsuconnect.images.ImageCacheManager;
 import ru.tulupov.nsuconnect.service.DataService;
 
 
 public class ChatFragment extends BaseFragment {
+    private static final int REQUEST_CODE_TAKE_PHOTO = 0;
+    private static final int REQUEST_CODE_IMPORT_PHOTO = 1;
+
     public static ChatFragment newInstance(final Context context) {
         return (ChatFragment) Fragment.instantiate(context, ChatFragment.class.getName());
     }
@@ -46,6 +56,12 @@ public class ChatFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_upload:
+
+
+                startActivityForResult(IntentActionHelper.getCameraIntent(getActivity()), REQUEST_CODE_TAKE_PHOTO);
+                break;
+
             case R.id.menu_close:
                 getActivity().stopService(new Intent(getActivity(), DataService.class));
                 closeFragment();
@@ -130,4 +146,24 @@ public class ChatFragment extends BaseFragment {
 
     private static final long TYPING_TIMEOUT = 1500;
     private Handler handler = new Handler();
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if ((requestCode == REQUEST_CODE_TAKE_PHOTO || requestCode == REQUEST_CODE_IMPORT_PHOTO) && resultCode == Activity.RESULT_OK) {
+            final String picturePath = BitmapHelper.getPicturePath(getActivity(), data);
+
+
+            Bitmap bitmap = BitmapHelper.getNormalPhoto(picturePath);
+
+            File file = BitmapHelper.saveBitmapToTmpFile(bitmap);
+
+
+            if (file != null) {
+                ImageCacheManager.getInstance().putBitmap(file.getPath(), bitmap);
+                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE).putExtra(DataService.EXTRA_FILE, file.getPath()));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

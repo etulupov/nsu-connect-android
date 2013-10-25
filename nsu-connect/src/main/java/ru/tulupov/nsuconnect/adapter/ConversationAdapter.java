@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import java.text.DateFormat;
@@ -71,15 +72,31 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
 
         holder.container.setBackgroundResource(item.isSentFlag() ? android.R.color.transparent : R.color.light_gray);
 
-        String url = item.getUrl();
+        final String url = item.getUrl();
         if (url != null) {
             if (holder.image != null) {
                 holder.image.setVisibility(View.VISIBLE);
-                holder.image.setImageUrl(url, ImageCacheManager.getInstance().getImageLoader());
+
+                if (url.startsWith("http")) {
+                    holder.image.setImageUrl(url, ImageCacheManager.getInstance().getImageLoader());
+                } else {
+                    ImageLoader imageLoader = new ImageLoader(null, null) {
+                        @Override
+                        public ImageContainer get(String requestUrl, ImageListener listener) {
+
+                            ImageContainer container = new ImageContainer(ImageCacheManager.getInstance().getBitmap(requestUrl), requestUrl, null, null);
+                            listener.onResponse(container, true);
+                            return container;
+
+                        }
+                    };
+                    holder.image.setImageUrl(url, imageLoader);
+                }
             }
         } else {
             if (holder.image != null) {
                 holder.image.setVisibility(View.GONE);
+                holder.image.setImageBitmap(null);
             }
         }
 
