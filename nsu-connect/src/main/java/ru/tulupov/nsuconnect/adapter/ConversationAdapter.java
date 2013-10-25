@@ -6,10 +6,13 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.images.ImageCacheManager;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
@@ -19,7 +22,8 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
     public static class Holder {
         @FindViewById(R.id.text)
         public TextView text;
-
+        @FindViewById(R.id.image)
+        public NetworkImageView image;
         @FindViewById(R.id.date)
         public TextView date;
         @FindViewById(R.id.container)
@@ -65,7 +69,19 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
 
         holder.date.setText(dateFormat.format(item.getDate()));
 
-        holder.container.setBackgroundResource(item.isSentFlag()?android.R.color.transparent:R.color.light_gray);
+        holder.container.setBackgroundResource(item.isSentFlag() ? android.R.color.transparent : R.color.light_gray);
+
+        String url = item.getUrl();
+        if (url != null) {
+            if (holder.image != null) {
+                holder.image.setVisibility(View.VISIBLE);
+                holder.image.setImageUrl(url, ImageCacheManager.getInstance().getImageLoader());
+            }
+        } else {
+            if (holder.image != null) {
+                holder.image.setVisibility(View.GONE);
+            }
+        }
 
 
     }

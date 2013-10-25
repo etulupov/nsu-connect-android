@@ -13,6 +13,7 @@ public interface Constants {
     String STATUS_START_TYPING = "#__typing_started";
     String STATUS_STOP_TYPING = "#__typing_stopped";
     String STATUS_MESSAGE = "#__message";
+    String STATUS_IAMGE_MESSAGE = "#__image_message";
     String MESSAGE = "message";
     String ACTION_GET_ONLINE = "get_online";
     String ACTION_SET_SETTINGS = "set_settings";

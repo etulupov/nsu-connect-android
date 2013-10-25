@@ -12,9 +12,11 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 import ru.tulupov.nsuconnect.database.dao.ChatDao;
+import ru.tulupov.nsuconnect.database.dao.ImageDao;
 import ru.tulupov.nsuconnect.database.dao.MessageDao;
 import ru.tulupov.nsuconnect.database.dao.UserDao;
 import ru.tulupov.nsuconnect.model.Chat;
+import ru.tulupov.nsuconnect.model.Image;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.User;
 
@@ -31,6 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private MessageDao messageDao = null;
     private ChatDao chatDao = null;
     private UserDao userDao = null;
+    private ImageDao imageDao = null;
 
 
     public DatabaseHelper(Context context) {
@@ -44,6 +47,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Message.class);
             TableUtils.createTable(connectionSource, Chat.class);
             TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, Image.class);
 
         } catch (SQLException e) {
             Log.e(TAG, "error creating DB " + DATABASE_NAME);
@@ -60,6 +64,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Message.class, true);
             TableUtils.dropTable(connectionSource, Chat.class, true);
             TableUtils.dropTable(connectionSource, User.class, true);
+            TableUtils.dropTable(connectionSource, Image.class, true);
 
             onCreate(db, connectionSource);
         } catch (SQLException e) {
@@ -88,12 +93,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return userDao;
     }
+
+    public ImageDao getImageDao() throws SQLException {
+        if (imageDao == null) {
+            imageDao = new ImageDao(getConnectionSource(), Image.class);
+        }
+        return imageDao;
+    }
     @Override
     public void close() {
         super.close();
         messageDao = null;
         chatDao = null;
         userDao = null;
-
+        imageDao = null;
     }
 }

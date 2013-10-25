@@ -1,6 +1,7 @@
 package ru.tulupov.nsuconnect;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.ExceptionReporter;
@@ -10,10 +11,16 @@ import com.google.analytics.tracking.android.Logger;
 import com.google.analytics.tracking.android.Tracker;
 
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.images.ImageCacheManager;
+import ru.tulupov.nsuconnect.request.RequestManager;
 import ru.tulupov.nsuconnect.helper.SoundHelper;
 
 
 public class NsuConnectApplication extends Application {
+    private static int DISK_IMAGECACHE_SIZE = 1024*1024*10;
+    private static Bitmap.CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
+    private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,7 +42,29 @@ public class NsuConnectApplication extends Application {
         SoundHelper.init(this);
 
         HelperFactory.setHelper(getApplicationContext());
+        init();
+
+    }
 
 
+
+    /**
+     * Intialize the request manager and the image cache
+     */
+    private void init() {
+        RequestManager.init(this);
+        createImageCache();
+    }
+
+    /**
+     * Create the image cache. Uses Memory Cache by default. Change to Disk for a Disk based LRU implementation.
+     */
+    private void createImageCache(){
+        ImageCacheManager.getInstance().init(this,
+                this.getPackageCodePath()
+                , DISK_IMAGECACHE_SIZE
+                , DISK_IMAGECACHE_COMPRESS_FORMAT
+                , DISK_IMAGECACHE_QUALITY
+                , ImageCacheManager.CacheType.MEMORY);
     }
 }

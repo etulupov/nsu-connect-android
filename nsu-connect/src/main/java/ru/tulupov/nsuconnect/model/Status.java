@@ -8,6 +8,24 @@ public class Status {
     private String status;
     @SerializedName("msg")
     private String msg;
+    @SerializedName("url")
+    private String url;
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getStatus() {
         return status;
@@ -22,6 +40,7 @@ public class Status {
         return "Status{" +
                 "status='" + status + '\'' +
                 ", msg='" + msg + '\'' +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

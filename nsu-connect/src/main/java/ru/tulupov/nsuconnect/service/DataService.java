@@ -298,6 +298,29 @@ public class DataService extends Service {
         if (status != null) {
 
 
+            if (status.getStatus().equals(Constants.STATUS_IAMGE_MESSAGE)) {
+
+                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
+
+
+
+                Message message = new Message();
+                message.setMessage(status.getMsg());
+                message.setUrl(status.getUrl());
+                message.setDate(new Date());
+                message.setChat(chat);
+                message.setUser(anonymousUser);
+                message.setSentFlag(true);
+                try {
+                    HelperFactory.getHelper().getMessageDao().create(message);
+                    ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
+                } catch (SQLException e) {
+                    Log.e(TAG, "cannot create message entity", e);
+                }
+
+            }
+
+
             if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
                 SoundHelper.beep();
                 sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
