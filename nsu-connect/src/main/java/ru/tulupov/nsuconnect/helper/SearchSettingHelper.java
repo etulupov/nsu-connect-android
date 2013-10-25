@@ -74,7 +74,7 @@ public class SearchSettingHelper {
         params.put(PARAMS_CITY_ID, "0");
         params.put(PARAMS_NSU_DEPARTMENT, "0");
         params.put(PARAMS_SEARCH_NSU_DEPARTMENT, "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0");
-        params.put(PARAMS_PROVIDER, "nsu");
+        params.put(PARAMS_PROVIDER, "1"); // provider=nsu
 
         List<String> encoded = new ArrayList<String>();
         for (Map.Entry<String, String> entry : params.entrySet()) {

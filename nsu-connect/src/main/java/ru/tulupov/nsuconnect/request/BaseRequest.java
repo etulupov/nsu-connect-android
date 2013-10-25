@@ -3,6 +3,7 @@ package ru.tulupov.nsuconnect.request;
 import android.net.Uri;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
@@ -27,6 +28,8 @@ public abstract class BaseRequest<T> extends StringRequest {
             }
         }, errorListener);
         this.session = session;
+        setRetryPolicy(new DefaultRetryPolicy(Config.TIMEOUT_QUERY, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
     }
 
     public BaseRequest(int method, String url, Session session, final Class<? extends T> clazz, final Response.Listener<T> listener, Response.ErrorListener errorListener) {
