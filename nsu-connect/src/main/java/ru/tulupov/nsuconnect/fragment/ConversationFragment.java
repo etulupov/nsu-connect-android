@@ -34,7 +34,7 @@ import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 public class ConversationFragment extends LoaderListFragment<Message> {
 
     private static final String TAG = ConversationFragment.class.getSimpleName();
-
+    private static final String ARGS_CHAT_ID = "chat_id";
 
     private ListView list;
     private View footer;
@@ -86,8 +86,10 @@ public class ConversationFragment extends LoaderListFragment<Message> {
 
     private Chat chat;
 
-    public static ConversationFragment newInstance(final Context context) {
-        return (ConversationFragment) Fragment.instantiate(context, ConversationFragment.class.getName());
+    public static ConversationFragment newInstance(final Context context, int chatId) {
+        final Bundle args = new Bundle();
+        args.putInt(ARGS_CHAT_ID, chatId);
+        return (ConversationFragment) Fragment.instantiate(context, ConversationFragment.class.getName(), args);
     }
 
     @Override
@@ -103,13 +105,15 @@ public class ConversationFragment extends LoaderListFragment<Message> {
         adapter = new ConversationAdapter();
         super.onViewCreated(view, savedInstanceState);
 
-        try {
-            chat = HelperFactory.getHelper().getChatDao().getLast();
+//        try {
+//            chat = HelperFactory.getHelper().getChatDao().getLast();
+//
+//        } catch (SQLException e) {
+//            Log.e(TAG, "cannot create chat entity", e);
+//        }
 
-        } catch (SQLException e) {
-            Log.e(TAG, "cannot create chat entity", e);
-        }
-
+        chat = new Chat();
+        chat.setId(getArguments().getInt(ARGS_CHAT_ID));
 
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

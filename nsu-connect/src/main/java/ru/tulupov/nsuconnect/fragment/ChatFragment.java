@@ -29,9 +29,12 @@ import ru.tulupov.nsuconnect.service.DataService;
 public class ChatFragment extends BaseFragment {
     private static final int REQUEST_CODE_TAKE_PHOTO = 0;
     private static final int REQUEST_CODE_IMPORT_PHOTO = 1;
+    private static final String ARGS_CHAT_ID = "chat_id";
 
-    public static ChatFragment newInstance(final Context context) {
-        return (ChatFragment) Fragment.instantiate(context, ChatFragment.class.getName());
+    public static ChatFragment newInstance(final Context context, int chatId) {
+        final Bundle args = new Bundle();
+        args.putInt(ARGS_CHAT_ID, chatId);
+        return (ChatFragment) Fragment.instantiate(context, ChatFragment.class.getName(), args);
     }
 
     @Override
@@ -40,6 +43,7 @@ public class ChatFragment extends BaseFragment {
     }
 
     private boolean isTyping;
+    private int chatId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,11 +77,11 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        chatId = getArguments().getInt(ARGS_CHAT_ID);
         if (savedInstanceState == null) {
 
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.message_container, ConversationFragment.newInstance(getActivity()))
+                    .add(R.id.message_container, ConversationFragment.newInstance(getActivity(), chatId))
                     .commit();
         }
         getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_LOGIN));

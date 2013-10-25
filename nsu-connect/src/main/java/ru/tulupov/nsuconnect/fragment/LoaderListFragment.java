@@ -5,12 +5,10 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.List;
@@ -39,6 +37,9 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
 
     }
 
+    protected void onItemClick(int position, T item) {
+
+    }
 
 
     @Override
@@ -50,7 +51,12 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
 
         adapter = getAdapter();
         list.setAdapter(adapter);
-
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                LoaderListFragment.this.onItemClick(position, adapter.getItem(position));
+            }
+        });
 
     }
 

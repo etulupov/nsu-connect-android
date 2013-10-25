@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +45,11 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
     }
 
     @Override
+    protected void onItemClick(int position, Chat item) {
+        addFragment(ChatFragment.newInstance(getActivity(), item.getId()));
+    }
+
+    @Override
     public int getTitleId() {
         return R.string.conversations_title;
     }
@@ -78,7 +82,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
                 }
 
 //                getActivity().getContentResolver().notifyChange(ContentUriHelper.getChatUri(), null);
-                addFragment(ChatFragment.newInstance(getActivity()));
+                addFragment(ChatFragment.newInstance(getActivity(), chat.getId()));
                 break;
         }
         return super.onOptionsItemSelected(item);
