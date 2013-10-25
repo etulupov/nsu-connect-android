@@ -20,6 +20,7 @@ import java.util.Map;
 import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.NotificationHelper;
 import ru.tulupov.nsuconnect.helper.SearchSettingHelper;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.helper.SoundHelper;
@@ -29,14 +30,12 @@ import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.Session;
 import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.model.Status;
-import ru.tulupov.nsuconnect.model.Success;
 import ru.tulupov.nsuconnect.model.Uid;
 import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.request.CommandRequest;
 import ru.tulupov.nsuconnect.request.Constants;
 import ru.tulupov.nsuconnect.request.GetUidRequest;
 import ru.tulupov.nsuconnect.request.SendMessageRequest;
-import ru.tulupov.nsuconnect.request.SetSearchParametersRequest;
 import ru.tulupov.nsuconnect.request.StartSearchRequest;
 import ru.tulupov.nsuconnect.request.StartTypingRequest;
 import ru.tulupov.nsuconnect.request.StopTypingRequest;
@@ -124,7 +123,7 @@ public class DataService extends Service {
     private void sendMessage() {
         try {
             sendEnabled = false;
-            List<Message> messages = HelperFactory.getHelper().getMessageDao().getUnsetMessagesByChat(chat);
+            List<Message> messages = HelperFactory.getHelper().getMessageDao().getUnsentMessagesByChat(chat);
             sendMessage(messages);
 
         } catch (SQLException e) {
@@ -167,7 +166,8 @@ public class DataService extends Service {
                 createErrorListener().onErrorResponse(volleyError);
                 sendEnabled = true;
             }
-        });
+        }
+        );
         queue.add(sendMessageRequest);
     }
 
@@ -192,6 +192,7 @@ public class DataService extends Service {
                 message.setDate(new Date());
                 message.setChat(chat);
                 message.setUser(myUser);
+                message.setReadFlag(true);
                 try {
                     HelperFactory.getHelper().getMessageDao().create(message);
                     ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
@@ -246,6 +247,7 @@ public class DataService extends Service {
                 Log.e("xxx", status.toString());
 
                 processCommand(status);
+
                 queryNextCommand();
             }
 
@@ -261,25 +263,33 @@ public class DataService extends Service {
                     for (Command command : commands) {
 
                         // TODO fix commands id, now its ignore
-//                        if (command.getIds() != null) {
-//                            for (Map.Entry<String, String> entry : command.getIds().entrySet()) {
-//                                session.setLastId(String.format("%s:%s", entry.getValue(), entry.getKey()));
-//                            }
-//                        }
 
-                        session.setLastId(session.getUid().getUid());
+                        Log.e("xxx", "start to process command, get ids");
+
+                        if (command.getIds() != null) {
+                            for (Map.Entry<String, String> entry : command.getIds().entrySet()) {
+
+                                session.setLastId(String.format("%s:%s", entry.getValue(), entry.getKey()));
+
+                                Log.e("xxx", "current id=" + session.getLastId());
+                            }
+                        }
+
+//                        session.setLastId(session.getUid().getUid());
 
                         processCommand(command.getStatus());
                         Log.e("xxx", "status=" + command.getStatus().toString());
-                        queryNextCommand();
+
                     }
+
+                    queryNextCommand();
                 } else {
                     queryNextCommand();
                 }
             }
-        }
+        };
 
-                ;
+
     }
 
     private void processCommand(Status status) {
@@ -295,12 +305,16 @@ public class DataService extends Service {
                 message.setChat(chat);
                 message.setUser(anonymousUser);
                 message.setSentFlag(true);
+
+
                 try {
                     HelperFactory.getHelper().getMessageDao().create(message);
                     ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
                 } catch (SQLException e) {
                     Log.e(TAG, "cannot create message entity", e);
                 }
+
+                NotificationHelper.notify(this, message, chat);
             }
 
             if (status.getStatus().equals(Constants.STATUS_START_TYPING)) {
@@ -333,6 +347,7 @@ public class DataService extends Service {
         message.setChat(chat);
         message.setUser(systemUser);
         message.setSentFlag(true);
+        message.setReadFlag(true);
         try {
             HelperFactory.getHelper().getMessageDao().create(message);
             ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
@@ -363,6 +378,7 @@ public class DataService extends Service {
             public void onErrorResponse(VolleyError volleyError) {
                 Log.e("xxx", volleyError.toString());
                 if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 502) {
+                    Log.e("xxx", "session error, reset id");
                     session.setLastId(session.getUid().getUid());
                     queryNextCommand();
                 }

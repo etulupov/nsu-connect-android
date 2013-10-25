@@ -111,7 +111,6 @@ public class ConversationFragment extends LoaderListFragment<Message> {
         }
 
 
-
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -170,6 +169,8 @@ public class ConversationFragment extends LoaderListFragment<Message> {
 
         IntentFilter updateTypingStatusFilter = new IntentFilter(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS);
         getActivity().registerReceiver(updateTypingStatusReceiver, updateTypingStatusFilter);
+
+        updateReadFlag();
     }
 
     @Override
@@ -180,4 +181,19 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     }
 
 
+    @Override
+    protected void onDataChange() {
+        super.onDataChange();
+
+        updateReadFlag();
+    }
+
+    private void updateReadFlag() {
+        try {
+            HelperFactory.getHelper().getMessageDao().updateReadFlag(chat);
+
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot update read flag", e);
+        }
+    }
 }

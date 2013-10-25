@@ -1,5 +1,7 @@
 package ru.tulupov.nsuconnect.request;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
@@ -12,15 +14,16 @@ import ru.tulupov.nsuconnect.model.Session;
 
 public class CommandRequest extends BaseRequest<Command[]> {
     public CommandRequest(Session session, Response.Listener<Command[]> listener, Response.ErrorListener errorListener) {
+
+
         super(Method.POST,
-                Config.MSG_ENDPOINT
-                        .buildUpon()
-                        .appendQueryParameter(Constants.IDENTIFIER, session.getLastId())
-                        .build(),
+                String.format("%s?=%s=%s", Config.MSG_ENDPOINT.toString(), Constants.IDENTIFIER, session.getLastId()),
                 session,
                 Command[].class,
                 listener,
                 errorListener);
+
+        Log.e("xxx", "!!! " + getUrl());
         setRetryPolicy(new DefaultRetryPolicy(61000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 

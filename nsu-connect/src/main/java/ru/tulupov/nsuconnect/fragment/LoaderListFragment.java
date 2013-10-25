@@ -30,9 +30,14 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
         @Override
         public void onChange(boolean selfChange) {
             update();
+            onDataChange();
         }
     };
 
+
+    protected void onDataChange() {
+
+    }
 
 
 
