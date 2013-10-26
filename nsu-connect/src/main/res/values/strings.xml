@@ -4,9 +4,10 @@
     <string name="app_name">NSU connect</string>
 
     <!-- Menu items -->
+    <string name="menu_start_chat">Начать беседу</string>
     <string name="menu_messages">Диалоги</string>
     <string name="menu_settings">Настройки</string>
-
+    <string name="menu_about_application">О приложении</string>
 
     <string name="conversations_title">Диалоги</string>
     <string name="fgt_welcome_title">Настройки</string>

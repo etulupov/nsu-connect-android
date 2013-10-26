@@ -2,6 +2,12 @@
 
     <item
 
+        android:id="@+id/menu_start_chat"
+        android:icon="@drawable/ic_left_messages_normal"
+        android:title="@string/menu_start_chat" />
+
+    <item
+
         android:id="@+id/menu_messages"
         android:icon="@drawable/ic_left_messages_normal"
         android:title="@string/menu_messages" />
@@ -11,4 +17,10 @@
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_left_settings_normal"
         android:title="@string/menu_settings" />
+
+    <item
+
+        android:id="@+id/menu_about_application"
+        android:icon="@drawable/ic_left_settings_normal"
+        android:title="@string/menu_about_application" />
 </menu>
