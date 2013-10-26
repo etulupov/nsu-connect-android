@@ -1,2 +1,3 @@
 include ':sliding-menu-library'
+include ':app-rater-library'
 include ':nsu-connect'

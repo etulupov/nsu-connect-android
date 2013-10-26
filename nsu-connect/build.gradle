@@ -29,4 +29,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.j256.ormlite:ormlite-android:4.0@jar'
     compile project(':sliding-menu-library')
+    compile project(':app-rater-library')
 }

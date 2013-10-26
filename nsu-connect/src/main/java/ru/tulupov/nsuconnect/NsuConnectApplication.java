@@ -10,6 +10,8 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger;
 import com.google.analytics.tracking.android.Tracker;
 
+import org.codechimp.apprater.AppRater;
+
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.images.ImageCacheManager;
 import ru.tulupov.nsuconnect.request.RequestManager;
@@ -43,6 +45,8 @@ public class NsuConnectApplication extends Application {
 
         HelperFactory.setHelper(getApplicationContext());
         init();
+
+
 
     }
 
