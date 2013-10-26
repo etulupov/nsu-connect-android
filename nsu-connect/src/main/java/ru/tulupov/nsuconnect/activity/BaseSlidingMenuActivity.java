@@ -39,7 +39,7 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setIcon(R.drawable.ic_left_menu);
 
         SlidingMenuFragment slidingMenuFragment = new SlidingMenuFragment();
         setBehindContentView(R.layout.menu_frame);
