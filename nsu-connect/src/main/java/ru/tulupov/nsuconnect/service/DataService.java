@@ -1,6 +1,7 @@
 package ru.tulupov.nsuconnect.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Handler;
@@ -32,6 +33,8 @@ import ru.tulupov.nsuconnect.model.Settings;
 import ru.tulupov.nsuconnect.model.Status;
 import ru.tulupov.nsuconnect.model.Uid;
 import ru.tulupov.nsuconnect.model.User;
+import ru.tulupov.nsuconnect.protocol.CommandContext;
+import ru.tulupov.nsuconnect.protocol.CommandFactory;
 import ru.tulupov.nsuconnect.request.CommandRequest;
 import ru.tulupov.nsuconnect.request.Constants;
 import ru.tulupov.nsuconnect.request.GetUidRequest;
@@ -325,92 +328,50 @@ public class DataService extends Service {
 
     }
 
-    private void processCommand(Status status) {
+    private void processCommand(final Status status) {
         if (status != null) {
 
 
-            if (status.getStatus().equals(Constants.STATUS_IAMGE_MESSAGE)) {
-
-                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-
-
-                Message message = new Message();
-                message.setMessage(status.getMsg());
-                message.setUrl(status.getUrl());
-                message.setDate(new Date());
-                message.setChat(chat);
-                message.setUser(anonymousUser);
-                message.setSentFlag(true);
-                try {
-                    HelperFactory.getHelper().getMessageDao().create(message);
-                    ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
-                } catch (SQLException e) {
-                    Log.e(TAG, "cannot create message entity", e);
+            CommandContext commandContext = new CommandContext() {
+                @Override
+                public Context getApplicationContext() {
+                    return DataService.this.getApplicationContext();
                 }
 
-            }
-
-
-            if (status.getStatus().equals(Constants.STATUS_MESSAGE)) {
-                SoundHelper.beep();
-                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-                Message message = new Message();
-                message.setMessage(status.getMsg());
-                message.setDate(new Date());
-                message.setChat(chat);
-                message.setUser(anonymousUser);
-                message.setSentFlag(true);
-
-
-                try {
-                    HelperFactory.getHelper().getMessageDao().create(message);
-                    ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
-                } catch (SQLException e) {
-                    Log.e(TAG, "cannot create message entity", e);
+                @Override
+                public Status getStatus() {
+                    return status;
                 }
 
-                NotificationHelper.notify(this, message, chat);
-            }
+                @Override
+                public Chat getChat() {
+                    return chat;
+                }
 
-            if (status.getStatus().equals(Constants.STATUS_START_TYPING)) {
-                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, true));
-            }
-            if (status.getStatus().equals(Constants.STATUS_STOP_TYPING)) {
-                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-            }
+                @Override
+                public User getAnonymousUser() {
+                    return anonymousUser;
+                }
 
-            if (status.getStatus().equals(Constants.STATUS_WAITING)) {
-                SoundHelper.beep();
-                writeSystem("Ожидание подключения");
-            }
-            if (status.getStatus().equals(Constants.STATUS_CONNECTED)) {
-                SoundHelper.beep();
-                writeSystem("Подключено");
-            }
-            if (status.getStatus().equals(Constants.STATUS_DISCONNECTED)) {
-                SoundHelper.beep();
-                writeSystem("Отключено");
-                sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
-            }
+                @Override
+                public User getSystemUser() {
+                    return systemUser;
+                }
+
+                @Override
+                public User getCurrentUser() {
+                    return myUser;
+                }
+            };
+
+
+            CommandFactory.get(status.getStatus()).execute(commandContext);
+
+
         }
     }
 
-    private void writeSystem(String text) {
-        Message message = new Message();
-        message.setMessage(text);
-        message.setDate(new Date());
-        message.setChat(chat);
-        message.setUser(systemUser);
-        message.setSentFlag(true);
-        message.setReadFlag(true);
-        try {
-            HelperFactory.getHelper().getMessageDao().create(message);
-            ContentUriHelper.notifyChange(getApplicationContext(), ContentUriHelper.getConversationUri(chat.getId()));
 
-        } catch (SQLException e) {
-            Log.e(TAG, "cannot create message entity", e);
-        }
-    }
 
     private void queryNextCommand() {
         CommandRequest commandRequest = new CommandRequest(session, createCommandListener(), createCommandErrorListener());

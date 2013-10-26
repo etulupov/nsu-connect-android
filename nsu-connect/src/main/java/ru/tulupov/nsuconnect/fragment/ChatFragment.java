@@ -159,9 +159,11 @@ public class ChatFragment extends BaseFragment {
                         slidingMenu.setOnOpenListener(new SlidingMenu.OnOpenListener() {
                             @Override
                             public void onOpen() {
-                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                                        Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                                if (getActivity() != null) {
+                                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                                            Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                                }
                             }
                         });
 
