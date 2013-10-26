@@ -1,9 +1,14 @@
 package ru.tulupov.nsuconnect.service;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
+import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.activity.MainActivity;
 import ru.tulupov.nsuconnect.model.Status;
 import ru.tulupov.nsuconnect.protocol.Session;
 import ru.tulupov.nsuconnect.protocol.SessionManager;
@@ -19,6 +24,7 @@ public class DataService extends Service {
     private static final String TAG = DataService.class.getSimpleName();
     public static final String EXTRA_ID = "id";
     public static final String ACTION_CREATE_SESSION = "create_session";
+    private static final int NOTIFICATION_ID = 1;
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -32,6 +38,27 @@ public class DataService extends Service {
         sessionManager = new SessionManager(getApplicationContext());
         sessionManager.onCreate();
 
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle(getString(R.string.app_name))
+//                .setContentText("http://android-er.blogspot.com/")
+//                .setTicker("Notification!")
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(resultPendingIntent)
+//                .setDefaults(Notification.DEFAULT_SOUND)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .build();
+
+        startForeground(NOTIFICATION_ID, notification);
 
     }
 
@@ -39,7 +66,7 @@ public class DataService extends Service {
     public void onDestroy() {
         super.onDestroy();
         sessionManager.onDestroy();
-
+        stopForeground(true);
 
     }
 
