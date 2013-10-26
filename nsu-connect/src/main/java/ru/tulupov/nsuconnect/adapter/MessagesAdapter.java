@@ -2,6 +2,8 @@ package ru.tulupov.nsuconnect.adapter;
 
 
 import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -22,8 +24,16 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
         @FindViewById(R.id.date)
         public TextView date;
 
-
+        @FindViewById(R.id.stop)
+        public ImageView stop;
     }
+
+    public interface OnClickListener {
+        void onStop(Chat chat);
+    }
+
+    private OnClickListener onClickListener;
+
 
     private DateFormat dateFormat;
 
@@ -34,16 +44,30 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
     }
 
 
-
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
 
     @Override
-    protected void updateHolder(Context context, Holder holder, Chat item, int position) {
+    protected void updateHolder(Context context, Holder holder, final Chat item, int position) {
         holder.text.setText(item.getName());
 
         holder.date.setText(dateFormat.format(item.getDate()));
 
-
+        if (item.isActive()) {
+            holder.stop.setVisibility(View.VISIBLE);
+            holder.stop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onClickListener != null) {
+                        onClickListener.onStop(item);
+                    }
+                }
+            });
+        } else {
+            holder.stop.setVisibility(View.INVISIBLE);
+        }
     }
 
 

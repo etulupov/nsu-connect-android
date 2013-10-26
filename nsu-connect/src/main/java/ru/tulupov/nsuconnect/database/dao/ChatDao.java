@@ -3,11 +3,13 @@ package ru.tulupov.nsuconnect.database.dao;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 import java.util.List;
 
+import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.DatabaseContract;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
@@ -36,4 +38,14 @@ public class ChatDao extends BaseDaoImpl<Chat, Integer> {
         List<Chat> list = query(queryBuilder.prepare());
         return list.isEmpty() ? null : list.get(0);
     }
+
+    public void deactivateAllChats() throws SQLException {
+        UpdateBuilder<Chat, Integer> updateBuilder = updateBuilder();
+
+
+        updateBuilder.updateColumnValue(DatabaseContract.Chat.ACTIVE_FLAG, DatabaseConstants.BOOLEAN_FALSE);
+
+        update(updateBuilder.prepare());
+    }
+
 }

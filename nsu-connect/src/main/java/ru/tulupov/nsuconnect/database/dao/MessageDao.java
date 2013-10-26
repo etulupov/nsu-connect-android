@@ -12,6 +12,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import java.sql.SQLException;
 import java.util.List;
 
+import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.DatabaseContract;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.model.Chat;
@@ -35,7 +36,7 @@ public class MessageDao extends BaseDaoImpl<Message, Integer> {
     public List<Message> getUnsentMessagesByChat(Chat chat) throws SQLException {
         QueryBuilder<Message, Integer> queryBuilder = HelperFactory.getHelper().getMessageDao().queryBuilder();
         queryBuilder.where().eq(DatabaseContract.Message.CHAT, chat.getId());
-        queryBuilder.where().eq(DatabaseContract.Message.SEND_FLAG, "0");
+        queryBuilder.where().eq(DatabaseContract.Message.SEND_FLAG, DatabaseConstants.BOOLEAN_FALSE);
         queryBuilder.orderBy(DatabaseContract.Message.DATE, true);
         PreparedQuery<Message> preparedQuery = queryBuilder.prepare();
         List<Message> messages = HelperFactory.getHelper().getMessageDao().query(preparedQuery);
@@ -48,8 +49,8 @@ public class MessageDao extends BaseDaoImpl<Message, Integer> {
         UpdateBuilder<Message, Integer> updateBuilder = updateBuilder();
 
         updateBuilder.where().eq(DatabaseContract.Message.CHAT, chat.getId());
-        updateBuilder.where().eq(DatabaseContract.Message.READ_FLAG, "0");
-        updateBuilder.updateColumnValue(DatabaseContract.Message.READ_FLAG, "1");
+        updateBuilder.where().eq(DatabaseContract.Message.READ_FLAG, DatabaseConstants.BOOLEAN_FALSE);
+        updateBuilder.updateColumnValue(DatabaseContract.Message.READ_FLAG, DatabaseConstants.BOOLEAN_TRUE);
 
         update(updateBuilder.prepare());
     }
@@ -57,7 +58,7 @@ public class MessageDao extends BaseDaoImpl<Message, Integer> {
     public List<Message> getUnreadMessagesByChat(Chat chat) throws SQLException {
         QueryBuilder<Message, Integer> queryBuilder = HelperFactory.getHelper().getMessageDao().queryBuilder();
         queryBuilder.where().eq(DatabaseContract.Message.CHAT, chat.getId());
-        queryBuilder.where().eq(DatabaseContract.Message.READ_FLAG, "0");
+        queryBuilder.where().eq(DatabaseContract.Message.READ_FLAG, DatabaseConstants.BOOLEAN_FALSE);
         queryBuilder.orderBy(DatabaseContract.Message.DATE, true);
         PreparedQuery<Message> preparedQuery = queryBuilder.prepare();
         List<Message> messages = HelperFactory.getHelper().getMessageDao().query(preparedQuery);

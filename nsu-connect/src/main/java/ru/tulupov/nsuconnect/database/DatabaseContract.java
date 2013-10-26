@@ -19,6 +19,7 @@ public interface DatabaseContract {
         String ID = "id";
         String NAME = "name";
         String DATE = "date";
+        String ACTIVE_FLAG = "active_flag";
 
     }
 

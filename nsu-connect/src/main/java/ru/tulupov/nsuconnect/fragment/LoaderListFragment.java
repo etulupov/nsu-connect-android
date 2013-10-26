@@ -55,7 +55,7 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
     }
 
 
-    private void update() {
+    public void update() {
         LoaderManager loaderManager = getLoaderManager();
         Loader loader = loaderManager.getLoader(UPDATE_LIST_LOADER_ID);
         if (loader == null) {

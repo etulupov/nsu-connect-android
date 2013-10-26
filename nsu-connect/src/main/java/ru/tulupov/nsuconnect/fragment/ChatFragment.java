@@ -23,11 +23,14 @@ import android.widget.EditText;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.io.File;
+import java.sql.SQLException;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.helper.BitmapHelper;
 import ru.tulupov.nsuconnect.helper.IntentActionHelper;
 import ru.tulupov.nsuconnect.images.ImageCacheManager;
+import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.service.DataService;
 
 
@@ -35,6 +38,7 @@ public class ChatFragment extends BaseFragment {
     private static final int REQUEST_CODE_TAKE_PHOTO = 0;
     private static final int REQUEST_CODE_IMPORT_PHOTO = 1;
     private static final String ARGS_CHAT_ID = "chat_id";
+    private static final String TAG = ChatFragment.class.getSimpleName();
 
     public static ChatFragment newInstance(final Context context, int chatId) {
         final Bundle args = new Bundle();
@@ -66,6 +70,11 @@ public class ChatFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+            case android.R.id.home:
+                closeFragment();
+                break;
+
             case R.id.menu_upload:
 
 
@@ -76,8 +85,10 @@ public class ChatFragment extends BaseFragment {
                 getActivity().stopService(new Intent(getActivity(), DataService.class));
                 closeFragment();
                 break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -173,6 +184,19 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
+
+        Chat chat;
+        try {
+            chat = HelperFactory.getHelper().getChatDao().getChat(chatId);
+            if (!chat.isActive()) {
+                findViewById(R.id.send_container).setVisibility(View.GONE);
+                findViewById(R.id.shadow).setVisibility(View.GONE);
+            }
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot create chat entity", e);
+        }
+
+
     }
 
     private Runnable stopTypingRunnable = new Runnable() {
@@ -205,4 +229,6 @@ public class ChatFragment extends BaseFragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }

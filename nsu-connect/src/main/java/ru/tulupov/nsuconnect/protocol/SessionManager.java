@@ -51,4 +51,20 @@ public class SessionManager {
             session.onDestroy();
         }
     }
+
+    public void destroy(int id) {
+        Session session = sessions.get(id);
+        if (session != null) {
+            session.onDestroy();
+            sessions.remove(id);
+        }
+    }
+
+    public int count() {
+        return sessions.size();
+    }
+
+    public boolean isEmpty() {
+        return sessions.isEmpty();
+    }
 }

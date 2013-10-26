@@ -8,6 +8,10 @@ public interface DatabaseConstants {
     String ACTION_UPDATE_TYPING_STATUS = AUTHORITY + "/" + "typing";
     String EXTRA_IS_TYPING = "is_typing";
 
+    String BOOLEAN_FALSE = "0";
+    String BOOLEAN_TRUE = "1";
+
+
     Uri URI_BASE = Uri.parse("content://ru.tulupov.nsuconnect");
     Uri URI_CHAT = URI_BASE.buildUpon().appendPath("chat").build();
     Uri URI_CONVERSATION = URI_BASE.buildUpon().appendPath("converstaion").build();

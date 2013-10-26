@@ -20,6 +20,9 @@ public class Chat {
     @DatabaseField(columnName = DATE, dataType = DataType.JAVA_DATE_LONG)
     private Date date;
 
+    @DatabaseField(columnName = ACTIVE_FLAG)
+    private boolean active;
+
     public int getId() {
         return id;
     }
@@ -42,5 +45,13 @@ public class Chat {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

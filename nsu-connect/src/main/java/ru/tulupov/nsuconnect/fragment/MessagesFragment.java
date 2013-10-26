@@ -75,6 +75,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
                 Chat chat = new Chat();
                 chat.setName("test-" + System.currentTimeMillis());
                 chat.setDate(new Date());
+                chat.setActive(true);
                 try {
                     HelperFactory.getHelper().getChatDao().create(chat);
 
@@ -105,6 +106,24 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
     @Override
     protected BeanHolderAdapter<Chat, ?> getAdapter() {
-        return new MessagesAdapter();
+        MessagesAdapter adapter = new MessagesAdapter();
+        adapter.setOnClickListener(new MessagesAdapter.OnClickListener() {
+            @Override
+            public void onStop(Chat chat) {
+                chat.setActive(false);
+                try {
+                    getActivity().startService(new Intent(getActivity(), DataService.class)
+                            .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+
+                    HelperFactory.getHelper().getChatDao().update(chat);
+                    update();
+
+
+                } catch (SQLException e) {
+
+                }
+            }
+        });
+        return adapter;
     }
 }

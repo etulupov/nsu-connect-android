@@ -25,6 +25,7 @@ public class DataService extends Service {
     private static final String TAG = DataService.class.getSimpleName();
     public static final String EXTRA_ID = "id";
     public static final String ACTION_CREATE_SESSION = "create_session";
+    public static final String ACTION_DESTROY_SESSION = "destroy_session";
     private static final int NOTIFICATION_ID = 1;
 
     public IBinder onBind(Intent intent) {
@@ -84,6 +85,11 @@ public class DataService extends Service {
 
                 if (action.equals(ACTION_CREATE_SESSION)) {
                     sessionManager.init(id);
+                } else if (action.equals(ACTION_DESTROY_SESSION)) {
+                    sessionManager.destroy(id);
+                    if (sessionManager.isEmpty()) {
+                        stopSelf();
+                    }
                 } else {
                     Session session = sessionManager.get(id);
                     if (session != null) {
