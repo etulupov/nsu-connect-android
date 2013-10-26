@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -146,16 +147,24 @@ public class ChatFragment extends BaseFragment {
 
 
         final View rootView = getView();
+
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
                 SlidingMenu slidingMenu = getSlidingMenu();
-                if(slidingMenu!=null) {
+                if (slidingMenu != null) {
+                    // detect if keyboard opened
                     if (heightDiff > 250) {
-                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-                    } else {
-                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                        slidingMenu.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+                            @Override
+                            public void onOpen() {
+                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                                        Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                            }
+                        });
+
                     }
                 }
 
