@@ -11,12 +11,12 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-import ru.tulupov.nsuconnect.model.Session;
+import ru.tulupov.nsuconnect.model.RequestSession;
 
 public abstract class BaseRequest<T> extends StringRequest {
-    protected Session session;
+    protected RequestSession session;
 
-    public BaseRequest(int method, Uri uri, Session session, final Class<? extends T> clazz, final Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    public BaseRequest(int method, Uri uri, RequestSession session, final Class<? extends T> clazz, final Response.Listener<T> listener, Response.ErrorListener errorListener) {
 
         super(method, uri.toString(), new Response.Listener<String>() {
             @Override
@@ -32,7 +32,7 @@ public abstract class BaseRequest<T> extends StringRequest {
 
     }
 
-    public BaseRequest(int method, String url, Session session, final Class<? extends T> clazz, final Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    public BaseRequest(int method, String url, RequestSession session, final Class<? extends T> clazz, final Response.Listener<T> listener, Response.ErrorListener errorListener) {
 
         super(method, url, new Response.Listener<String>() {
             @Override
@@ -46,7 +46,7 @@ public abstract class BaseRequest<T> extends StringRequest {
         this.session = session;
     }
 
-    public BaseRequest(int method, Uri uri, Session session, final Response.Listener<String> listener, Response.ErrorListener errorListener) {
+    public BaseRequest(int method, Uri uri, RequestSession session, final Response.Listener<String> listener, Response.ErrorListener errorListener) {
         super(method, uri.toString(), listener, errorListener);
         this.session = session;
     }

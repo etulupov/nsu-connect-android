@@ -4,21 +4,15 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
-import com.android.volley.VolleyLog;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
-import ru.tulupov.nsuconnect.model.Message;
-import ru.tulupov.nsuconnect.model.Session;
+import ru.tulupov.nsuconnect.model.RequestSession;
 import ru.tulupov.nsuconnect.model.Status;
 
 public class UploadRequest extends BaseRequest<Status> {
@@ -27,7 +21,7 @@ public class UploadRequest extends BaseRequest<Status> {
     private static final String TAG = UploadRequest.class.getSimpleName();
     private MultipartEntity entity;
 
-    public UploadRequest(Session session, String file, Response.Listener<Status> listener, Response.ErrorListener errorListener) {
+    public UploadRequest(RequestSession session, String file, Response.Listener<Status> listener, Response.ErrorListener errorListener) {
         super(Method.POST,
                 Config.AJAX_ENDPOINT.buildUpon()
                         .appendQueryParameter(Constants.ACTION, Constants.ACTION_UPLOAD)

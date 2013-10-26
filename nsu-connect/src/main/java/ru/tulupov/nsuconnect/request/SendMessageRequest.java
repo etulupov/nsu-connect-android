@@ -7,12 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.tulupov.nsuconnect.model.Message;
-import ru.tulupov.nsuconnect.model.Session;
-import ru.tulupov.nsuconnect.model.Uid;
+import ru.tulupov.nsuconnect.model.RequestSession;
 
 public class SendMessageRequest extends BaseRequest<Message> {
     private String message;
-    public SendMessageRequest(Session session, String message, Response.Listener<Message> listener, Response.ErrorListener errorListener) {
+    public SendMessageRequest(RequestSession session, String message, Response.Listener<Message> listener, Response.ErrorListener errorListener) {
         super(Method.POST, Config.AJAX_ENDPOINT, session, Message.class, listener, errorListener);
         this.message=message;
     }

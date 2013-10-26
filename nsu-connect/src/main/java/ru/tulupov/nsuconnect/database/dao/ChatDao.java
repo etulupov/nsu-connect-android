@@ -2,6 +2,7 @@ package ru.tulupov.nsuconnect.database.dao;
 
 
 import com.j256.ormlite.dao.BaseDaoImpl;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
@@ -24,6 +25,15 @@ public class ChatDao extends BaseDaoImpl<Chat, Integer> {
     public Chat getLast() throws SQLException {
         List<Chat> list = query(queryBuilder()
                 .orderBy(DatabaseContract.Chat.ID, false).limit(1).prepare());
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+
+    public Chat getChat(int id) throws SQLException {
+
+        QueryBuilder<Chat, Integer> queryBuilder = queryBuilder();
+        queryBuilder.where().eq(DatabaseContract.Chat.ID, id);
+        List<Chat> list = query(queryBuilder.prepare());
         return list.isEmpty() ? null : list.get(0);
     }
 }

@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.tulupov.nsuconnect.model.Command;
-import ru.tulupov.nsuconnect.model.Session;
+import ru.tulupov.nsuconnect.model.RequestSession;
 
 public class CommandRequest extends BaseRequest<Command[]> {
-    public CommandRequest(Session session, Response.Listener<Command[]> listener, Response.ErrorListener errorListener) {
+    public CommandRequest(RequestSession session, Response.Listener<Command[]> listener, Response.ErrorListener errorListener) {
 
         super(Method.POST,
                 String.format("%s?=%s=%s", Config.MSG_ENDPOINT.toString(), Constants.IDENTIFIER, session.getLastId()),

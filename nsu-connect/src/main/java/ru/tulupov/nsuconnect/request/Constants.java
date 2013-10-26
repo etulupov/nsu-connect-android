@@ -4,6 +4,7 @@ public interface Constants {
 
     String ACTION = "action";
     String ACTION_GET_UID = "get_uid";
+    String ACTION_DISCONNECT = "disconnect";
     String ACTION_START_SEARCH = "start_search";
     String ACTION_SEND_MESSAGE = "send";
     String ACTION_UPLOAD = "upload";

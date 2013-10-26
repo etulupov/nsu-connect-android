@@ -6,12 +6,12 @@ import com.android.volley.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-import ru.tulupov.nsuconnect.model.Session;
+import ru.tulupov.nsuconnect.model.RequestSession;
 import ru.tulupov.nsuconnect.model.Status;
 
 
 public class StartSearchRequest extends BaseRequest<Status> {
-    public StartSearchRequest(Session session, Response.Listener<Status> listener, Response.ErrorListener errorListener) {
+    public StartSearchRequest(RequestSession session, Response.Listener<Status> listener, Response.ErrorListener errorListener) {
         super(Method.POST, Config.AJAX_ENDPOINT, session, Status.class, listener, errorListener);
     }
 

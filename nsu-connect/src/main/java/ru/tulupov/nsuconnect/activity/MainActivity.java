@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity {
             view.findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_LOGIN));
+//                    getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_LOGIN));
                 }
             });
         }

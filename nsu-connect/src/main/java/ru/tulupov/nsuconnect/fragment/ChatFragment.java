@@ -90,7 +90,7 @@ public class ChatFragment extends BaseFragment {
                     .add(R.id.message_container, ConversationFragment.newInstance(getActivity(), chatId))
                     .commit();
         }
-        getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_LOGIN));
+
 
 //        view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -111,7 +111,7 @@ public class ChatFragment extends BaseFragment {
         view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE).putExtra(DataService.EXTRA_MESSAGE, edit.getText().toString()));
+                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE).putExtra(DataService.EXTRA_ID, chatId).putExtra(DataService.EXTRA_MESSAGE, edit.getText().toString()));
                 edit.setText(null);
             }
         });
@@ -127,10 +127,10 @@ public class ChatFragment extends BaseFragment {
                 if (edit.getText().length() == 0) {
                     isTyping = false;
                     handler.removeCallbacks(stopTypingRunnable);
-                    getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_STOP_TYPING));
+                    getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_STOP_TYPING).putExtra(DataService.EXTRA_ID, chatId));
                 } else {
                     if (!isTyping) {
-                        getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_START_TYPING));
+                        getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_START_TYPING).putExtra(DataService.EXTRA_ID, chatId));
                         handler.removeCallbacks(stopTypingRunnable);
                         handler.postDelayed(stopTypingRunnable, TYPING_TIMEOUT);
                         isTyping = true;

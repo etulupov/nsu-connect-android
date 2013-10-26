@@ -6,11 +6,10 @@ import com.android.volley.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-import ru.tulupov.nsuconnect.model.Online;
-import ru.tulupov.nsuconnect.model.Session;
+import ru.tulupov.nsuconnect.model.RequestSession;
 
 public class StartTypingRequest extends BaseRequest {
-    public StartTypingRequest(Session session, Response.ErrorListener errorListener) {
+    public StartTypingRequest(RequestSession session, Response.ErrorListener errorListener) {
         super(Method.POST, Config.AJAX_ENDPOINT, session, null, errorListener);
     }
 

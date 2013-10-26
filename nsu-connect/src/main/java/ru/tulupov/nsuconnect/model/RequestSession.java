@@ -1,9 +1,10 @@
 package ru.tulupov.nsuconnect.model;
 
-public class Session {
+public class RequestSession {
     private Uid uid;
     private String search;
-private String lastId;
+    private String lastId;
+
     public Uid getUid() {
         return uid;
     }

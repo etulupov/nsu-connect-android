@@ -11,9 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.tulupov.nsuconnect.model.Online;
+import ru.tulupov.nsuconnect.model.RequestSession;
 import ru.tulupov.nsuconnect.model.SearchParameters;
-import ru.tulupov.nsuconnect.model.Session;
 import ru.tulupov.nsuconnect.model.Success;
 
 public class SetSearchParametersRequest extends BaseRequest<Success> {
@@ -30,7 +29,7 @@ public class SetSearchParametersRequest extends BaseRequest<Success> {
 
     private SearchParameters searchParameters;
 
-    public SetSearchParametersRequest(Session session, SearchParameters searchParameters, Response.Listener<Success> listener, Response.ErrorListener errorListener) {
+    public SetSearchParametersRequest(RequestSession session, SearchParameters searchParameters, Response.Listener<Success> listener, Response.ErrorListener errorListener) {
         super(Method.POST, Config.AJAX_ENDPOINT, session, Success.class, listener, errorListener);
         this.searchParameters = searchParameters;
     }

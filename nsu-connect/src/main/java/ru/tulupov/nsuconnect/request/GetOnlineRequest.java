@@ -7,11 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.tulupov.nsuconnect.model.Online;
-import ru.tulupov.nsuconnect.model.Session;
-import ru.tulupov.nsuconnect.model.Uid;
+import ru.tulupov.nsuconnect.model.RequestSession;
 
 public class GetOnlineRequest extends BaseRequest<Online> {
-    public GetOnlineRequest(Session session, Response.Listener<Online> listener, Response.ErrorListener errorListener) {
+    public GetOnlineRequest(RequestSession session, Response.Listener<Online> listener, Response.ErrorListener errorListener) {
         super(Method.POST, Config.AJAX_ENDPOINT, session, Online.class, listener, errorListener);
     }
 

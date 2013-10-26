@@ -1,6 +1,7 @@
 package ru.tulupov.nsuconnect.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.ChatLoader;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.model.Chat;
+import ru.tulupov.nsuconnect.service.DataService;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 
 
@@ -82,6 +84,9 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
                 }
 
 //                getActivity().getContentResolver().notifyChange(ContentUriHelper.getChatUri(), null);
+
+                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_CREATE_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+
                 addFragment(ChatFragment.newInstance(getActivity(), chat.getId()));
                 break;
         }
