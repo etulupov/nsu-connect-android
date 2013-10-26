@@ -42,7 +42,9 @@ public class DiskMemoryLruImageCache extends DiskLruImageCache {
             return bitmap;
         }
         bitmap = super.getBitmap(key);
-        bitmapLruImageCache.putBitmap(key, bitmap);
+        if (bitmap != null) {
+            bitmapLruImageCache.putBitmap(key, bitmap);
+        }
         return bitmap;
     }
 

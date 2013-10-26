@@ -1,5 +1,7 @@
 package ru.tulupov.nsuconnect.request;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyLog;
@@ -22,6 +24,7 @@ import ru.tulupov.nsuconnect.model.Status;
 public class UploadRequest extends BaseRequest<Status> {
 
 
+    private static final String TAG = UploadRequest.class.getSimpleName();
     private MultipartEntity entity;
 
     public UploadRequest(Session session, String file, Response.Listener<Status> listener, Response.ErrorListener errorListener) {
@@ -44,6 +47,7 @@ public class UploadRequest extends BaseRequest<Status> {
 
     @Override
     public String getBodyContentType() {
+        Log.e("xxx", entity.getContentType().getValue());
         return entity.getContentType().getValue();
     }
 
@@ -53,8 +57,10 @@ public class UploadRequest extends BaseRequest<Status> {
         try {
             entity.writeTo(bos);
         } catch (IOException e) {
-            VolleyLog.e("IOException writing to ByteArrayOutputStream");
+            Log.e(TAG, "upload error",e);
+
         }
+
         return bos.toByteArray();
     }
 
