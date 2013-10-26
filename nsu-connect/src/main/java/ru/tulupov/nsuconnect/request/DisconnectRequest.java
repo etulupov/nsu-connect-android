@@ -9,8 +9,8 @@ import java.util.Map;
 import ru.tulupov.nsuconnect.model.RequestSession;
 
 public class DisconnectRequest extends BaseRequest {
-    public DisconnectRequest(RequestSession session, Response.ErrorListener errorListener) {
-        super(Method.POST, Config.AJAX_ENDPOINT, session, null, errorListener);
+    public DisconnectRequest(RequestSession session, Response.Listener reponseListener, Response.ErrorListener errorListener) {
+        super(Method.POST, Config.AJAX_ENDPOINT, session, reponseListener, errorListener);
     }
 
     @Override

@@ -26,6 +26,7 @@ import ru.tulupov.nsuconnect.model.Status;
 import ru.tulupov.nsuconnect.model.Uid;
 import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.request.CommandRequest;
+import ru.tulupov.nsuconnect.request.DisconnectRequest;
 import ru.tulupov.nsuconnect.request.GetUidRequest;
 import ru.tulupov.nsuconnect.request.SendMessageRequest;
 import ru.tulupov.nsuconnect.request.StartSearchRequest;
@@ -50,7 +51,7 @@ public class Session {
         this.chat = chat;
     }
 
-    public  void onCreate() {
+    public void onCreate() {
         queue = Volley.newRequestQueue(context);
 
 
@@ -87,20 +88,34 @@ public class Session {
     }
 
 
-   public void onDestroy() {
+    public void onDestroy() {
         context.getContentResolver().unregisterContentObserver(messageContentObserver);
-        queue.stop();
+
+
+        DisconnectRequest request = new DisconnectRequest(requestSession, new Response.Listener() {
+            @Override
+            public void onResponse(Object o) {
+                queue.stop();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                queue.stop();
+            }
+        }
+        );
+        queue.add(request);
     }
 
 
     public void sendStartTyping() {
 
     }
+
     public void sendStopTyping() {
         StopTypingRequest stopTypingRequest = new StopTypingRequest(requestSession, createErrorListener());
         queue.add(stopTypingRequest);
     }
-
 
 
     private ContentObserver messageContentObserver = new ContentObserver(new Handler()) {
