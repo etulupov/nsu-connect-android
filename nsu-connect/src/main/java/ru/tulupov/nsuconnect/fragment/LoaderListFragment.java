@@ -49,14 +49,8 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
 
         list = (ListView) view.findViewById(R.id.list);
 
-        adapter = getAdapter();
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                LoaderListFragment.this.onItemClick(position, adapter.getItem(position));
-            }
-        });
+
+
 
     }
 
@@ -65,7 +59,8 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
         LoaderManager loaderManager = getLoaderManager();
         Loader loader = loaderManager.getLoader(UPDATE_LIST_LOADER_ID);
         if (loader == null) {
-            loaderManager.initLoader(UPDATE_LIST_LOADER_ID, null, new AdapterLoaderCallback<T>(adapter) {
+            adapter = getAdapter();
+            loaderManager.initLoader(UPDATE_LIST_LOADER_ID, null, new LoaderManager.LoaderCallbacks<List<T>>() {
                 @Override
                 public Loader<List<T>> onCreateLoader(int i, Bundle bundle) {
                     return LoaderListFragment.this.onCreateLoader();
@@ -73,10 +68,23 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
 
                 @Override
                 public void onLoadFinished(Loader<List<T>> loader, List<T> data) {
-                    super.onLoadFinished(loader, data);
+                    adapter.updateList(data);
+                    list.setAdapter(adapter);
+                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            LoaderListFragment.this.onItemClick(position, adapter.getItem(position));
+                        }
+                    });
                     LoaderListFragment.this.onLoadFinished();
                 }
+
+                @Override
+                public void onLoaderReset(Loader<List<T>> loader) {
+                    list.setAdapter(null);
+                }
             });
+
         }
         loader = loaderManager.getLoader(UPDATE_LIST_LOADER_ID);
         loader.forceLoad();
