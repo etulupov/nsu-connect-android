@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.activity.HomeActivity;
 import ru.tulupov.nsuconnect.activity.MainActivity;
 import ru.tulupov.nsuconnect.model.Status;
 import ru.tulupov.nsuconnect.protocol.Session;
@@ -38,7 +39,7 @@ public class DataService extends Service {
         sessionManager = new SessionManager(getApplicationContext());
         sessionManager.onCreate();
 
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        Intent resultIntent = new Intent(this, HomeActivity.class);
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
