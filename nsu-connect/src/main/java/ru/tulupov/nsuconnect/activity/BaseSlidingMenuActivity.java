@@ -1,8 +1,10 @@
 package ru.tulupov.nsuconnect.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -10,6 +12,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.fragment.AboutFragment;
 import ru.tulupov.nsuconnect.fragment.BaseFragment;
 import ru.tulupov.nsuconnect.fragment.MessagesFragment;
 import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
@@ -90,6 +93,10 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
             case R.id.menu_settings:
                 showFragment(WelcomeFragment.newInstance(getApplicationContext()));
                 return;
+
+            case R.id.menu_about_application:
+                addFragment(AboutFragment.newInstance(getApplicationContext()));
+                return;
         }
     }
 
@@ -135,7 +142,22 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
     }
 
     @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            getSlidingMenu().toggle();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
     public void onBackPressed() {
+
+        if (getSlidingMenu().isMenuShowing()) {
+            getSlidingMenu().toggle();
+            return;
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         BaseFragment topFragment = getTopFragment();
@@ -149,8 +171,12 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         closeFragment();
 
 
-        super.onBackPressed();
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (getSlidingMenu().isMenuShowing()) toggle();
     }
 
     @Override
@@ -172,15 +198,17 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() != 0) {
 
-            fragmentManager.popBackStack();
+            fragmentManager.popBackStackImmediate();
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                finish();
+                return;
+            }
 
             BaseFragment topFragment = getTopFragment();
             setTitle(topFragment.getTitleId());
             setCurrentItemId(topFragment.getMenuItemId());
 
-            if (fragmentManager.getBackStackEntryCount() == 0) {
-                finish();
-            }
+
         }
     }
 }

@@ -1,6 +1,7 @@
 package ru.tulupov.nsuconnect.fragment;
 
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
@@ -62,5 +63,13 @@ public abstract class BaseFragment extends Fragment implements BaseActivityInter
         if (getBaseActivity() != null) {
             getBaseActivity().closeFragment();
         }
+    }
+
+    protected View findViewById(int id) {
+        if (getView() != null) {
+            return getView().findViewById(id);
+        }
+
+        return null;
     }
 }
