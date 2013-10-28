@@ -51,6 +51,8 @@ public class SlidingMenuFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         adapter = new SlidingMenuAdapter();
+        View header = View.inflate(getActivity(), R.layout.header_sliding_menu, null);
+        getListView().addHeaderView(header);
         setListAdapter(adapter);
         parseXml(resourceId);
         adapter.updateList(menuItems);

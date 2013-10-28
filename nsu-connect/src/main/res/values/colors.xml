@@ -3,7 +3,10 @@
     <color name="light_gray">#ddd</color>
     <color name="black">#000</color>
     <color name="sliding_menu_background">#222</color>
+    <color name="sliding_menu_background_2">#333</color>
+    <color name="sliding_menu_background_3">#202020</color>
     <color name="sliding_menu_text">#ddd</color>
+    <color name="sliding_menu_header_text">#aaa</color>
 
 
 </resources>
