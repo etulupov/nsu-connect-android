@@ -42,6 +42,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/text"
         android:layout_weight="0"
+        android:gravity="center"
         android:text="16:00"
         android:textColor="#999"
         android:textSize="11dp"

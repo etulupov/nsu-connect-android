@@ -77,18 +77,20 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 toggle();
                 return true;
 
         }
+
         return super.onOptionsItemSelected(item);
     }
 
     protected void onMenuItemClick(int id) {
         switch (id) {
-            case R.id.menu_new_conversation:
+            case R.id.menu_start_chat:
                 ChatHelper.openChatFragment(this);
                 return;
             case R.id.menu_messages:
