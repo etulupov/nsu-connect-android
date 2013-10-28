@@ -22,6 +22,7 @@ import ru.tulupov.nsuconnect.adapter.MessagesAdapter;
 import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.ChatLoader;
+import ru.tulupov.nsuconnect.helper.ChatHelper;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.service.DataService;
@@ -72,23 +73,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_new_conversation:
-                Chat chat = new Chat();
-                chat.setName("test-" + System.currentTimeMillis());
-                chat.setDate(new Date());
-                chat.setActive(true);
-                try {
-                    HelperFactory.getHelper().getChatDao().create(chat);
-
-                    SettingsHelper.setChat(getActivity(), chat);
-                } catch (SQLException e) {
-
-                }
-
-//                getActivity().getContentResolver().notifyChange(ContentUriHelper.getChatUri(), null);
-
-                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_CREATE_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
-
-                addFragment(ChatFragment.newInstance(getActivity(), chat.getId()));
+                ChatHelper.openChatFragment(this);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -1,5 +1,6 @@
 package ru.tulupov.nsuconnect.activity;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -11,4 +12,5 @@ public interface BaseActivityInterface {
     void showFragment(BaseFragment fragment);
     void closeFragment();
     SlidingMenu getSlidingMenu();
+    Activity getActivity();
 }

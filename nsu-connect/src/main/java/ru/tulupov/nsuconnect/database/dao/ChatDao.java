@@ -39,6 +39,8 @@ public class ChatDao extends BaseDaoImpl<Chat, Integer> {
         return list.isEmpty() ? null : list.get(0);
     }
 
+
+
     public void deactivateAllChats() throws SQLException {
         UpdateBuilder<Chat, Integer> updateBuilder = updateBuilder();
 

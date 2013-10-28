@@ -24,11 +24,13 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Date;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.helper.BitmapHelper;
 import ru.tulupov.nsuconnect.helper.IntentActionHelper;
+import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.images.ImageCacheManager;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.service.DataService;
@@ -192,6 +194,7 @@ public class ChatFragment extends BaseFragment {
                 findViewById(R.id.send_container).setVisibility(View.GONE);
                 findViewById(R.id.shadow).setVisibility(View.GONE);
             }
+            getActivity().setTitle(chat.getName());
         } catch (SQLException e) {
             Log.e(TAG, "cannot create chat entity", e);
         }
@@ -231,7 +234,6 @@ public class ChatFragment extends BaseFragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
 }

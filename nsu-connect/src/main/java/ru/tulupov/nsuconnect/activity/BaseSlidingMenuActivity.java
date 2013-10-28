@@ -1,6 +1,7 @@
 package ru.tulupov.nsuconnect.activity;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import ru.tulupov.nsuconnect.fragment.AboutFragment;
 import ru.tulupov.nsuconnect.fragment.BaseFragment;
 import ru.tulupov.nsuconnect.fragment.MessagesFragment;
 import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
+import ru.tulupov.nsuconnect.helper.ChatHelper;
 import ru.tulupov.nsuconnect.slidingmenu.SlidingMenuFragment;
 
 
@@ -86,7 +88,9 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
     protected void onMenuItemClick(int id) {
         switch (id) {
-
+            case R.id.menu_new_conversation:
+                ChatHelper.openChatFragment(this);
+                return;
             case R.id.menu_messages:
                 showFragment(MessagesFragment.newInstance(getApplicationContext()));
                 return;
@@ -210,5 +214,10 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
 
         }
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 }
