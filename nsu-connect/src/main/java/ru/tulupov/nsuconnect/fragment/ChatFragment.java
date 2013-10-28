@@ -203,7 +203,9 @@ public class ChatFragment extends BaseFragment {
         @Override
         public void run() {
             isTyping = false;
-            getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_STOP_TYPING));
+            if (getActivity() != null) {
+                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_STOP_TYPING));
+            }
         }
     };
 
@@ -229,6 +231,7 @@ public class ChatFragment extends BaseFragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 
 
 }
