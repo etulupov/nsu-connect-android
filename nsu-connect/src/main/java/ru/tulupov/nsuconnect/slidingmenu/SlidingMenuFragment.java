@@ -3,6 +3,7 @@ package ru.tulupov.nsuconnect.slidingmenu;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
@@ -10,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -17,10 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.model.Online;
+import ru.tulupov.nsuconnect.request.GetOnlineRequest;
 
 
 public class SlidingMenuFragment extends ListFragment {
 
+
+    private static final long DELAY = 30000;
 
     public static SlidingMenuFragment newInstance(final Context context) {
         return (SlidingMenuFragment) Fragment.instantiate(context, SlidingMenuFragment.class.getName());
@@ -46,16 +56,56 @@ public class SlidingMenuFragment extends ListFragment {
         return inflater.inflate(R.layout.fgt_sliding_menu, null);
     }
 
+    private RequestQueue queue;
+    private View header;
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        queue = Volley.newRequestQueue(getActivity());
         adapter = new SlidingMenuAdapter();
-        View header = View.inflate(getActivity(), R.layout.header_sliding_menu, null);
+
+        header = View.inflate(getActivity(), R.layout.header_sliding_menu, null);
+
+
+        updateCounter();
+
+
         getListView().addHeaderView(header);
         setListAdapter(adapter);
         parseXml(resourceId);
         adapter.updateList(menuItems);
+    }
+
+    public void updateCounter() {
+        queue.add(new GetOnlineRequest(new Response.Listener<Online>() {
+            @Override
+            public void onResponse(Online online) {
+                TextView count = (TextView) header.findViewById(R.id.count);
+                count.setText(String.valueOf(online.getCount()));
+            }
+        }));
+    }
+
+    private Handler handler = new Handler();
+    private Runnable updateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateCounter();
+            handler.postDelayed(updateRunnable, DELAY);
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        handler.post(updateRunnable);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(updateRunnable);
     }
 
     public void setMenuItems(int resourceId) {

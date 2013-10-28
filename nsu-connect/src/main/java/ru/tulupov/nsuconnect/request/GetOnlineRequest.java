@@ -2,6 +2,7 @@ package ru.tulupov.nsuconnect.request;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +11,13 @@ import ru.tulupov.nsuconnect.model.Online;
 import ru.tulupov.nsuconnect.model.RequestSession;
 
 public class GetOnlineRequest extends BaseRequest<Online> {
-    public GetOnlineRequest(RequestSession session, Response.Listener<Online> listener, Response.ErrorListener errorListener) {
-        super(Method.POST, Config.AJAX_ENDPOINT, session, Online.class, listener, errorListener);
+    public GetOnlineRequest( Response.Listener<Online> listener) {
+        super(Method.POST, Config.AJAX_ENDPOINT, null, Online.class, listener, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        });
     }
 
     @Override

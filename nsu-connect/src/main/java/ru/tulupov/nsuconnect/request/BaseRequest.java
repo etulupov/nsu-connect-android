@@ -54,7 +54,9 @@ public abstract class BaseRequest<T> extends StringRequest {
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> headers = new HashMap<String, String>();
-        headers.put("Cookie", session.getSearch());
+        if (session != null) {
+            headers.put("Cookie", session.getSearch());
+        }
         headers.put("Referer", "http://inctalk.net/chat.php?noheader=1&provider=nsu&local=1&basecss=http://nsu-connect.ru/chatcss/base.css&chatcss=http://nsu-connect.ru/chatcss/chat.css&settingscss=http://nsu-connect.ru/chatcss/settings.css");
 
         return headers;
