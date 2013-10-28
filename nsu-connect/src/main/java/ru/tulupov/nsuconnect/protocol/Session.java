@@ -74,7 +74,6 @@ public class Session {
             Log.e(TAG, "cannot create chat entity", e);
         }
 
-        context.getContentResolver().registerContentObserver(ContentUriHelper.getConversationUri(chat.getId()), false, messageContentObserver);
 
 
         Settings settings = SettingsHelper.getSettings(context);
@@ -84,6 +83,11 @@ public class Session {
         Log.e("xxx", "set settings =" + requestSession.getSearch());
         GetUidRequest getUidRequest = new GetUidRequest(requestSession, createGetUidListener(), createErrorListener());
         queue.add(getUidRequest);
+
+    }
+
+    public void startMessageSending() {
+        context.getContentResolver().registerContentObserver(ContentUriHelper.getConversationUri(chat.getId()), false, messageContentObserver);
 
     }
 
@@ -324,6 +328,11 @@ public class Session {
                 @Override
                 public Response.ErrorListener getErrorListener() {
                     return createErrorListener();
+                }
+
+                @Override
+                public Session getSession() {
+                    return Session.this;
                 }
             };
 

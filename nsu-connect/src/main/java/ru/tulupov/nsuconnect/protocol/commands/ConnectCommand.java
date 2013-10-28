@@ -9,5 +9,6 @@ public class ConnectCommand extends SystemCommand {
     public void execute(CommandContext context) {
         SoundHelper.beep();
         writeSystem(context, "Подключено");
+        context.getSession().startMessageSending();
     }
 }

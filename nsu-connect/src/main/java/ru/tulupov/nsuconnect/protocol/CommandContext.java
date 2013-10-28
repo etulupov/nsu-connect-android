@@ -31,4 +31,6 @@ public interface CommandContext {
 
     Response.ErrorListener getErrorListener();
 
+    Session getSession();
+
 }
