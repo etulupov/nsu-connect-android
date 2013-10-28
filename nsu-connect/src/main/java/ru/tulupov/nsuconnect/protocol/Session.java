@@ -75,7 +75,6 @@ public class Session {
         }
 
 
-
         Settings settings = SettingsHelper.getSettings(context);
 
         requestSession.setSearch(SearchSettingHelper.generate(settings.getSearchParameters()));
@@ -88,7 +87,7 @@ public class Session {
 
     public void startMessageSending() {
         context.getContentResolver().registerContentObserver(ContentUriHelper.getConversationUri(chat.getId()), false, messageContentObserver);
-
+        sendMessage();
     }
 
 

@@ -12,12 +12,16 @@ import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.protocol.Command;
 import ru.tulupov.nsuconnect.protocol.CommandContext;
+import ru.tulupov.nsuconnect.service.DataService;
 
 public class StartTypingCommand implements Command {
     private static final String TAG = StartTypingCommand.class.getSimpleName();
 
     @Override
     public void execute(CommandContext context) {
-        context.getApplicationContext().sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, true));
+        context.getApplicationContext().sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS)
+                .putExtra(DatabaseConstants.EXTRA_IS_TYPING, true)
+                .putExtra(DataService.EXTRA_ID, context.getChat().getId())
+        );
     }
 }

@@ -28,6 +28,7 @@ import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.MessageLoader;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
+import ru.tulupov.nsuconnect.service.DataService;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 
 
@@ -41,9 +42,13 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     private boolean listAtTheEnd;
     private boolean firstTime = true;
 
+
     private BroadcastReceiver updateTypingStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (chat.getId() != intent.getIntExtra(DataService.EXTRA_ID, 0)) {
+                return;
+            }
             boolean isTyping = intent.getBooleanExtra(DatabaseConstants.EXTRA_IS_TYPING, false);
 
             updateTypingStatus(isTyping);
