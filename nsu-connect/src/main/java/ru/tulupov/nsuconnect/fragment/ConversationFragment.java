@@ -147,7 +147,7 @@ public class ConversationFragment extends LoaderListFragment<Message> {
                 public void run() {
                     list.setSelection(adapter.getCount() - 1);
                 }
-            }, 1000);
+            }, 100);
         }
     }
 

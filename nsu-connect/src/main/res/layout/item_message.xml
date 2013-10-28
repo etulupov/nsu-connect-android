@@ -5,37 +5,59 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:padding="10dp">
 
     <TextView
-
         android:id="@+id/text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:text="Text" />
+        android:layout_toLeftOf="@+id/date"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="Text"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/stop"
+        android:background="#ddd"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:minLines="2"
+        android:padding="5dp"
+        android:text="description"
+        android:textStyle="italic" />
 
 
     <TextView
-
 
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text"
+        android:layout_alignBottom="@id/text"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/text"
         android:layout_weight="0"
         android:text="16:00"
         android:textColor="#999"
-        android:visibility="gone" />
+        android:textSize="11dp"
+        android:textStyle="italic" />
 
     <ImageView
-
-        android:padding="5dp"
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/description"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
+        android:layout_alignTop="@id/description"
+        android:layout_below="@id/text"
+        android:layout_marginLeft="4dp"
+        android:padding="8dp"
         android:src="@drawable/ic_stop" />
+
+
 </RelativeLayout>

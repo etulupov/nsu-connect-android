@@ -48,4 +48,12 @@ public class ChatDao extends BaseDaoImpl<Chat, Integer> {
         update(updateBuilder.prepare());
     }
 
+    public void updateLastMessage(Chat chat, Message message) throws SQLException {
+        UpdateBuilder<Chat, Integer> updateBuilder = updateBuilder();
+
+        updateBuilder.where().eq(DatabaseContract.Chat.ID, chat.getId());
+        updateBuilder.updateColumnValue(DatabaseContract.Chat.LAST_MESSAGE, message.getId());
+
+        update(updateBuilder.prepare());
+    }
 }

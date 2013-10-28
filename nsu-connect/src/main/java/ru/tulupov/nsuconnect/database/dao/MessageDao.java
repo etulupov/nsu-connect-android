@@ -66,4 +66,28 @@ public class MessageDao extends BaseDaoImpl<Message, Integer> {
         return messages;
 
     }
+
+
+    public Message getLastMessageByChat(Chat chat) throws SQLException {
+        QueryBuilder<Message, Integer> queryBuilder = queryBuilder();
+        queryBuilder.where().eq(DatabaseContract.Message.CHAT, chat.getId());
+        queryBuilder.orderBy(DatabaseContract.Message.ID, false);
+        queryBuilder.limit(1);
+
+        List<Message> list = query(queryBuilder.prepare());
+
+        return list.isEmpty() ? null : list.get(0);
+
+    }
+
+    public Message get(int id) throws SQLException {
+        QueryBuilder<Message, Integer> queryBuilder = queryBuilder();
+        queryBuilder.where().eq(DatabaseContract.Message.ID, id);
+
+
+        List<Message> list = query(queryBuilder.prepare());
+
+        return list.isEmpty() ? null : list.get(0);
+
+    }
 }

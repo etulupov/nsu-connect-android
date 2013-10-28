@@ -20,6 +20,7 @@ public interface DatabaseContract {
         String NAME = "name";
         String DATE = "date";
         String ACTIVE_FLAG = "active_flag";
+        String LAST_MESSAGE = "last_message";
 
     }
 

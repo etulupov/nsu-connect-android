@@ -2,6 +2,7 @@ package ru.tulupov.nsuconnect.adapter;
 
 
 import android.content.Context;
+import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
@@ -66,7 +67,7 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
 
     @Override
     protected void updateHolder(Context context, Holder holder, Message item, int position) {
-        holder.text.setText(item.getMessage());
+        holder.text.setText(Html.fromHtml(item.getMessage()));
 
         holder.date.setText(dateFormat.format(item.getDate()));
 

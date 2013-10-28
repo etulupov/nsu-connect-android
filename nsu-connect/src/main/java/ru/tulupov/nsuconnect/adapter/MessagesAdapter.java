@@ -2,14 +2,17 @@ package ru.tulupov.nsuconnect.adapter;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.User;
@@ -17,12 +20,17 @@ import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 import ru.tulupov.nsuconnect.util.adapter.FindViewById;
 
 public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Holder> {
+    private static final String TAG = MessagesAdapter.class.getSimpleName();
+
     public static class Holder {
         @FindViewById(R.id.text)
         public TextView text;
 
         @FindViewById(R.id.date)
         public TextView date;
+
+        @FindViewById(R.id.description)
+        public TextView description;
 
         @FindViewById(R.id.stop)
         public ImageView stop;
@@ -51,6 +59,27 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
 
     @Override
     protected void updateHolder(Context context, Holder holder, final Chat item, int position) {
+
+
+        if (item.getLastMessage() == null && item.getLastMessageId() != null) {
+            try {
+
+                item.setLastMessage(HelperFactory.getHelper().getMessageDao().get(item.getLastMessageId()));
+            } catch (SQLException e) {
+                Log.e(TAG, "error load last message", e);
+            }
+        }
+
+        Message lastMessage = item.getLastMessage();
+        if (lastMessage != null) {
+            holder.date.setText(lastMessage.getMessage());
+            holder.description.setText(lastMessage.getMessage());
+
+            holder.description.setBackgroundResource(lastMessage.isSentFlag() && lastMessage.isReadFlag() ? android.R.color.transparent : R.color.light_gray);
+        } else {
+            holder.description.setBackgroundResource(android.R.color.transparent);
+        }
+
         holder.text.setText(item.getName());
 
         holder.date.setText(dateFormat.format(item.getDate()));

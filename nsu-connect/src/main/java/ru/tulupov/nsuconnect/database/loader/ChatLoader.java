@@ -29,11 +29,13 @@ public class ChatLoader extends AsyncTaskLoader<List<Chat>> {
     public List<Chat> loadInBackground() {
         try {
             QueryBuilder<Chat, Integer> queryBuilder = HelperFactory.getHelper().getChatDao().queryBuilder();
-            queryBuilder.orderBy(DatabaseContract.Chat.DATE, false);
-            queryBuilder.orderBy(DatabaseContract.Chat.ACTIVE_FLAG, false);
+            queryBuilder.orderBy(DatabaseContract.Chat.LAST_MESSAGE, false);
+
             PreparedQuery<Chat> preparedQuery = queryBuilder.prepare();
             List<Chat> chats = HelperFactory.getHelper().getChatDao().query(preparedQuery);
-
+            for (Chat chat : chats) {
+                HelperFactory.getHelper().getMessageDao().refresh(chat.getLastMessage());
+            }
             return chats;
         } catch (SQLException e) {
             Log.e(TAG, "Error", e);

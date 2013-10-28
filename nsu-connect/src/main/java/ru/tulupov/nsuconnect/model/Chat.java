@@ -23,6 +23,27 @@ public class Chat {
     @DatabaseField(columnName = ACTIVE_FLAG)
     private boolean active;
 
+    @DatabaseField(columnName = LAST_MESSAGE, canBeNull = true)
+    private Integer lastMessageId;
+
+    private Message lastMessage;
+
+    public Integer getLastMessageId() {
+        return lastMessageId;
+    }
+
+    public void setLastMessageId(Integer lastMessageId) {
+        this.lastMessageId = lastMessageId;
+    }
+
+    public Message getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
     public int getId() {
         return id;
     }

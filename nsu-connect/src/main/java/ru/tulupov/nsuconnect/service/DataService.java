@@ -39,7 +39,7 @@ public class DataService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        sessionManager = new SessionManager(getApplicationContext());
+        sessionManager = new SessionManager(this);
         sessionManager.onCreate();
 
         Intent resultIntent = new Intent(this, HomeActivity.class);
@@ -73,6 +73,8 @@ public class DataService extends Service {
         stopForeground(true);
 
     }
+
+
 
 
     @Override

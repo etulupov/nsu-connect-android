@@ -33,6 +33,9 @@ public class MessageCommand implements Command {
         try {
             HelperFactory.getHelper().getMessageDao().create(message);
             ContentUriHelper.notifyChange(context.getApplicationContext(), ContentUriHelper.getConversationUri(context.getChat().getId()));
+
+            HelperFactory.getHelper().getChatDao().updateLastMessage(context.getChat(), message);
+            ContentUriHelper.notifyChange(context.getApplicationContext(), ContentUriHelper.getChatUri());
         } catch (SQLException e) {
             Log.e(TAG, "cannot create message entity", e);
         }
