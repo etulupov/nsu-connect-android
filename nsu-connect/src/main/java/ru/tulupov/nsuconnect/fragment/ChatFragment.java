@@ -124,6 +124,9 @@ public class ChatFragment extends BaseFragment {
         view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (edit.getText().length() == 0) {
+                    return;
+                }
                 getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE).putExtra(DataService.EXTRA_ID, chatId).putExtra(DataService.EXTRA_MESSAGE, edit.getText().toString()));
                 edit.setText(null);
             }
