@@ -14,7 +14,8 @@
     <string name="about_app_name">NSU connect</string>
     <string name="about_rate">Оценить приложение!</string>
 
-
+    <!-- date format -->
+    <string name="date_yesterday">Вчера</string>
 
 
     <string name="conversations_title">Диалоги</string>

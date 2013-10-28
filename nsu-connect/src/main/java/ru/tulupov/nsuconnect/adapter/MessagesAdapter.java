@@ -16,6 +16,7 @@ import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.User;
+import ru.tulupov.nsuconnect.util.DateUtils;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 import ru.tulupov.nsuconnect.util.adapter.FindViewById;
 
@@ -43,12 +44,10 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
     private OnClickListener onClickListener;
 
 
-    private DateFormat dateFormat;
-
     public MessagesAdapter() {
         super(R.layout.item_message, Holder.class);
 
-        dateFormat = new SimpleDateFormat("HH:mm");
+
     }
 
 
@@ -82,7 +81,7 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
 
         holder.text.setText(item.getName());
 
-        holder.date.setText(dateFormat.format(item.getDate()));
+        holder.date.setText(DateUtils.formatChatDate(context, item.getDate()));
 
         if (item.isActive()) {
             holder.stop.setVisibility(View.VISIBLE);
