@@ -28,7 +28,7 @@ public abstract class BaseRequest<T> extends StringRequest {
             }
         }, errorListener);
         this.session = session;
-        setRetryPolicy(new DefaultRetryPolicy(Config.TIMEOUT_QUERY, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        setRetryPolicy(new DefaultRetryPolicy(Config.TIMEOUT_QUERY, Config.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
     }
 

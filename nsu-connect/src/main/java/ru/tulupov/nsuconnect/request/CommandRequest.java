@@ -1,6 +1,5 @@
 package ru.tulupov.nsuconnect.request;
 
- 
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -21,7 +20,7 @@ public class CommandRequest extends BaseRequest<Command[]> {
                 Command[].class,
                 listener,
                 errorListener);
-        setRetryPolicy(new DefaultRetryPolicy(Config.TIMEOUT_POOLING, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        setRetryPolicy(new DefaultRetryPolicy(Config.TIMEOUT_POOLING, Config.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     @Override

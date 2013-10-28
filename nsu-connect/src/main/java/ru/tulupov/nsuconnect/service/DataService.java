@@ -34,6 +34,8 @@ public class DataService extends Service {
 
     public SessionManager sessionManager;
 
+    // todo try to send message after a few error
+
     @Override
     public void onCreate() {
         super.onCreate();
