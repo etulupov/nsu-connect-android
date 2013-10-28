@@ -4,14 +4,14 @@
 
         android:id="@+id/menu_upload"
         android:title="upload"
-
+        android:icon="@drawable/ic_ab_attach"
         app:showAsAction="always" />
-    <item
+    <!--<item-->
 
-        android:id="@+id/menu_close"
-       android:title="close"
+    <!--android:id="@+id/menu_close"-->
+    <!--android:title="close"-->
 
-        app:showAsAction="always" />
+    <!--app:showAsAction="always" />-->
 
 
 </menu>

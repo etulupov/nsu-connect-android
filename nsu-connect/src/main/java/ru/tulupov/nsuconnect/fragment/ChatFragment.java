@@ -83,10 +83,7 @@ public class ChatFragment extends BaseFragment {
                 startActivityForResult(IntentActionHelper.getCameraIntent(getActivity()), REQUEST_CODE_TAKE_PHOTO);
                 break;
 
-            case R.id.menu_close:
-                getActivity().stopService(new Intent(getActivity(), DataService.class));
-                closeFragment();
-                break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

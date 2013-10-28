@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="light_gray">#ddd</color>
+    <color name="black">#000</color>
+    <color name="sliding_menu_background">#222</color>
+    <color name="sliding_menu_text">#ddd</color>
 
 
 </resources>
