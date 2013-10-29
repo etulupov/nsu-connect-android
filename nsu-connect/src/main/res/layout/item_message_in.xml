@@ -10,13 +10,13 @@
     android:padding="5dp">
 
     <LinearLayout
+
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/bg_msg_in"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="vertical">
 
 
         <TextView
@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:autoLink="all"
+            android:layout_marginTop="2dp"
             android:linksClickable="true"
             android:text="Text" />
 

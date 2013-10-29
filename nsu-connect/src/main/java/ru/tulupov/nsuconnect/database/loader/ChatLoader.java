@@ -29,7 +29,8 @@ public class ChatLoader extends AsyncTaskLoader<List<Chat>> {
     public List<Chat> loadInBackground() {
         try {
             QueryBuilder<Chat, Integer> queryBuilder = HelperFactory.getHelper().getChatDao().queryBuilder();
-            queryBuilder.orderBy(DatabaseContract.Chat.LAST_MESSAGE, false);
+            queryBuilder.orderBy(DatabaseContract.Chat.LAST_MESSAGE, false)
+                    .orderBy(DatabaseContract.Chat.ACTIVE_FLAG, false);
 
             PreparedQuery<Chat> preparedQuery = queryBuilder.prepare();
             List<Chat> chats = HelperFactory.getHelper().getChatDao().query(preparedQuery);

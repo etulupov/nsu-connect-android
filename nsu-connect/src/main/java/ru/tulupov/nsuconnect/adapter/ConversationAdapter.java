@@ -67,7 +67,13 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
 
     @Override
     protected void updateHolder(Context context, Holder holder, Message item, int position) {
-        holder.text.setText(Html.fromHtml(item.getMessage()));
+        if (item.getMessage() != null) {
+            holder.text.setText(Html.fromHtml(item.getMessage()));
+            holder.text.setVisibility(View.VISIBLE);
+        } else {
+            holder.text.setText(null);
+            holder.text.setVisibility(View.GONE);
+        }
 
         holder.date.setText(dateFormat.format(item.getDate()));
 

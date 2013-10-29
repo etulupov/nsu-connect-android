@@ -2,6 +2,7 @@ package ru.tulupov.nsuconnect.adapter;
 
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -60,7 +61,7 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
     protected void updateHolder(Context context, Holder holder, final Chat item, int position) {
 
 
-        if (item.getLastMessage() == null && item.getLastMessageId() != null) {
+        if (item.getLastMessageId() != null) {
             try {
 
                 item.setLastMessage(HelperFactory.getHelper().getMessageDao().get(item.getLastMessageId()));
@@ -72,7 +73,13 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
         Message lastMessage = item.getLastMessage();
         if (lastMessage != null) {
             holder.date.setText(lastMessage.getMessage());
-            holder.description.setText(lastMessage.getMessage());
+
+            if (lastMessage.getMessage() != null) {
+                holder.description.setText(Html.fromHtml(lastMessage.getMessage()));
+
+            } else {
+                holder.description.setText(context.getString(R.string.messages_image_type));
+            }
 
             holder.description.setBackgroundResource(lastMessage.isSentFlag() && lastMessage.isReadFlag() ? android.R.color.transparent : R.color.light_gray);
         } else {

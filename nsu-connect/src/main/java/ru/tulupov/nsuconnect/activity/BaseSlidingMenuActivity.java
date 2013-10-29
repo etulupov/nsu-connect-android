@@ -4,6 +4,7 @@ package ru.tulupov.nsuconnect.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -131,6 +132,11 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         addFragment(fragment);
     }
 
+    @Override
+    public void showDialog(DialogFragment fragment) {
+        fragment.show(getSupportFragmentManager(), null);
+    }
+
     private void clearBackStack() {
         for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
             getSupportFragmentManager().popBackStack();
@@ -187,11 +193,21 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            UpdateChecker.checkForNotification(this);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
         EasyTracker.getInstance(this).activityStart(this);
-        UpdateChecker.checkForNotification(this);
+
     }
 
     @Override

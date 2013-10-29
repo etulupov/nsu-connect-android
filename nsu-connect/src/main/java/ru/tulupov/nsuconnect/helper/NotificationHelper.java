@@ -59,7 +59,7 @@ public class NotificationHelper {
                     .setLights(Color.GREEN, 250, 500)
                     .setVibrate(new long[]{100, 200, 100, 200})
                     .setAutoCancel(false)
-                    .setSmallIcon(R.drawable.ic_left_messages)
+                    .setSmallIcon(R.drawable.ic_messages)
                     .setContentIntent(resultPendingIntent);
 
             if (unreadCount != 0) {
@@ -72,6 +72,12 @@ public class NotificationHelper {
 
 
     }
+
+    public static void hideNotification(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
+    }
+
 
 
 }

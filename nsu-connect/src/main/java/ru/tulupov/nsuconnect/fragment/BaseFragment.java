@@ -1,5 +1,6 @@
 package ru.tulupov.nsuconnect.fragment;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -71,5 +72,12 @@ public abstract class BaseFragment extends Fragment implements BaseActivityInter
         }
 
         return null;
+    }
+
+    @Override
+    public void showDialog(DialogFragment fragment) {
+        if (getBaseActivity() != null) {
+            getBaseActivity().showDialog(fragment);
+        }
     }
 }

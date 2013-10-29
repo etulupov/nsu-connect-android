@@ -26,6 +26,7 @@ import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.MessageLoader;
+import ru.tulupov.nsuconnect.helper.NotificationHelper;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.service.DataService;
@@ -59,6 +60,7 @@ public class ConversationFragment extends LoaderListFragment<Message> {
 
     private void updateTypingStatus(boolean isTyping) {
         final View container = footer.findViewById(R.id.container);
+
         if (isTyping) {
             if (container.getVisibility() != View.VISIBLE) {
                 Animation animation = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
@@ -175,11 +177,14 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     @Override
     public void onResume() {
         super.onResume();
-
+        updateTypingStatus(false);
         IntentFilter updateTypingStatusFilter = new IntentFilter(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS);
         getActivity().registerReceiver(updateTypingStatusReceiver, updateTypingStatusFilter);
 
         updateReadFlag();
+
+        NotificationHelper.hideNotification(getActivity());
+
     }
 
     @Override

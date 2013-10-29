@@ -17,6 +17,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="right"
             android:layout_marginRight="10dp"
+
             android:text="16:00"
             android:textColor="#999" />
 
@@ -27,8 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/date"
             android:background="@drawable/bg_msg_out"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
 
             <TextView
@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:autoLink="all"
+                android:layout_marginTop="2dp"
                 android:linksClickable="true"
                 android:text="Text" />
 
