@@ -41,6 +41,9 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
 
     }
 
+    protected boolean onItemLongPress(int position, T item) {
+        return false;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -48,8 +51,6 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
 
 
         list = (ListView) view.findViewById(R.id.list);
-
-
 
 
     }
@@ -74,6 +75,13 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                             LoaderListFragment.this.onItemClick(position, adapter.getItem(position));
+                        }
+                    });
+                    list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            return LoaderListFragment.this.onItemLongPress(position, adapter.getItem(position));
+
                         }
                     });
                     LoaderListFragment.this.onLoadFinished();

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +33,8 @@ import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 
 public class MessagesFragment extends LoaderListFragment<Chat> {
 
+
+    private static final String TAG = MessagesFragment.class.getSimpleName();
 
     public static MessagesFragment newInstance(final Context context) {
         return (MessagesFragment) Fragment.instantiate(context, MessagesFragment.class.getName());
@@ -105,10 +109,35 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
 
                 } catch (SQLException e) {
-
+                    Log.e(TAG, "error", e);
                 }
             }
         });
         return adapter;
+    }
+
+    @Override
+    protected boolean onItemLongPress(int position, final Chat item) {
+        DialogItemList dialogItemList = DialogItemList.newInstance(getActivity(), R.array.messages_chat_actions);
+
+        dialogItemList.setOnItemClickListener(new DialogItemList.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                switch (position) {
+                    case 0:
+                        try {
+
+                            HelperFactory.getHelper().getChatDao().delete(item);
+                            ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
+
+                        } catch (SQLException e) {
+                            Log.e(TAG, "error", e);
+                        }
+                        return;
+                }
+            }
+        });
+        showDialog(dialogItemList);
+        return true;
     }
 }

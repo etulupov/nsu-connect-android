@@ -25,6 +25,9 @@
         <item>Сделать снимок</item>
         <item>Выбрать из галереи</item>
     </string-array>
+    <string-array name="messages_chat_actions">
+        <item>Удалить беседу</item>
+    </string-array>
 
     <string name="chat_default_title_formatter">Диалог #%1$d</string>
 
