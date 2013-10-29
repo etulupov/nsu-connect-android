@@ -27,7 +27,7 @@ public class SlidingMenuAdapter extends BeanHolderAdapter<SlidingMenuItem, Slidi
     protected void updateHolder(Context context, SlidingMenuAdapter.Holder holder, SlidingMenuItem item, int position) {
         holder.icon.setImageResource(item.icon);
         holder.text.setText(item.text);
-        holder.count.setVisibility(item.notifiactions == 0 ? View.GONE : View.INVISIBLE);
+        holder.count.setVisibility(item.notifiactions == 0 ? View.GONE : View.VISIBLE);
         holder.count.setText(String.valueOf(item.notifiactions));
     }
 

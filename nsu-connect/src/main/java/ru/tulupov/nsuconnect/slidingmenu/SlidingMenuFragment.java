@@ -2,11 +2,13 @@ package ru.tulupov.nsuconnect.slidingmenu;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +21,13 @@ import com.android.volley.toolbox.Volley;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.database.DatabaseConstants;
+import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.model.Online;
 import ru.tulupov.nsuconnect.request.GetOnlineRequest;
 
@@ -31,6 +36,7 @@ public class SlidingMenuFragment extends ListFragment {
 
 
     private static final long DELAY = 30000;
+    private static final String TAG = SlidingMenuFragment.class.getSimpleName();
 
     public static SlidingMenuFragment newInstance(final Context context) {
         return (SlidingMenuFragment) Fragment.instantiate(context, SlidingMenuFragment.class.getName());
@@ -87,7 +93,27 @@ public class SlidingMenuFragment extends ListFragment {
         }));
     }
 
+
     private Handler handler = new Handler();
+    private ContentObserver contentObserver = new ContentObserver(handler) {
+        @Override
+        public void onChange(boolean selfChange) {
+
+            try {
+
+
+                int unreadCount = HelperFactory.getHelper().getMessageDao().getUnreadCount();
+                if (adapter.getCount() != 0) {
+                    adapter.getItem(1).notifiactions = unreadCount;
+                    adapter.notifyDataSetChanged();
+                }
+
+            } catch (SQLException e) {
+                Log.e(TAG, "error", e);
+            }
+
+        }
+    };
     private Runnable updateRunnable = new Runnable() {
         @Override
         public void run() {
@@ -100,12 +126,15 @@ public class SlidingMenuFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         handler.post(updateRunnable);
+        contentObserver.onChange(false);
+        getActivity().getContentResolver().registerContentObserver(DatabaseConstants.URI_CONVERSATION, true, contentObserver);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         handler.removeCallbacks(updateRunnable);
+        getActivity().getContentResolver().unregisterContentObserver(contentObserver);
     }
 
     public void setMenuItems(int resourceId) {
@@ -114,7 +143,7 @@ public class SlidingMenuFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
-      SlidingMenuItem item = (SlidingMenuItem) lv.getItemAtPosition(position);
+        SlidingMenuItem item = (SlidingMenuItem) lv.getItemAtPosition(position);
         if (onItemClickListener != null) {
             onItemClickListener.onClick(item.id);
         }

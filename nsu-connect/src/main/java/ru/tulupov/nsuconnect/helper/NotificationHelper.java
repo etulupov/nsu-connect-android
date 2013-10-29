@@ -33,7 +33,7 @@ public class NotificationHelper {
             try {
 
 
-                unreadCount = HelperFactory.getHelper().getMessageDao().getUnreadCount(chat.getId());
+                unreadCount = HelperFactory.getHelper().getMessageDao().getUnreadCount();
 
             } catch (SQLException e) {
                 Log.e(TAG, "error", e);

@@ -41,7 +41,7 @@ public class MessageCommand implements Command {
             Log.e(TAG, "cannot create message entity", e);
         }
 
-
+        NotificationHelper.notify(context.getApplicationContext(), message, context.getChat());
         SoundHelper.beep();
         VibrateHelper.vibrate();
     }

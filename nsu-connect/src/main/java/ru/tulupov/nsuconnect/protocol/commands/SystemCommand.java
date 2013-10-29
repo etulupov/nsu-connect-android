@@ -9,6 +9,7 @@ import java.util.Date;
 
 import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.NotificationHelper;
 import ru.tulupov.nsuconnect.helper.SoundHelper;
 import ru.tulupov.nsuconnect.helper.VibrateHelper;
 import ru.tulupov.nsuconnect.model.Message;
@@ -36,6 +37,7 @@ public abstract class SystemCommand implements Command {
             Log.e(TAG, "cannot create message entity", e);
         }
 
+        NotificationHelper.notify(context.getApplicationContext(), message, context.getChat());
         SoundHelper.beep();
         VibrateHelper.vibrate();
     }

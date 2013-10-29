@@ -14,6 +14,7 @@ public class ContentUriHelper {
     }
 
 
+
     public static void notifyChange(Context context, Uri uri) {
         context.getContentResolver().notifyChange(uri, null);
     }
