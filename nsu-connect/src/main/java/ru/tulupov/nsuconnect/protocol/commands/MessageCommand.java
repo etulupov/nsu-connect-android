@@ -11,6 +11,7 @@ import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.helper.NotificationHelper;
 import ru.tulupov.nsuconnect.helper.SoundHelper;
+import ru.tulupov.nsuconnect.helper.VibrateHelper;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.protocol.Command;
 import ru.tulupov.nsuconnect.protocol.CommandContext;
@@ -42,7 +43,6 @@ public class MessageCommand implements Command {
 
 
         SoundHelper.beep();
-
-        NotificationHelper.notify(context.getApplicationContext(), message, context.getChat());
+        VibrateHelper.vibrate();
     }
 }

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:autoLink="all"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             android:linksClickable="true"
             android:text="Text" />
 

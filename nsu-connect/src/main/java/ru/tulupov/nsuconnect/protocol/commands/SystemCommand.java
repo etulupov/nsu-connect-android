@@ -1,6 +1,7 @@
 package ru.tulupov.nsuconnect.protocol.commands;
 
 import android.content.Context;
+import android.os.Vibrator;
 import android.util.Log;
 
 import java.sql.SQLException;
@@ -8,6 +9,8 @@ import java.util.Date;
 
 import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.SoundHelper;
+import ru.tulupov.nsuconnect.helper.VibrateHelper;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.protocol.Command;
 import ru.tulupov.nsuconnect.protocol.CommandContext;
@@ -32,5 +35,8 @@ public abstract class SystemCommand implements Command {
         } catch (SQLException e) {
             Log.e(TAG, "cannot create message entity", e);
         }
+
+        SoundHelper.beep();
+        VibrateHelper.vibrate();
     }
 }

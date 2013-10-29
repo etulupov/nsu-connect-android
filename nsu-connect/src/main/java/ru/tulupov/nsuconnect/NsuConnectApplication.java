@@ -17,6 +17,7 @@ import org.codechimp.apprater.AppRater;
 import java.sql.SQLException;
 
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.VibrateHelper;
 import ru.tulupov.nsuconnect.images.ImageCacheManager;
 import ru.tulupov.nsuconnect.request.RequestManager;
 import ru.tulupov.nsuconnect.helper.SoundHelper;
@@ -24,7 +25,8 @@ import ru.tulupov.nsuconnect.helper.SoundHelper;
 
 public class NsuConnectApplication extends Application {
     private static final String TAG = NsuConnectApplication.class.getSimpleName();
-    private static int DISK_IMAGECACHE_SIZE = 1024 * 1024 * 10;
+    private static int DISK_IMAGECACHE_SIZE = 1024 * 1024 * 100;
+    private static int MEMORY_IMAGECACHE_SIZE = 1024 * 1024 * 10;
     private static Bitmap.CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
     private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
 
@@ -47,6 +49,7 @@ public class NsuConnectApplication extends Application {
         }
 
         SoundHelper.init(this);
+        VibrateHelper.init(this);
 
         HelperFactory.setHelper(getApplicationContext());
         init();
@@ -57,7 +60,6 @@ public class NsuConnectApplication extends Application {
         } catch (SQLException e) {
             Log.e(TAG, "Cannot deactivate chats", e);
         }
-
 
 
     }
@@ -78,6 +80,7 @@ public class NsuConnectApplication extends Application {
         ImageCacheManager.getInstance().init(this,
                 this.getPackageCodePath()
                 , DISK_IMAGECACHE_SIZE
+                , MEMORY_IMAGECACHE_SIZE
                 , DISK_IMAGECACHE_COMPRESS_FORMAT
                 , DISK_IMAGECACHE_QUALITY
                 , ImageCacheManager.CacheType.BOTH);

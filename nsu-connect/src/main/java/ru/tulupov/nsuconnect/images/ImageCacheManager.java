@@ -60,13 +60,13 @@ public class ImageCacheManager {
      * @param compressFormat file type compression format.
      * @param quality
      */
-    public void init(Context context, String uniqueName, int cacheSize, CompressFormat compressFormat, int quality, CacheType type) {
+    public void init(Context context, String uniqueName, int cacheSize, int memCacheSize, CompressFormat compressFormat, int quality, CacheType type) {
         switch (type) {
             case DISK:
                 mImageCache = new DiskLruImageCache(context, uniqueName, cacheSize, compressFormat, quality);
                 break;
             case BOTH:
-                mImageCache = new DiskMemoryLruImageCache(context, uniqueName, cacheSize, cacheSize, compressFormat, quality);
+                mImageCache = new DiskMemoryLruImageCache(context, uniqueName, cacheSize, memCacheSize, compressFormat, quality);
                 break;
             case MEMORY:
                 mImageCache = new BitmapLruImageCache(cacheSize);

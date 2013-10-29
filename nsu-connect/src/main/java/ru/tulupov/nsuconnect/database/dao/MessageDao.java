@@ -95,7 +95,7 @@ public class MessageDao extends BaseDaoImpl<Message, Integer> {
     public int getUnreadCount(int id) throws SQLException {
 
         QueryBuilder<Message, Integer> queryBuilder = queryBuilder();
-        queryBuilder.where().eq(DatabaseContract.Message.ID, id)
+        queryBuilder.where().eq(DatabaseContract.Message.CHAT, id)
                 .and().eq(DatabaseContract.Message.READ_FLAG, DatabaseConstants.BOOLEAN_FALSE);
 
 

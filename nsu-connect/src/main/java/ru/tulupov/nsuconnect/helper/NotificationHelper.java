@@ -57,7 +57,7 @@ public class NotificationHelper {
 
 
                     .setLights(Color.GREEN, 250, 500)
-                    .setVibrate(new long[]{100, 200, 100, 200})
+//                    .setVibrate(new long[]{100, 200, 100, 200})
                     .setAutoCancel(false)
                     .setSmallIcon(R.drawable.ic_messages)
                     .setContentIntent(resultPendingIntent);
@@ -66,8 +66,7 @@ public class NotificationHelper {
                 builder.setNumber(unreadCount);
             }
 
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(NOTIFICATION_ID, builder.build());
+
         }
 
 
@@ -77,7 +76,6 @@ public class NotificationHelper {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
     }
-
 
 
 }

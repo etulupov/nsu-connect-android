@@ -9,6 +9,8 @@ import java.util.Date;
 import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.SoundHelper;
+import ru.tulupov.nsuconnect.helper.VibrateHelper;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.Status;
@@ -33,8 +35,14 @@ public class ImageMessageCommand implements Command {
         try {
             HelperFactory.getHelper().getMessageDao().create(message);
             ContentUriHelper.notifyChange(context.getApplicationContext(), ContentUriHelper.getConversationUri(context.getChat().getId()));
+
+            HelperFactory.getHelper().getChatDao().updateLastMessage(context.getChat(), message);
+            ContentUriHelper.notifyChange(context.getApplicationContext(), ContentUriHelper.getChatUri());
         } catch (SQLException e) {
             Log.e(TAG, "cannot create message entity", e);
         }
+
+        SoundHelper.beep();
+        VibrateHelper.vibrate();
     }
 }
