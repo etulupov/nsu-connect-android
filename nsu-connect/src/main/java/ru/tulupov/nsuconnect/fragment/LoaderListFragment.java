@@ -27,8 +27,10 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
     private ContentObserver contentObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
-            update();
-            onDataChange();
+            if (getActivity() != null) {
+                update();
+                onDataChange();
+            }
         }
     };
 

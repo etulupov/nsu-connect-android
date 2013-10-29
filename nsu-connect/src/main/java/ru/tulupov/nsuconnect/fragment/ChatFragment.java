@@ -65,6 +65,16 @@ public class ChatFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Chat chat;
+        try {
+            chat = HelperFactory.getHelper().getChatDao().getChat(chatId);
+            if (!chat.isActive()) {
+                return;
+            }
+
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot load chat entity", e);
+        }
         inflater.inflate(R.menu.fgt_chat, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -210,7 +220,7 @@ public class ChatFragment extends BaseFragment {
             }
             getActivity().setTitle(chat.getName());
         } catch (SQLException e) {
-            Log.e(TAG, "cannot create chat entity", e);
+            Log.e(TAG, "cannot load chat entity", e);
         }
 
 

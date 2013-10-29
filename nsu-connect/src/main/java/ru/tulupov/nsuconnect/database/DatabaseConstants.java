@@ -15,5 +15,6 @@ public interface DatabaseConstants {
     Uri URI_BASE = Uri.parse("content://ru.tulupov.nsuconnect");
     Uri URI_CHAT = URI_BASE.buildUpon().appendPath("chat").build();
     Uri URI_CONVERSATION = URI_BASE.buildUpon().appendPath("converstaion").build();
+    Uri URI_COUNTER = URI_BASE.buildUpon().appendPath("counter").build();
 
 }

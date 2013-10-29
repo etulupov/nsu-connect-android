@@ -128,6 +128,7 @@ public class SlidingMenuFragment extends ListFragment {
         handler.post(updateRunnable);
         contentObserver.onChange(false);
         getActivity().getContentResolver().registerContentObserver(DatabaseConstants.URI_CONVERSATION, true, contentObserver);
+        getActivity().getContentResolver().registerContentObserver(DatabaseConstants.URI_COUNTER, true, contentObserver);
     }
 
     @Override
