@@ -118,6 +118,10 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
     @Override
     protected boolean onItemLongPress(int position, final Chat item) {
+        if (item.isActive()) {
+            return false;
+        }
+
         DialogItemList dialogItemList = DialogItemList.newInstance(getActivity(), R.array.messages_chat_actions);
 
         dialogItemList.setOnItemClickListener(new DialogItemList.OnItemClickListener() {

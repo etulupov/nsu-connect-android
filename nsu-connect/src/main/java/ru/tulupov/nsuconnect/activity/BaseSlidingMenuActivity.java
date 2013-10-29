@@ -18,6 +18,7 @@ import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.fragment.AboutFragment;
 import ru.tulupov.nsuconnect.fragment.BaseFragment;
 import ru.tulupov.nsuconnect.fragment.MessagesFragment;
+import ru.tulupov.nsuconnect.fragment.SettingsFragment;
 import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
 import ru.tulupov.nsuconnect.helper.ChatHelper;
 import ru.tulupov.nsuconnect.slidingmenu.SlidingMenuFragment;
@@ -99,7 +100,7 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
                 showFragment(MessagesFragment.newInstance(getApplicationContext()));
                 return;
             case R.id.menu_settings:
-                showFragment(WelcomeFragment.newInstance(getApplicationContext()));
+                addFragment(SettingsFragment.newInstance(getApplicationContext()));
                 return;
 
             case R.id.menu_about_application:

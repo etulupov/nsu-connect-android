@@ -11,6 +11,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.helper.IntentActionHelper;
+import ru.tulupov.nsuconnect.helper.SettingsHelper;
 
 
 public class SplashActivity extends BaseActivity {
@@ -19,7 +20,12 @@ public class SplashActivity extends BaseActivity {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            startActivity(IntentActionHelper.getHomeIntent(getApplicationContext()));
+            if(  SettingsHelper.isFirstRun(getActivity())) {
+                startActivity(IntentActionHelper.getWeclomeIntent(getApplicationContext()));
+            } else {
+                startActivity(IntentActionHelper.getHomeIntent(getApplicationContext()));
+            }
+
             finish();
         }
     };

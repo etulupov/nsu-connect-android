@@ -42,12 +42,12 @@ public class ChatHelper {
         return null;
     }
 
-    public static void openChatFragment(BaseActivityInterface fragment) {
-        Chat chat = ChatHelper.createChat(fragment.getActivity());
+    public static void openChatFragment(BaseActivityInterface context) {
+        Chat chat = ChatHelper.createChat(context.getActivity());
 
 
-        fragment.getActivity().startService(new Intent(fragment.getActivity(), DataService.class).setAction(DataService.ACTION_CREATE_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+        context.getActivity().startService(new Intent(context.getActivity(), DataService.class).setAction(DataService.ACTION_CREATE_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
 
-        fragment.addFragment(ChatFragment.newInstance(fragment.getActivity(), chat.getId()));
+        context.addFragment(ChatFragment.newInstance(context.getActivity(), chat.getId()));
     }
 }

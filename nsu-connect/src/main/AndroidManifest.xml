@@ -43,6 +43,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <activity
+            android:launchMode="singleTop"
+            android:name=".activity.WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <service android:name=".service.DataService" />
     </application>
 

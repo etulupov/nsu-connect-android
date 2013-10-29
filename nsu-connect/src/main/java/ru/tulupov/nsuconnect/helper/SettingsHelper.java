@@ -12,6 +12,7 @@ import ru.tulupov.nsuconnect.model.Settings;
 public class SettingsHelper {
     private static final String PREFERENCES_NAME = "preferences";
     private static final String SETTINGS = "settings";
+    private static final String IS_FIRST_RUN = "is_first_run";
 
 
     public SettingsHelper() {
@@ -43,6 +44,16 @@ public class SettingsHelper {
     public static Chat getChat(Context context) {
         Settings settings = getSettings(context);
         return settings.getChat();
+    }
+
+    public static boolean isFirstRun(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return preferences.getBoolean(IS_FIRST_RUN, true);
+    }
+
+    public static void setFirstRun(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        preferences.edit().putBoolean(IS_FIRST_RUN, false).commit();
     }
 
 }
