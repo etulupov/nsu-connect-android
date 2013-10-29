@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -139,10 +142,13 @@ public class WelcomeFragment extends BaseFragment {
         Settings settings = SettingsHelper.getSettings(getActivity());
         settings.setSearchParameters(searchParameters);
         SettingsHelper.setSettings(getActivity(), settings);
+
+
+        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "save settings", searchParameters.toString(), null).build());
+
     }
 
     protected void navigate(int page) {
-
         pagesBackStack.add(page);
         pager.setCurrentItem(page, true);
     }

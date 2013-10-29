@@ -40,4 +40,9 @@ public class SearchParameters {
     public void setTargetAge(List<Integer> targetAge) {
         this.targetAge = targetAge;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s; %s; %s; %s", yourGender, targetGender, yourAge, targetGender);
+    }
 }
