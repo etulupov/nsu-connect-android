@@ -114,8 +114,9 @@ public class SlidingMenuFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
+      SlidingMenuItem item = (SlidingMenuItem) lv.getItemAtPosition(position);
         if (onItemClickListener != null) {
-            onItemClickListener.onClick(menuItems.get(position).id);
+            onItemClickListener.onClick(item.id);
         }
     }
 
