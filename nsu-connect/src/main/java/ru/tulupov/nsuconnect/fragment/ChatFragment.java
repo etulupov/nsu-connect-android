@@ -65,16 +65,7 @@ public class ChatFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Chat chat;
-        try {
-            chat = HelperFactory.getHelper().getChatDao().getChat(chatId);
-            if (!chat.isActive()) {
-                return;
-            }
 
-        } catch (SQLException e) {
-            Log.e(TAG, "cannot load chat entity", e);
-        }
         inflater.inflate(R.menu.fgt_chat, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -103,7 +94,10 @@ public class ChatFragment extends BaseFragment {
                         }
                     }
                 });
-                showDialog(dialogItemList);
+                if (chat != null && chat.isActive()) {
+                    showDialog(dialogItemList);
+                }
+
 
                 break;
 
@@ -113,6 +107,8 @@ public class ChatFragment extends BaseFragment {
         }
         return true;
     }
+
+    private Chat chat;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -211,7 +207,6 @@ public class ChatFragment extends BaseFragment {
         });
 
 
-        Chat chat;
         try {
             chat = HelperFactory.getHelper().getChatDao().getChat(chatId);
             if (!chat.isActive()) {
