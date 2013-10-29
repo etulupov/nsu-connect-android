@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.rampo.updatechecker.UpdateChecker;
@@ -95,16 +96,21 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         switch (id) {
             case R.id.menu_start_chat:
                 ChatHelper.openChatFragment(this);
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "menu_left", "menu_start_chat", null).build());
+
                 return;
             case R.id.menu_messages:
                 showFragment(MessagesFragment.newInstance(getApplicationContext()));
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "menu_left", "menu_messages", null).build());
                 return;
             case R.id.menu_settings:
                 addFragment(SettingsFragment.newInstance(getApplicationContext()));
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "menu_left", "menu_settings", null).build());
                 return;
 
             case R.id.menu_about_application:
                 addFragment(AboutFragment.newInstance(getApplicationContext()));
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "menu_left", "menu_about_application", null).build());
                 return;
         }
     }

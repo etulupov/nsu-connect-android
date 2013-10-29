@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
@@ -78,6 +81,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
         switch (item.getItemId()) {
             case R.id.menu_new_conversation:
                 ChatHelper.openChatFragment(this);
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "menu_new_conversation", null).build());
                 break;
         }
         return super.onOptionsItemSelected(item);
