@@ -11,8 +11,14 @@
 
     <!-- about -->
     <string name="about_title">О приложении</string>
-    <string name="about_app_name">NSU connect</string>
-    <string name="about_rate">Оценить приложение!</string>
+    <string name="about_app_name_formatter">NSU connect %1$s</string>
+
+    <string name="about_rate">Оценить приложение</string>
+    <string name="about_update">Проверить обновления</string>
+    <string name="about_report">Сообщить об ошибке</string>
+    <string name="about_author">Тулупов Евгений © 2013</string>
+    <string name="about_author_contacts">http://vk.com/etulupov</string>
+
 
     <!-- date format -->
     <string name="date_yesterday">Вчера</string>

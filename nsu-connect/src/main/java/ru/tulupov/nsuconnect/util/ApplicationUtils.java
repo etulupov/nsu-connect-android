@@ -4,6 +4,7 @@ package ru.tulupov.nsuconnect.util;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.PowerManager;
 
 import java.util.List;
@@ -28,5 +29,16 @@ public class ApplicationUtils {
 
     public static boolean isScreenOn(final Context context) {
         return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
+    }
+
+    public static String getVersionName(Context context) {
+
+        String name = "";
+        try {
+            name = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+
+        return name;
     }
 }

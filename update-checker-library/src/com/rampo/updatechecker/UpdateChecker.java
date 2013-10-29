@@ -85,7 +85,7 @@ public class UpdateChecker extends Fragment implements CheckResultInterface, Dia
      * @param fragmentActivity         Required.
      * @param successfulChecksRequired The number of checks after the dialog will be shown.
      */
-    public static void checkForDialog(FragmentActivity fragmentActivity, int successfulChecksRequired) {
+        public static void checkForDialog(FragmentActivity fragmentActivity, int successfulChecksRequired) {
         FragmentTransaction content = fragmentActivity.getSupportFragmentManager().beginTransaction();
         UpdateChecker updateChecker = new UpdateChecker();
         Bundle args = new Bundle();
