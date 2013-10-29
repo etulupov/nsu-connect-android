@@ -39,7 +39,14 @@ public class ChatDao extends BaseDaoImpl<Chat, Integer> {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    public void deactivateChat(int id) throws SQLException {
+        UpdateBuilder<Chat, Integer> updateBuilder = updateBuilder();
 
+        updateBuilder.where().eq(DatabaseContract.Chat.ID, id);
+        updateBuilder.updateColumnValue(DatabaseContract.Chat.ACTIVE_FLAG, DatabaseConstants.BOOLEAN_FALSE);
+
+        update(updateBuilder.prepare());
+    }
 
     public void deactivateAllChats() throws SQLException {
         UpdateBuilder<Chat, Integer> updateBuilder = updateBuilder();

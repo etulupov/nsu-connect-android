@@ -27,7 +27,7 @@ public class DisconnectCommand extends SystemCommand {
         context.getChat().setActive(false);
         try {
 
-            HelperFactory.getHelper().getChatDao().update(context.getChat());
+            HelperFactory.getHelper().getChatDao().deactivateChat(context.getChat().getId());
             ContentUriHelper.notifyChange(context.getApplicationContext(), ContentUriHelper.getChatUri());
 
 
