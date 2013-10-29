@@ -10,6 +10,7 @@ import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger;
 import com.google.analytics.tracking.android.Tracker;
+import com.rampo.updatechecker.UpdateChecker;
 
 import org.codechimp.apprater.AppRater;
 
@@ -56,6 +57,7 @@ public class NsuConnectApplication extends Application {
         } catch (SQLException e) {
             Log.e(TAG, "Cannot deactivate chats", e);
         }
+
 
 
     }

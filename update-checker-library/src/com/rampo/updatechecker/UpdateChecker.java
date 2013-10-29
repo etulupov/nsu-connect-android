@@ -288,6 +288,9 @@ public class UpdateChecker extends Fragment implements CheckResultInterface, Dia
      * @see <a href="https://github.com/rampo/UpdateChecker/issues/1">Issue #1</a>
      */
     public final boolean containsNumber(String string) {
+        if (string == null) {
+            return false;
+        }
         return string.matches(".*[0-9].*");
     }
 

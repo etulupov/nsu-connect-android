@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
+import com.rampo.updatechecker.UpdateChecker;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.fragment.AboutFragment;
@@ -190,6 +191,7 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         super.onResume();
 
         EasyTracker.getInstance(this).activityStart(this);
+        UpdateChecker.checkForNotification(this);
     }
 
     @Override
