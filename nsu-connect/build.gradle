@@ -30,4 +30,5 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.0@jar'
     compile project(':sliding-menu-library')
     compile project(':app-rater-library')
+    compile project(':update-checker-library')
 }

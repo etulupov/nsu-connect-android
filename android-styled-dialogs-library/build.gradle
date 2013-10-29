@@ -1,13 +1,16 @@
 buildscript {
     repositories {
-        maven { url 'http://repo1.maven.org/maven2' }
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
-
 apply plugin: 'android-library'
+
+dependencies {
+    compile 'com.android.support:support-v4:18.0.+'
+}
 
 android {
     compileSdkVersion 17
@@ -17,7 +20,6 @@ android {
         minSdkVersion 8
         targetSdkVersion 18
     }
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -26,6 +28,3 @@ android {
         }
     }
 }
-
-
-
