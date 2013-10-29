@@ -19,6 +19,12 @@
 
 
     <string name="messages_image_type">Изображение</string>
+    <string name="dialog__items_title">Выберите</string>
+
+    <string-array name="messages_attach_actions">
+        <item>Сделать снимок</item>
+        <item>Выбрать из галереи</item>
+    </string-array>
 
     <string name="chat_default_title_formatter">Диалог #%1$d</string>
 

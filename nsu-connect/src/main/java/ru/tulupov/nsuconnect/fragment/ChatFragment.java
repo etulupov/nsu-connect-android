@@ -79,8 +79,22 @@ public class ChatFragment extends BaseFragment {
 
             case R.id.menu_upload:
 
+                DialogItemList dialogItemList = DialogItemList.newInstance(getActivity(), R.array.messages_attach_actions);
+                dialogItemList.setOnItemClickListener(new DialogItemList.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        switch (position) {
+                            case 0:
+                                startActivityForResult(IntentActionHelper.getCameraIntent(getActivity()), REQUEST_CODE_TAKE_PHOTO);
+                                return;
+                            case 1:
+                                startActivityForResult(IntentActionHelper.getSelectFromGallery1Intent(getActivity()), REQUEST_CODE_IMPORT_PHOTO);
+                                return;
+                        }
+                    }
+                });
+                showDialog(dialogItemList);
 
-                startActivityForResult(IntentActionHelper.getCameraIntent(getActivity()), REQUEST_CODE_TAKE_PHOTO);
                 break;
 
 
@@ -229,7 +243,9 @@ public class ChatFragment extends BaseFragment {
 
             if (file != null) {
                 ImageCacheManager.getInstance().putBitmap(file.getPath(), bitmap);
-                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE).putExtra(DataService.EXTRA_FILE, file.getPath()));
+                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE)
+                        .putExtra(DataService.EXTRA_FILE, file.getPath())
+                        .putExtra(DataService.EXTRA_ID, chatId));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
