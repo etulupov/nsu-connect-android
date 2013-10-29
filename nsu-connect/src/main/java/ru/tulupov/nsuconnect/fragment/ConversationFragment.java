@@ -205,7 +205,7 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     private void updateReadFlag() {
         try {
             HelperFactory.getHelper().getMessageDao().updateReadFlag(chat);
-
+            ContentUriHelper.notifyChange(getActivity(), DatabaseConstants.URI_CONVERSATION);
         } catch (SQLException e) {
             Log.e(TAG, "cannot update read flag", e);
         }
