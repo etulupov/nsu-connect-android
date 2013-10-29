@@ -66,7 +66,8 @@ public class NotificationHelper {
                 builder.setNumber(unreadCount);
             }
 
-
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
 
 
