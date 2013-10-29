@@ -37,8 +37,8 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
 
 
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.logo_in);
-        findViewById(R.id.logo).startAnimation(animation);
+//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.logo_in);
+//        findViewById(R.id.logo).startAnimation(animation);
 
         handler.postDelayed(runnable, DELAY);
     }
