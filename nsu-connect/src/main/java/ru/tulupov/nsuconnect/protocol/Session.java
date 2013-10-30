@@ -30,13 +30,13 @@ import ru.tulupov.nsuconnect.request.DisconnectRequest;
 import ru.tulupov.nsuconnect.request.GetUidRequest;
 import ru.tulupov.nsuconnect.request.SendMessageRequest;
 import ru.tulupov.nsuconnect.request.StartSearchRequest;
-import ru.tulupov.nsuconnect.request.StartTypingRequest;
 import ru.tulupov.nsuconnect.request.StopTypingRequest;
 import ru.tulupov.nsuconnect.request.UploadRequest;
 
 public class Session {
 
     private static final String TAG = Session.class.getSimpleName();
+    private static final long RETRY_DELAY = 1000;
     private RequestSession requestSession = new RequestSession();
 
     private RequestQueue queue;
@@ -80,10 +80,29 @@ public class Session {
         requestSession.setSearch(SearchSettingHelper.generate(settings.getSearchParameters()));
 
         Log.e("xxx", "set settings =" + requestSession.getSearch());
-        GetUidRequest getUidRequest = new GetUidRequest(requestSession, createGetUidListener(), createErrorListener());
+        GetUidRequest getUidRequest = new GetUidRequest(requestSession, createGetUidListener(), createGetUidErrorListener());
         queue.add(getUidRequest);
 
     }
+
+    private Response.ErrorListener createGetUidErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                createErrorListener().onErrorResponse(volleyError);
+
+                handler.postDelayed(getUidRunnable, RETRY_DELAY);
+            }
+        };
+    }
+
+    private Runnable getUidRunnable = new Runnable() {
+        @Override
+        public void run() {
+            GetUidRequest getUidRequest = new GetUidRequest(requestSession, createGetUidListener(), createGetUidErrorListener());
+            queue.add(getUidRequest);
+        }
+    };
 
     public void startMessageSending() {
         context.getContentResolver().registerContentObserver(ContentUriHelper.getConversationUri(chat.getId()), false, messageContentObserver);
@@ -107,6 +126,9 @@ public class Session {
             }
         }
         );
+        handler.removeCallbacks(queryCommandRunnable);
+        handler.removeCallbacks(getUidRunnable);
+        handler.removeCallbacks(startSearchRunnable);
         queue.add(request);
     }
 
@@ -220,11 +242,29 @@ public class Session {
             public void onResponse(Uid uid) {
                 requestSession.setUid(uid);
                 Log.e("xxx", uid.getUid());
-                StartSearchRequest startSearchRequest = new StartSearchRequest(requestSession, createStartSearchListener(), createErrorListener());
+                StartSearchRequest startSearchRequest = new StartSearchRequest(requestSession, createStartSearchListener(), createStartSearchErrorListener());
                 queue.add(startSearchRequest);
             }
         };
     }
+
+    private Response.ErrorListener createStartSearchErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                createErrorListener().onErrorResponse(volleyError);
+                handler.postDelayed(startSearchRunnable, RETRY_DELAY);
+            }
+        };
+    }
+
+    private Runnable startSearchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            StartSearchRequest startSearchRequest = new StartSearchRequest(requestSession, createStartSearchListener(), createStartSearchErrorListener());
+            queue.add(startSearchRequest);
+        }
+    };
 
     private Response.Listener<Status> createStartSearchListener() {
         return new Response.Listener<Status>() {
@@ -358,16 +398,28 @@ public class Session {
         };
     }
 
+    private Handler handler = new Handler();
+    private Runnable queryCommandRunnable = new Runnable() {
+        @Override
+        public void run() {
+            sendMessage();
+            queryNextCommand();
+        }
+    };
+
     private Response.ErrorListener createCommandErrorListener() {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.e("xxx", volleyError.toString());
-                if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 502) {
-                    Log.e("xxx", "session error, reset id");
-                    requestSession.setLastId(requestSession.getUid().getUid());
-                    queryNextCommand();
-                }
+                Log.e("xxx", "Try reconnect after delay");
+                handler.postDelayed(queryCommandRunnable, RETRY_DELAY);
+
+//                if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 502) {
+//                    Log.e("xxx", "session error, reset id");
+//                    requestSession.setLastId(requestSession.getUid().getUid());
+//                    queryNextCommand();
+//                }
 
             }
         };
