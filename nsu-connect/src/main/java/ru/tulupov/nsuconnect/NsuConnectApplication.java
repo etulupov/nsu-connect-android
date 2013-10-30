@@ -45,11 +45,11 @@ public class NsuConnectApplication extends Application {
 
         Thread.setDefaultUncaughtExceptionHandler(handler);
 
-        if (BuildConfig.DEBUG) {
-            GoogleAnalytics.getInstance(this)
-                    .getLogger()
-                    .setLogLevel(Logger.LogLevel.VERBOSE);
-        }
+//        if (BuildConfig.DEBUG) {
+//            GoogleAnalytics.getInstance(this)
+//                    .getLogger()
+//                    .setLogLevel(Logger.LogLevel.VERBOSE);
+//        }
 
         SoundHelper.init(this);
         VibrateHelper.init(this);
@@ -65,10 +65,10 @@ public class NsuConnectApplication extends Application {
         }
 
 
-        GoogleAnalytics.getInstance(this).setDryRun(BuildConfig.DEBUG);
+//        GoogleAnalytics.getInstance(this).setDryRun(BuildConfig.DEBUG);
 
         try {
-            if (!BuildConfig.DEBUG)
+//            if (!BuildConfig.DEBUG)
                 BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense_api_key));
         } catch (Exception e) {
         }
