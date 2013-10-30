@@ -21,3 +21,6 @@ Fix scrolling of chat
 Change icons for closing chat
 Add logging of exceptions
 Changed google analytics
+
+1.0.5
+Removed BuildConfig.DEBUG mode
