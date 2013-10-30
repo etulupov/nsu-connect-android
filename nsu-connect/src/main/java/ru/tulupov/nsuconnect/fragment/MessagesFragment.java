@@ -104,6 +104,8 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
             @Override
             public void onStop(Chat chat) {
                 chat.setActive(false);
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_item", null).build());
+
                 try {
                     getActivity().startService(new Intent(getActivity(), DataService.class)
                             .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
@@ -133,6 +135,8 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
             public void onClick(int position) {
                 switch (position) {
                     case 0:
+                        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "delete_chat", null).build());
+
                         try {
 
                             HelperFactory.getHelper().getChatDao().delete(item);

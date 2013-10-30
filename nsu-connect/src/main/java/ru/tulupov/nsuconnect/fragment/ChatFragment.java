@@ -9,7 +9,9 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import ru.tulupov.nsuconnect.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +23,8 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.io.File;
@@ -91,6 +95,8 @@ public class ChatFragment extends BaseFragment {
                 closeFragment();
                 break;
             case R.id.menu_close:
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "exit_chat", null).build());
+
                 try {
                     getActivity().startService(new Intent(getActivity(), DataService.class)
                             .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
@@ -107,6 +113,7 @@ public class ChatFragment extends BaseFragment {
 
 
             case R.id.menu_upload:
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "attach_file", null).build());
 
                 DialogItemList dialogItemList = DialogItemList.newInstance(getActivity(), R.array.messages_attach_actions);
                 dialogItemList.setOnItemClickListener(new DialogItemList.OnItemClickListener() {
@@ -114,9 +121,13 @@ public class ChatFragment extends BaseFragment {
                     public void onClick(int position) {
                         switch (position) {
                             case 0:
+                                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "attach_take_photo", null).build());
+
                                 startActivityForResult(IntentActionHelper.getCameraIntent(getActivity()), REQUEST_CODE_TAKE_PHOTO);
                                 return;
                             case 1:
+                                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "attach_import_photo", null).build());
+
                                 startActivityForResult(IntentActionHelper.getSelectFromGallery1Intent(getActivity()), REQUEST_CODE_IMPORT_PHOTO);
                                 return;
                         }
@@ -174,6 +185,9 @@ public class ChatFragment extends BaseFragment {
                 }
                 getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE).putExtra(DataService.EXTRA_ID, chatId).putExtra(DataService.EXTRA_MESSAGE, edit.getText().toString()));
                 edit.setText(null);
+
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "send_message", null).build());
+
             }
         });
 
@@ -266,19 +280,23 @@ public class ChatFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if ((requestCode == REQUEST_CODE_TAKE_PHOTO || requestCode == REQUEST_CODE_IMPORT_PHOTO) && resultCode == Activity.RESULT_OK) {
-            final String picturePath = BitmapHelper.getPicturePath(getActivity(), data);
+            try {
+                final String picturePath = BitmapHelper.getPicturePath(getActivity(), data);
 
 
-            Bitmap bitmap = BitmapHelper.getNormalPhoto(picturePath);
+                Bitmap bitmap = BitmapHelper.getNormalPhoto(picturePath);
 
-            File file = BitmapHelper.saveBitmapToTmpFile(bitmap);
+                File file = BitmapHelper.saveBitmapToTmpFile(bitmap);
 
 
-            if (file != null) {
-                ImageCacheManager.getInstance().putBitmap(file.getPath(), bitmap);
-                getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE)
-                        .putExtra(DataService.EXTRA_FILE, file.getPath())
-                        .putExtra(DataService.EXTRA_ID, chatId));
+                if (file != null) {
+                    ImageCacheManager.getInstance().putBitmap(file.getPath(), bitmap);
+                    getActivity().startService(new Intent(getActivity(), DataService.class).setAction(DataService.ACTION_SEND_MESSAGE)
+                            .putExtra(DataService.EXTRA_FILE, file.getPath())
+                            .putExtra(DataService.EXTRA_ID, chatId));
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "get the photo error", e);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

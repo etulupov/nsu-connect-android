@@ -13,3 +13,11 @@ Fix 9-patches for several dpi
 Fix http connection bugs on android 2.3
 Add bugsense
 Don't track google analytics events in debug mode
+
+
+1.0.4
+Add close button in chat
+Fix scrolling of chat
+Change icons for closing chat
+Add logging of exceptions
+Changed google analytics
