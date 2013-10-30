@@ -49,6 +49,7 @@ public class DialogItemListFragment extends SimpleDialogFragment {
                 if (onItemClickListener != null) {
                     onItemClickListener.onClick(position);
                 }
+                dismiss();
             }
         });
 

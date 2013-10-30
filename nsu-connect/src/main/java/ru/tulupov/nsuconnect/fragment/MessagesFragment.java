@@ -106,30 +106,53 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_item", null).build());
 
 
-                DialogConfirmExitFragment dialog = DialogConfirmExitFragment.newInstance(getActivity());
-                dialog.setOnExitListener(new DialogConfirmExitFragment.OnExitListener() {
-                    @Override
-                    public void onExit() {
-                        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_yes", null).build());
-                        try {
-                            getActivity().startService(new Intent(getActivity(), DataService.class)
-                                    .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
-
-                            HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
-                            ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
-
-
-                        } catch (SQLException e) {
-                            Log.e(TAG, "error deactivating chat", e);
-                        }
-                    }
-                });
-                showDialog(dialog);
+                deactivateChat(chat);
 
 
             }
         });
         return adapter;
+    }
+
+    private void deactivateChat(final Chat chat) {
+        DialogConfirmExitFragment dialog = DialogConfirmExitFragment.newInstance(getActivity());
+        dialog.setOnExitListener(new DialogConfirmExitFragment.OnExitListener() {
+            @Override
+            public void onExit() {
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_yes", null).build());
+                try {
+                    getActivity().startService(new Intent(getActivity(), DataService.class)
+                            .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+
+                    HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
+                    ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
+
+
+                } catch (SQLException e) {
+                    Log.e(TAG, "error deactivating chat", e);
+                }
+            }
+        });
+        showDialog(dialog);
+    }
+
+    private void removeChat(final Chat chat) {
+        DialogConfirmDeletionFragment dialog = DialogConfirmDeletionFragment.newInstance(getActivity());
+        dialog.setOnDeleteListener(new DialogConfirmDeletionFragment.OnDeleteListener() {
+            @Override
+            public void onDelete() {
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "delete_chat_yes", null).build());
+
+
+                try {
+                    HelperFactory.getHelper().getChatDao().delete(chat);
+                    ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
+                } catch (SQLException e) {
+                    Log.e(TAG, "error removing chat", e);
+                }
+            }
+        });
+        showDialog(dialog);
     }
 
     @Override
@@ -147,14 +170,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
                     case 0:
                         EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "delete_chat", null).build());
 
-                        try {
-
-                            HelperFactory.getHelper().getChatDao().delete(item);
-                            ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
-
-                        } catch (SQLException e) {
-                            Log.e(TAG, "error", e);
-                        }
+                      removeChat(item);
                         return;
                 }
             }
