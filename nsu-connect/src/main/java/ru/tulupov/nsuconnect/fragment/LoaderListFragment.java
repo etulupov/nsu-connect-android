@@ -53,16 +53,20 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
 
 
         list = (ListView) view.findViewById(R.id.list);
-
+        adapter = getAdapter();
+        list.setAdapter(adapter);
 
     }
 
 
+
+
     public void update() {
+
         LoaderManager loaderManager = getLoaderManager();
         Loader loader = loaderManager.getLoader(UPDATE_LIST_LOADER_ID);
         if (loader == null) {
-            adapter = getAdapter();
+
             loaderManager.initLoader(UPDATE_LIST_LOADER_ID, null, new LoaderManager.LoaderCallbacks<List<T>>() {
                 @Override
                 public Loader<List<T>> onCreateLoader(int i, Bundle bundle) {
@@ -72,7 +76,7 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
                 @Override
                 public void onLoadFinished(Loader<List<T>> loader, List<T> data) {
                     adapter.updateList(data);
-                    list.setAdapter(adapter);
+
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {

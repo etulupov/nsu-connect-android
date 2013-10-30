@@ -139,6 +139,8 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     }
 
 
+
+
     @Override
     protected void onLoadFinished() {
         super.onLoadFinished();
