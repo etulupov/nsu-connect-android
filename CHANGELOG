@@ -27,3 +27,8 @@ Removed BuildConfig.DEBUG mode
 
 1.0.6
 Fix app crash
+
+1.0.7
+Added confirm dialog for exit
+Changed dialogs style
+

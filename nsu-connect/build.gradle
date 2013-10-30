@@ -31,4 +31,5 @@ dependencies {
     compile project(':sliding-menu-library')
     compile project(':app-rater-library')
     compile project(':update-checker-library')
+    compile project(":android-styled-dialogs-library")
 }

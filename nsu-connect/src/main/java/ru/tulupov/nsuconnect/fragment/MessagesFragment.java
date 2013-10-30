@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
+
 import ru.tulupov.nsuconnect.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -102,21 +104,32 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
         MessagesAdapter adapter = new MessagesAdapter();
         adapter.setOnClickListener(new MessagesAdapter.OnClickListener() {
             @Override
-            public void onStop(Chat chat) {
+            public void onStop(final Chat chat) {
                 chat.setActive(false);
                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_item", null).build());
 
-                try {
-                    getActivity().startService(new Intent(getActivity(), DataService.class)
-                            .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
 
-                    HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
-                    ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
+                DialogConfirmExitFragment dialog = DialogConfirmExitFragment.newInstance(getActivity());
+                dialog.setOnExitListener(new DialogConfirmExitFragment.OnExitListener() {
+                    @Override
+                    public void onExit() {
+                        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_yes", null).build());
+                        try {
+                            getActivity().startService(new Intent(getActivity(), DataService.class)
+                                    .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+
+                            HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
+                            ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
 
 
-                } catch (SQLException e) {
-                    Log.e(TAG, "error", e);
-                }
+                        } catch (SQLException e) {
+                            Log.e(TAG, "error deactivating chat", e);
+                        }
+                    }
+                });
+                showDialog(dialog);
+
+
             }
         });
         return adapter;

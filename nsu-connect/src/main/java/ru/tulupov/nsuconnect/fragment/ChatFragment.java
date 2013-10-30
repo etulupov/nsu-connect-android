@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -29,14 +28,12 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.Date;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.helper.BitmapHelper;
 import ru.tulupov.nsuconnect.helper.IntentActionHelper;
-import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.images.ImageCacheManager;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.service.DataService;
@@ -96,19 +93,28 @@ public class ChatFragment extends BaseFragment {
                 break;
             case R.id.menu_close:
                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "exit_chat", null).build());
+                DialogConfirmExitFragment dialog = DialogConfirmExitFragment.newInstance(getActivity());
+                dialog.setOnExitListener(new DialogConfirmExitFragment.OnExitListener() {
+                    @Override
+                    public void onExit() {
+                        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "exit_chat_yes", null).build());
 
-                try {
-                    getActivity().startService(new Intent(getActivity(), DataService.class)
-                            .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+                        try {
+                            getActivity().startService(new Intent(getActivity(), DataService.class)
+                                    .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
 
-                    HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
-                    ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
+                            HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
+                            ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
 
 
-                } catch (SQLException e) {
-                    Log.e(TAG, "error deactivate chat", e);
-                }
-                closeFragment();
+                        } catch (SQLException e) {
+                            Log.e(TAG, "error deactivate chat", e);
+                        }
+                        closeFragment();
+                    }
+                });
+                showDialog(dialog);
+
                 break;
 
 
