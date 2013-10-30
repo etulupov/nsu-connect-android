@@ -2,7 +2,9 @@ package ru.tulupov.nsuconnect.protocol;
 
 import android.content.Context;
 import android.database.ContentObserver;
+import android.net.http.AndroidHttpClient;
 import android.os.Handler;
+
 import ru.tulupov.nsuconnect.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -39,7 +41,7 @@ import ru.tulupov.nsuconnect.request.UploadRequest;
 public class Session {
 
     private static final String TAG = Session.class.getSimpleName();
-    private static final long RETRY_DELAY = 1000;
+    private static final long RETRY_DELAY = 2000;
     private RequestSession requestSession = new RequestSession();
 
     private RequestQueue queue;
@@ -55,7 +57,7 @@ public class Session {
     }
 
     public void onCreate() {
-        queue = Volley.newRequestQueue(context, new HttpClientStack(new DefaultHttpClient()));
+        queue = Volley.newRequestQueue(context, new HttpClientStack(AndroidHttpClient.newInstance("android")));
 
 
         myUser = new User();
@@ -132,6 +134,7 @@ public class Session {
         handler.removeCallbacks(queryCommandRunnable);
         handler.removeCallbacks(getUidRunnable);
         handler.removeCallbacks(startSearchRunnable);
+        handler.removeCallbacks(sendMessageRunnable);
         queue.add(request);
     }
 
@@ -161,7 +164,11 @@ public class Session {
     boolean wasUpdated = false;
 
     private void sendMessage() {
+        if(!sendEnabled) {
+            return;
+        }
         try {
+
             sendEnabled = false;
             List<Message> messages = HelperFactory.getHelper().getMessageDao().getUnsentMessagesByChat(chat);
             sendMessage(messages);
@@ -205,6 +212,8 @@ public class Session {
                 public void onErrorResponse(VolleyError volleyError) {
                     createErrorListener().onErrorResponse(volleyError);
                     sendEnabled = true;
+                    handler.postDelayed(sendMessageRunnable, RETRY_DELAY);
+
                 }
             }
             );
@@ -231,6 +240,7 @@ public class Session {
                 public void onErrorResponse(VolleyError volleyError) {
                     createErrorListener().onErrorResponse(volleyError);
                     sendEnabled = true;
+                    handler.postDelayed(sendMessageRunnable, RETRY_DELAY);
                 }
             }
             );
@@ -261,6 +271,12 @@ public class Session {
         };
     }
 
+    private Runnable sendMessageRunnable = new Runnable() {
+        @Override
+        public void run() {
+            sendMessage();
+        }
+    };
     private Runnable startSearchRunnable = new Runnable() {
         @Override
         public void run() {
@@ -405,7 +421,7 @@ public class Session {
     private Runnable queryCommandRunnable = new Runnable() {
         @Override
         public void run() {
-            sendMessage();
+
             queryNextCommand();
         }
     };

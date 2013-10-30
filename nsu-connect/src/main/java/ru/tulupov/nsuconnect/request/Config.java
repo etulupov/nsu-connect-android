@@ -7,5 +7,5 @@ public interface Config {
     Uri MSG_ENDPOINT = Uri.parse("http://msg.inctalk.net");
     int TIMEOUT_QUERY = 300000;
     int TIMEOUT_POOLING = 630000;
-    int DEFAULT_MAX_RETRIES = 3;
+    int DEFAULT_MAX_RETRIES = 1;
 }
