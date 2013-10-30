@@ -121,8 +121,8 @@ public class ChatFragment extends BaseFragment {
             case R.id.menu_upload:
                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "attach_file", null).build());
 
-                DialogItemList dialogItemList = DialogItemList.newInstance(getActivity(), R.array.messages_attach_actions);
-                dialogItemList.setOnItemClickListener(new DialogItemList.OnItemClickListener() {
+                DialogItemListFragment dialogItemList = DialogItemListFragment.newInstance(getActivity(), R.array.messages_attach_actions);
+                dialogItemList.setOnItemClickListener(new DialogItemListFragment.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
                         switch (position) {

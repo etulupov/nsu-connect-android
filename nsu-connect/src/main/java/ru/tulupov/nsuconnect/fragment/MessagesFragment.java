@@ -20,8 +20,6 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
@@ -30,7 +28,6 @@ import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.database.loader.ChatLoader;
 import ru.tulupov.nsuconnect.helper.ChatHelper;
-import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.model.Chat;
 import ru.tulupov.nsuconnect.service.DataService;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
@@ -141,9 +138,9 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
             return false;
         }
 
-        DialogItemList dialogItemList = DialogItemList.newInstance(getActivity(), R.array.messages_chat_actions);
+        DialogItemListFragment dialogItemList = DialogItemListFragment.newInstance(getActivity(), R.array.messages_chat_actions);
 
-        dialogItemList.setOnItemClickListener(new DialogItemList.OnItemClickListener() {
+        dialogItemList.setOnItemClickListener(new DialogItemListFragment.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 switch (position) {
