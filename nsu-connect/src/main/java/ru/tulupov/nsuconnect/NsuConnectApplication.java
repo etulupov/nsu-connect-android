@@ -70,7 +70,7 @@ public class NsuConnectApplication extends Application {
         try {
 //            if (!BuildConfig.DEBUG)
                 BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense_api_key));
-        } catch (Exception e) {
+        } catch (Throwable e) {
         }
     }
 

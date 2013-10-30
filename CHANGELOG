@@ -24,3 +24,6 @@ Changed google analytics
 
 1.0.5
 Removed BuildConfig.DEBUG mode
+
+1.0.6
+Fix app crash
