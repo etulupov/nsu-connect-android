@@ -4,6 +4,7 @@ import android.app.Application;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
@@ -63,6 +64,12 @@ public class NsuConnectApplication extends Application {
 
 
         GoogleAnalytics.getInstance(this).setDryRun(BuildConfig.DEBUG);
+
+        try {
+            if (!BuildConfig.DEBUG)
+                BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense_api_key));
+        } catch (Exception e) {
+        }
     }
 
 
