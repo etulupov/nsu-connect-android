@@ -3,15 +3,22 @@
     <item
 
         android:id="@+id/menu_upload"
-        android:title="upload"
         android:icon="@drawable/ic_ab_attach"
+        app:showAsAction="always">
+        <!--<menu>-->
+        <!--<item-->
+
+        <!--android:id="@+id/menu_upload1"-->
+        <!--android:title="upload"-->
+        <!--android:icon="@drawable/ic_ab_attach"-->
+        <!--/>-->
+        <!--</menu>-->
+    </item>
+    <item
+
+        android:id="@+id/menu_close"
+        android:icon="@drawable/ic_ab_exit"
         app:showAsAction="always" />
-    <!--<item-->
-
-    <!--android:id="@+id/menu_close"-->
-    <!--android:title="close"-->
-
-    <!--app:showAsAction="always" />-->
 
 
 </menu>

@@ -54,7 +54,7 @@ public class NotificationHelper {
                     .setContentTitle(chat.getName())
                     .setContentText(message.getMessage())
                     .setWhen(System.currentTimeMillis())
-
+                    .setTicker(String.format("%s: %s", chat.getName(), message.getMessage()))
 
                     .setLights(Color.GREEN, 250, 500)
 //                    .setVibrate(new long[]{100, 200, 100, 200})

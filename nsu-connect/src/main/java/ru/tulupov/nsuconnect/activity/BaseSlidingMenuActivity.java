@@ -163,10 +163,10 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-            getSlidingMenu().toggle();
-            return true;
-        }
+//        if (keyCode == KeyEvent.KEYCODE_MENU) {
+//            getSlidingMenu().toggle();
+//            return true;
+//        }
         return super.onKeyUp(keyCode, event);
     }
 

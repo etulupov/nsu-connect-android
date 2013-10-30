@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -27,6 +28,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import ru.tulupov.nsuconnect.R;
+import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.HelperFactory;
 import ru.tulupov.nsuconnect.helper.BitmapHelper;
 import ru.tulupov.nsuconnect.helper.IntentActionHelper;
@@ -67,8 +69,19 @@ public class ChatFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.fgt_chat, menu);
+
+//        SubMenu submenu = menu.addSubMenu(0, Menu.NONE, 1, "New Form").setIcon(R.drawable.ic_launcher);
+//        submenu.add("Form 1").setIcon(R.drawable.ic_launcher);
+
+
+//        SubMenu subMenu = menu.addSubMenu(0,   R.id.menu_attach_take_photo, Menu.NONE,R.string.menu_attach_take_photo);
+
+//        menu.addSubMenu(0,   R.id.menu_attach_take_photo, Menu.NONE,R.string.menu_attach_take_photo);
+//        menu.addSubMenu(0,  R.id.menu_attach_import_photo,Menu.NONE, R.string.menu_attach_import_photo);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -77,6 +90,21 @@ public class ChatFragment extends BaseFragment {
             case android.R.id.home:
                 closeFragment();
                 break;
+            case R.id.menu_close:
+                try {
+                    getActivity().startService(new Intent(getActivity(), DataService.class)
+                            .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+
+                    HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
+                    ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
+
+
+                } catch (SQLException e) {
+                    Log.e(TAG, "error deactivate chat", e);
+                }
+                closeFragment();
+                break;
+
 
             case R.id.menu_upload:
 

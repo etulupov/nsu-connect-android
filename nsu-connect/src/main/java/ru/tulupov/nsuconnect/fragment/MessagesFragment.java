@@ -108,8 +108,8 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
                     getActivity().startService(new Intent(getActivity(), DataService.class)
                             .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
 
-                    HelperFactory.getHelper().getChatDao().update(chat);
-                    update();
+                    HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
+                    ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
 
 
                 } catch (SQLException e) {

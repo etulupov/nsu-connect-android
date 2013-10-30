@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="menu_attach_take_photo"/>
+    <item type="id" name="menu_attach_import_photo"/>
+</resources>
