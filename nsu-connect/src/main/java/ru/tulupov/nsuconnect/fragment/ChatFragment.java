@@ -117,7 +117,7 @@ public class ChatFragment extends BaseFragment {
         if (savedInstanceState == null) {
 
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.message_container, ConversationFragment.newInstance(getActivity(), chatId))
+                    .replace(R.id.message_container, ConversationFragment.newInstance(getActivity(), chatId))
                     .commit();
         }
 
