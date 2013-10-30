@@ -1,0 +1,15 @@
+1.0
+First release
+
+1.0.1
+Fix sliding menu bug
+
+1.0.2
+Add restoring http connection feature
+Fix settings screen layout on small screens
+
+1.0.3
+Fix 9-patches for several dpi
+Fix http connection bugs on android 2.3
+Add bugsense
+Don't track google analytics events in debug mode
