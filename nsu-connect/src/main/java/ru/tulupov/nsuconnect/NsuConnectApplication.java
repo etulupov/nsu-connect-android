@@ -62,6 +62,7 @@ public class NsuConnectApplication extends Application {
         }
 
 
+        GoogleAnalytics.getInstance(this).setDryRun(BuildConfig.DEBUG);
     }
 
 
