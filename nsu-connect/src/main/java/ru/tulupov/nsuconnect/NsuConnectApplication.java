@@ -35,6 +35,8 @@ public class NsuConnectApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        System.setProperty("http.keepAlive", "false");
+
         Thread.UncaughtExceptionHandler handler = new ExceptionReporter(
                 EasyTracker.getInstance(this),
                 GAServiceManager.getInstance(),

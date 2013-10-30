@@ -8,7 +8,10 @@ import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.Volley;
+
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -52,7 +55,7 @@ public class Session {
     }
 
     public void onCreate() {
-        queue = Volley.newRequestQueue(context);
+        queue = Volley.newRequestQueue(context, new HttpClientStack(new DefaultHttpClient()));
 
 
         myUser = new User();
