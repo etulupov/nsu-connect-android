@@ -18,21 +18,34 @@ public class Log {
     public static void e(String tag, String msg) {
         android.util.Log.e(tag, msg);
 
-        EasyTracker.getInstance(CONTEXT).send(MapBuilder.createException(String.format("%s: %s", tag, msg), false).build());
-        BugSenseHandler.addCrashExtraData(tag, msg);
+        try {
+            EasyTracker.getInstance(CONTEXT).send(MapBuilder.createException(String.format("%s: %s", tag, msg), false).build());
+        } catch (Throwable e) {
+
+        }
+        try {
+            BugSenseHandler.addCrashExtraData(tag, msg);
+        } catch (Throwable e) {
+
+        }
     }
 
     public static void e(String tag, String msg, Exception tr) {
         android.util.Log.e(tag, msg, tr);
+        try {
+            EasyTracker.getInstance(CONTEXT).send(MapBuilder.createException(String.format("%s: %s: %s",
+                    tag,
+                    msg,
+                    android.util.Log.getStackTraceString(tr)),
+                    false).build());
+        } catch (Throwable e) {
 
-        EasyTracker.getInstance(CONTEXT).send(MapBuilder.createException(String.format("%s: %s: %s",
-                tag,
-                msg,
-                android.util.Log.getStackTraceString(tr)),
-                false).build());
+        }
+        try {
+            BugSenseHandler.sendExceptionMessage(tag, msg, tr);
+        } catch (Throwable e) {
 
-
-        BugSenseHandler.sendExceptionMessage(tag, msg, tr);
+        }
     }
 
     public static void v(String tag, String msg) {
