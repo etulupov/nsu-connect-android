@@ -3,7 +3,7 @@ package ru.tulupov.nsuconnect.protocol;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -82,7 +82,7 @@ public class Session {
 
         requestSession.setSearch(SearchSettingHelper.generate(settings.getSearchParameters()));
 
-        Log.e("xxx", "set settings =" + requestSession.getSearch());
+        Log.d(TAG, "set settings =" + requestSession.getSearch());
         GetUidRequest getUidRequest = new GetUidRequest(requestSession, createGetUidListener(), createGetUidErrorListener());
         queue.add(getUidRequest);
 
@@ -167,7 +167,7 @@ public class Session {
             sendMessage(messages);
 
         } catch (SQLException e) {
-            Log.e(TAG, "error", e);
+            Log.e(TAG, "send message error", e);
         }
     }
 
@@ -195,7 +195,7 @@ public class Session {
                         ContentUriHelper.notifyChange(context, ContentUriHelper.getConversationUri(chat.getId()));
 
                     } catch (SQLException e) {
-                        Log.e(TAG, "error", e);
+                        Log.e(TAG, "send message error", e);
                     }
 
                     sendMessage(messages);
@@ -214,7 +214,7 @@ public class Session {
             SendMessageRequest sendMessageRequest = new SendMessageRequest(requestSession, messageToSend.getMessage(), new Response.Listener<Message>() {
                 @Override
                 public void onResponse(Message message) {
-                    Log.e("xxx", message.toString());
+                    Log.d(TAG, message.toString());
                     messageToSend.setSentFlag(true);
                     try {
                         HelperFactory.getHelper().getMessageDao().update(messageToSend);
@@ -244,7 +244,7 @@ public class Session {
             @Override
             public void onResponse(Uid uid) {
                 requestSession.setUid(uid);
-                Log.e("xxx", uid.getUid());
+                Log.d(TAG, uid.getUid());
                 StartSearchRequest startSearchRequest = new StartSearchRequest(requestSession, createStartSearchListener(), createStartSearchErrorListener());
                 queue.add(startSearchRequest);
             }
@@ -274,7 +274,7 @@ public class Session {
             @Override
             public void onResponse(Status status) {
                 requestSession.setLastId(requestSession.getUid().getUid());
-                Log.e("xxx", status.toString());
+                Log.d(TAG, status.toString());
 
                 processCommand(status);
 
@@ -294,21 +294,21 @@ public class Session {
 
                         // TODO fix commands id, now its ignore
 
-                        Log.e("xxx", "start to process command, get ids");
+                        Log.d(TAG, "start to process command, get ids");
 
                         if (command.getIds() != null) {
                             for (Map.Entry<String, String> entry : command.getIds().entrySet()) {
 
                                 requestSession.setLastId(String.format("%s:%s", entry.getValue(), entry.getKey()));
 
-                                Log.e("xxx", "current id=" + requestSession.getLastId());
+                                Log.d(TAG, "current id=" + requestSession.getLastId());
                             }
                         }
 
 //                        session.setLastId(session.getUid().getUid());
 
                         processCommand(command.getStatus());
-                        Log.e("xxx", "status=" + command.getStatus().toString());
+                        Log.d(TAG, "status=" + command.getStatus().toString());
 
                     }
 
@@ -389,14 +389,14 @@ public class Session {
     private void queryNextCommand() {
         CommandRequest commandRequest = new CommandRequest(requestSession, createCommandListener(), createCommandErrorListener());
         queue.add(commandRequest);
-        Log.e("xxx", "add CommandRequest");
+        Log.d(TAG, "add CommandRequest");
     }
 
     private Response.ErrorListener createErrorListener() {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.e("xxx", volleyError.toString());
+                Log.e(TAG, volleyError.toString());
             }
         };
     }
@@ -414,12 +414,12 @@ public class Session {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.e("xxx", volleyError.toString());
-                Log.e("xxx", "Try reconnect after delay");
+                Log.e(TAG, volleyError.toString());
+                Log.d(TAG, "Try reconnect after delay");
                 handler.postDelayed(queryCommandRunnable, RETRY_DELAY);
 
 //                if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 502) {
-//                    Log.e("xxx", "session error, reset id");
+//                    Log.d(TAG, "session error, reset id");
 //                    requestSession.setLastId(requestSession.getUid().getUid());
 //                    queryNextCommand();
 //                }

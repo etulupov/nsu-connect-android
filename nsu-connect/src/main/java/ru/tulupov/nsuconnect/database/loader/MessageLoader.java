@@ -3,7 +3,7 @@ package ru.tulupov.nsuconnect.database.loader;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;

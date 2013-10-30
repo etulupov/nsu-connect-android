@@ -1,6 +1,6 @@
 package ru.tulupov.nsuconnect.request;
 
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;

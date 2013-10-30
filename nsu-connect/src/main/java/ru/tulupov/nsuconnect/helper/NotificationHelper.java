@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import java.sql.SQLException;
 import java.util.Arrays;

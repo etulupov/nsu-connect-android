@@ -1,7 +1,7 @@
 package ru.tulupov.nsuconnect.protocol.commands;
 
 import android.content.Intent;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import java.sql.SQLException;
 import java.util.Date;

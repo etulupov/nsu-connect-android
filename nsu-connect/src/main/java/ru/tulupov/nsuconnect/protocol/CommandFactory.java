@@ -1,7 +1,7 @@
 package ru.tulupov.nsuconnect.protocol;
 
 
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;

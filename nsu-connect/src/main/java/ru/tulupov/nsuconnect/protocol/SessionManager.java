@@ -2,7 +2,7 @@ package ru.tulupov.nsuconnect.protocol;
 
 
 import android.content.Context;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import java.sql.SQLException;
 import java.util.HashMap;

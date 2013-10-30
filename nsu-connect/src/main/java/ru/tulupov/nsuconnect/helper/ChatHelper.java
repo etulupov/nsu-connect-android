@@ -2,7 +2,7 @@ package ru.tulupov.nsuconnect.helper;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import java.sql.SQLException;
 import java.util.Date;

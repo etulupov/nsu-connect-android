@@ -2,7 +2,7 @@ package ru.tulupov.nsuconnect.images;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 

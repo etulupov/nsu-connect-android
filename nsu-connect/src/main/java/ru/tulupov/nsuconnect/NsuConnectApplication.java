@@ -2,7 +2,7 @@ package ru.tulupov.nsuconnect;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.google.analytics.tracking.android.EasyTracker;

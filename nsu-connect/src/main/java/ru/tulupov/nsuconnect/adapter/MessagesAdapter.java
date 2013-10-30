@@ -3,7 +3,7 @@ package ru.tulupov.nsuconnect.adapter;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
+import ru.tulupov.nsuconnect.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
