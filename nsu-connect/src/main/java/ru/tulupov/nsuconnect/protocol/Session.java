@@ -5,6 +5,7 @@ import android.database.ContentObserver;
 import android.net.http.AndroidHttpClient;
 import android.os.Handler;
 
+import ru.tulupov.nsuconnect.helper.VolleyHelper;
 import ru.tulupov.nsuconnect.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -57,7 +58,7 @@ public class Session {
     }
 
     public void onCreate() {
-        queue = Volley.newRequestQueue(context, new HttpClientStack(AndroidHttpClient.newInstance("android")));
+        queue = VolleyHelper.newRequestQueue(context);
 
 
         myUser = new User();

@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
+
+import ru.tulupov.nsuconnect.helper.VolleyHelper;
 import ru.tulupov.nsuconnect.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +70,7 @@ public class SlidingMenuFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        queue = Volley.newRequestQueue(getActivity());
+        queue = VolleyHelper.newRequestQueue(getActivity());
         adapter = new SlidingMenuAdapter();
 
         header = View.inflate(getActivity(), R.layout.header_sliding_menu, null);
