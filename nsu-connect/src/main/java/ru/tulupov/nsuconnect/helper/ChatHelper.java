@@ -48,6 +48,6 @@ public class ChatHelper {
 
         context.getActivity().startService(new Intent(context.getActivity(), DataService.class).setAction(DataService.ACTION_CREATE_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
 
-        context.addFragment(ChatFragment.newInstance(context.getActivity(), chat.getId()));
+        context.addFragment(ChatFragment.newInstance(context.getActivity(), chat.getId(), true));
     }
 }

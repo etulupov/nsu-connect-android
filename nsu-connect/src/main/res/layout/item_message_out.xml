@@ -42,7 +42,7 @@
                 android:linksClickable="true"
                 android:text="Text" />
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ru.tulupov.nsuconnect.widget.CustomNetworkImageView
 
                 android:id="@+id/image"
                 android:layout_width="wrap_content"

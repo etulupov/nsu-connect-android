@@ -38,6 +38,7 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     private static final String TAG = ConversationFragment.class.getSimpleName();
     private static final String ARGS_CHAT_ID = "chat_id";
 
+
     private ListView list;
     private View footer;
     private boolean listAtTheEnd;
@@ -96,6 +97,7 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     public static ConversationFragment newInstance(final Context context, int chatId) {
         final Bundle args = new Bundle();
         args.putInt(ARGS_CHAT_ID, chatId);
+
         return (ConversationFragment) Fragment.instantiate(context, ConversationFragment.class.getName(), args);
     }
 

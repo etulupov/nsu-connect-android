@@ -43,11 +43,13 @@ public class ChatFragment extends BaseFragment {
     private static final int REQUEST_CODE_TAKE_PHOTO = 0;
     private static final int REQUEST_CODE_IMPORT_PHOTO = 1;
     private static final String ARGS_CHAT_ID = "chat_id";
+    private static final String ARGS_IS_ACTIVE = "chat_is_active";
     private static final String TAG = ChatFragment.class.getSimpleName();
 
-    public static ChatFragment newInstance(final Context context, int chatId) {
+    public static ChatFragment newInstance(final Context context, int chatId, boolean isChatActive) {
         final Bundle args = new Bundle();
         args.putInt(ARGS_CHAT_ID, chatId);
+        args.putBoolean(ARGS_IS_ACTIVE, isChatActive);
         return (ChatFragment) Fragment.instantiate(context, ChatFragment.class.getName(), args);
     }
 
@@ -68,8 +70,9 @@ public class ChatFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.fgt_chat, menu);
+        if (getArguments().getBoolean(ARGS_IS_ACTIVE)) {
+            inflater.inflate(R.menu.fgt_chat, menu);
+        }
 
 //        SubMenu submenu = menu.addSubMenu(0, Menu.NONE, 1, "New Form").setIcon(R.drawable.ic_launcher);
 //        submenu.add("Form 1").setIcon(R.drawable.ic_launcher);

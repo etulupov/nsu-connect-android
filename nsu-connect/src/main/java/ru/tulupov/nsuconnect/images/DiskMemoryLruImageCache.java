@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+
+import ru.tulupov.nsuconnect.helper.BitmapHelper;
 import ru.tulupov.nsuconnect.util.Log;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
@@ -50,7 +52,7 @@ public class DiskMemoryLruImageCache extends DiskLruImageCache {
 
     @Override
     public void putBitmap(String key, Bitmap data) {
-
+        data = BitmapHelper.getScaledBitmap(data);
         super.putBitmap(key, data);
     }
 }

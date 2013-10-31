@@ -55,7 +55,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
     @Override
     protected void onItemClick(int position, Chat item) {
-        addFragment(ChatFragment.newInstance(getActivity(), item.getId()));
+        addFragment(ChatFragment.newInstance(getActivity(), item.getId(), item.isActive()));
     }
 
     @Override
@@ -170,7 +170,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
                     case 0:
                         EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "delete_chat", null).build());
 
-                      removeChat(item);
+                        removeChat(item);
                         return;
                 }
             }

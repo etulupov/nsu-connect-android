@@ -19,13 +19,14 @@ import ru.tulupov.nsuconnect.model.Message;
 import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 import ru.tulupov.nsuconnect.util.adapter.FindViewById;
+import ru.tulupov.nsuconnect.widget.CustomNetworkImageView;
 
 public class ConversationAdapter extends BeanHolderAdapter<Message, ConversationAdapter.Holder> {
     public static class Holder {
         @FindViewById(R.id.text)
         public TextView text;
         @FindViewById(R.id.image)
-        public NetworkImageView image;
+        public CustomNetworkImageView image;
         @FindViewById(R.id.date)
         public TextView date;
         @FindViewById(R.id.container)

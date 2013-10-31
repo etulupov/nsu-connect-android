@@ -10,6 +10,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
+
 import ru.tulupov.nsuconnect.util.Log;
 
 import java.io.File;
@@ -18,7 +20,7 @@ import java.io.FileOutputStream;
 public final class BitmapHelper {
 
     private static final String TAG = "BitmapHelper";
-    public static final int PICTURE_MAX_SIZE = 200;
+    public static final int PICTURE_MAX_SIZE = 500;
 
     private BitmapHelper() {
         throw new UnsupportedOperationException();
@@ -101,6 +103,27 @@ public final class BitmapHelper {
             Log.e(TAG, "error", e);
         }
         return rotate;
+    }
+
+    public static Bitmap getScaledBitmap(Bitmap photo) {
+        final int bitmapWidth = photo.getWidth();
+        final int bitmapHeight = photo.getHeight();
+        float ratio;
+        int targetWidth;
+        int targetHeight;
+        if (bitmapWidth > bitmapHeight) {
+            ratio = (float) bitmapHeight / bitmapWidth;
+            targetWidth = PICTURE_MAX_SIZE;
+            targetHeight = Math.round(targetWidth * ratio);
+        } else {
+            ratio = (float) bitmapWidth / bitmapHeight;
+
+            targetHeight = PICTURE_MAX_SIZE;
+            targetWidth = Math.round(targetHeight * ratio);
+        }
+
+
+        return Bitmap.createScaledBitmap(photo, targetWidth, targetHeight, true);
     }
 
     public static Bitmap getNormalPhoto(String picturePath) {
