@@ -20,17 +20,26 @@ import java.io.FileOutputStream;
 public final class BitmapHelper {
 
     private static final String TAG = "BitmapHelper";
-    public static final int PICTURE_MAX_SIZE = 500;
+    public static final int PICTURE_MAX_SIZE = 600;
 
     private BitmapHelper() {
         throw new UnsupportedOperationException();
     }
 
     public static String getPicturePath(final Context context, final Intent data) {
+        if (data == null) {
+            return null;
+        }
         final Uri selectedImage = data.getData();
+        if (selectedImage == null) {
+            return null;
+        }
         final String[] filePathColumn = {MediaStore.Images.Media.DATA};
         final Cursor cursor = context.getContentResolver()
                 .query(selectedImage, filePathColumn, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
         cursor.moveToFirst();
         final int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         final String picturePath = cursor.getString(columnIndex);
@@ -142,18 +151,23 @@ public final class BitmapHelper {
         return bitmap;
     }
 
+    public static File getTempFile() {
+        File dir = new File(Environment.getExternalStorageDirectory() + "/tmp");
+        dir.mkdirs();
+        return new File(dir, String.format("%d.jpg", System.currentTimeMillis()));
+    }
+
     public static File saveBitmapToTmpFile(Bitmap bitmap) {
         File file = null;
         try {
-            File dir = new File(Environment.getExternalStorageDirectory() + "/tmp");
-            dir.mkdirs();
-            file = new File(dir, String.format("%d.jpg", System.currentTimeMillis()));
+
+            file = getTempFile();
             file.deleteOnExit();
             FileOutputStream fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.close();
         } catch (Exception e) {
-            Log.e(TAG, "Error", e);
+            android.util.Log.e(TAG, "Error", e);
         }
         return file;
     }

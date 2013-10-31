@@ -42,3 +42,7 @@ Fix multiple message sending
 1.1.0
 Fix welcome settings crash on HTC One
 
+1.1.1
+Resize image messages after loading
+Fix chat dialog when it's not active
+Fix camera issues on Samsung Galaxy S2

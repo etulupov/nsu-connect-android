@@ -45,6 +45,7 @@ public class ChatFragment extends BaseFragment {
     private static final String ARGS_CHAT_ID = "chat_id";
     private static final String ARGS_IS_ACTIVE = "chat_is_active";
     private static final String TAG = ChatFragment.class.getSimpleName();
+    private File photo;
 
     public static ChatFragment newInstance(final Context context, int chatId, boolean isChatActive) {
         final Bundle args = new Bundle();
@@ -131,8 +132,8 @@ public class ChatFragment extends BaseFragment {
                         switch (position) {
                             case 0:
                                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "attach_take_photo", null).build());
-
-                                startActivityForResult(IntentActionHelper.getCameraIntent(getActivity()), REQUEST_CODE_TAKE_PHOTO);
+                                photo = BitmapHelper.getTempFile();
+                                startActivityForResult(IntentActionHelper.getCameraIntent(getActivity(), photo), REQUEST_CODE_TAKE_PHOTO);
                                 return;
                             case 1:
                                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "attach_import_photo", null).build());
@@ -290,8 +291,10 @@ public class ChatFragment extends BaseFragment {
 
         if ((requestCode == REQUEST_CODE_TAKE_PHOTO || requestCode == REQUEST_CODE_IMPORT_PHOTO) && resultCode == Activity.RESULT_OK) {
             try {
-                final String picturePath = BitmapHelper.getPicturePath(getActivity(), data);
-
+                String picturePath = BitmapHelper.getPicturePath(getActivity(), data);
+                if (picturePath == null) {
+                    picturePath = photo.getPath();
+                }
 
                 Bitmap bitmap = BitmapHelper.getNormalPhoto(picturePath);
 

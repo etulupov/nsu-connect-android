@@ -90,13 +90,12 @@ public class ConversationAdapter extends BeanHolderAdapter<Message, Conversation
                 } else {
                     ImageLoader imageLoader = new ImageLoader(null, null) {
                         @Override
-                        public ImageContainer get(String requestUrl, ImageListener listener) {
-
+                        public ImageContainer get(String requestUrl, ImageListener imageListener, int maxWidth, int maxHeight) {
                             ImageContainer container = new ImageContainer(ImageCacheManager.getInstance().getBitmap(requestUrl), requestUrl, null, null);
-                            listener.onResponse(container, true);
+                            imageListener.onResponse(container, true);
                             return container;
-
                         }
+
                     };
                     holder.image.setImageUrl(url, imageLoader);
                 }
