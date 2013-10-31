@@ -88,8 +88,8 @@ public class WelcomeFragment extends BaseFragment {
             public void onSelect(List<Integer> selected) {
                 int position = selected.get(0);
                 if (position == 0) {
-                    navigate(PAGE_YOUR_AGE);
                     targetGenderFragment.clearSelection();
+                    navigate(PAGE_YOUR_AGE);
                 } else {
                     navigate(PAGE_TARGET_GENDER);
                 }
@@ -106,8 +106,8 @@ public class WelcomeFragment extends BaseFragment {
             public void onSelect(List<Integer> selected) {
                 int position = selected.get(0);
                 if (position == 0) {
-                    navigate(PAGE_FINISH);
                     targetAgeFragment.clearSelection();
+                    navigate(PAGE_FINISH);
                 } else {
                     navigate(PAGE_TARGET_AGE);
                 }

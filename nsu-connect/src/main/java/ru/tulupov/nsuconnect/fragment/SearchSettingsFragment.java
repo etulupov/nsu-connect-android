@@ -89,22 +89,27 @@ public abstract class SearchSettingsFragment extends BaseFragment {
     }
 
     public List<Integer> getSelectedItems() {
-        SparseBooleanArray checked = list.getCheckedItemPositions();
         List<Integer> selected = new ArrayList<Integer>();
-        for (int i = 0; i < checked.size(); i++) {
-            int position = checked.keyAt(i);
-            if (checked.valueAt(i)) {
-                selected.add(position);
+
+        if (list != null) {
+            SparseBooleanArray checked = list.getCheckedItemPositions();
+
+            for (int i = 0; i < checked.size(); i++) {
+                int position = checked.keyAt(i);
+                if (checked.valueAt(i)) {
+                    selected.add(position);
+                }
             }
         }
-
         return selected;
     }
 
     public void clearSelection() {
-        list.clearChoices();
-        for (int i = 0; i < list.getChildCount(); i++) {
-            list.setItemChecked(i, false);
+        if (list != null) {
+            list.clearChoices();
+            for (int i = 0; i < list.getChildCount(); i++) {
+                list.setItemChecked(i, false);
+            }
         }
 
         saveState();
@@ -116,21 +121,25 @@ public abstract class SearchSettingsFragment extends BaseFragment {
     }
 
     private void saveState() {
-        SharedPreferences preferences = getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String className = ((Object) this).getClass().getSimpleName();
-        preferences.edit().putString(String.format(PREFS_STATE_FORMATTER, getClassName()), gson.toJson(getSelectedItems())).commit();
+        if (getActivity() != null) {
+            SharedPreferences preferences = getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String className = ((Object) this).getClass().getSimpleName();
+            preferences.edit().putString(String.format(PREFS_STATE_FORMATTER, getClassName()), gson.toJson(getSelectedItems())).commit();
+        }
     }
 
     private void restoreState() {
-        SharedPreferences preferences = getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        Type listType = new TypeToken<ArrayList<Integer>>() {
-        }.getType();
-        List<Integer> selected = gson.fromJson(preferences.getString(String.format(PREFS_STATE_FORMATTER, getClassName()), ""), listType);
-        if (selected != null) {
-            for (Integer position : selected) {
-                list.setItemChecked(position, true);
+        if (getActivity() != null) {
+            SharedPreferences preferences = getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<Integer>>() {
+            }.getType();
+            List<Integer> selected = gson.fromJson(preferences.getString(String.format(PREFS_STATE_FORMATTER, getClassName()), ""), listType);
+            if (selected != null) {
+                for (Integer position : selected) {
+                    list.setItemChecked(position, true);
+                }
             }
         }
     }
