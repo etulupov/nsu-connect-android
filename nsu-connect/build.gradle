@@ -32,4 +32,5 @@ dependencies {
     compile project(':app-rater-library')
     compile project(':update-checker-library')
     compile project(":android-styled-dialogs-library")
+    compile project(":volley-library")
 }
