@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 
 import ru.tulupov.nsuconnect.helper.BroadcastHelper;
 import ru.tulupov.nsuconnect.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +112,7 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         list = (ListView) view.findViewById(R.id.list);
+        list.setEmptyView(findViewById(R.id.empty));
         footer = View.inflate(getActivity(), R.layout.footer_messages, null);
         list.addFooterView(footer);
         adapter = new ConversationAdapter();
@@ -141,8 +143,6 @@ public class ConversationFragment extends LoaderListFragment<Message> {
         });
 
     }
-
-
 
 
     @Override
