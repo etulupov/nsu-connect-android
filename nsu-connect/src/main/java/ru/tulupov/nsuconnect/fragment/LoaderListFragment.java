@@ -80,6 +80,7 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
                             LoaderListFragment.this.onItemClick(position, adapter.getItem(position));
                         }
                     });

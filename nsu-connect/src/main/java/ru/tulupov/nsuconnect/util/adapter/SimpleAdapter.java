@@ -73,8 +73,12 @@ public abstract class SimpleAdapter<T> extends BaseAdapter {
     @Override
     public T getItem(int position) {
         synchronized (lock) {
-            return list.get(position);
+            if (position < list.size()) {
+                return list.get(position);
+            }
         }
+
+        return null;
     }
 
     @Override
