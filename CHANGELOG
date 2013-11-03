@@ -46,3 +46,11 @@ Fix welcome settings crash on HTC One
 Resize image messages after loading
 Fix chat dialog when it's not active
 Fix camera issues on Samsung Galaxy S2
+
+1.2.0
+Changed vibration policy
+Fix crash in chat (click on footer)
+Fix volley out of memory error
+Deactivate chat after disconnect
+Add progress indicator in chat
+
