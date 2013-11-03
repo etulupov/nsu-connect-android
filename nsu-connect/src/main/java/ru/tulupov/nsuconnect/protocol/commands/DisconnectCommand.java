@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import ru.tulupov.nsuconnect.database.ContentUriHelper;
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
 import ru.tulupov.nsuconnect.database.HelperFactory;
+import ru.tulupov.nsuconnect.helper.BroadcastHelper;
 import ru.tulupov.nsuconnect.helper.SoundHelper;
 import ru.tulupov.nsuconnect.protocol.Command;
 import ru.tulupov.nsuconnect.protocol.CommandContext;
@@ -17,7 +18,8 @@ public class DisconnectCommand extends SystemCommand {
     public void execute(CommandContext context) {
         SoundHelper.beep();
         writeSystem(context, "Отключено");
-        context.getApplicationContext().sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
+        context.getApplicationContext().sendBroadcast(BroadcastHelper.getChatTypingIntent(context.getChat().getId(), false));
+        context.getApplicationContext().sendBroadcast(BroadcastHelper.getChatDisconnectIntent(context.getChat().getId()));
 
 
         context.getApplicationContext().startService(new Intent(context.getApplicationContext(), DataService.class)

@@ -1,6 +1,8 @@
 package ru.tulupov.nsuconnect.protocol.commands;
 
 import android.content.Intent;
+
+import ru.tulupov.nsuconnect.helper.BroadcastHelper;
 import ru.tulupov.nsuconnect.util.Log;
 
 import java.sql.SQLException;
@@ -23,7 +25,7 @@ public class ImageMessageCommand implements Command {
 
     @Override
     public void execute(CommandContext context) {
-        context.getApplicationContext(). sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS).putExtra(DatabaseConstants.EXTRA_IS_TYPING, false));
+        context.getApplicationContext().sendBroadcast(BroadcastHelper.getChatTypingIntent(context.getChat().getId(), false));
 
    
         Message message = new Message();

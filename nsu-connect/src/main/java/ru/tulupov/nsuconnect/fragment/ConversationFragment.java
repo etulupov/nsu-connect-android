@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
+
+import ru.tulupov.nsuconnect.helper.BroadcastHelper;
 import ru.tulupov.nsuconnect.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,10 +50,10 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     private BroadcastReceiver updateTypingStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (chat.getId() != intent.getIntExtra(DataService.EXTRA_ID, 0)) {
+            if (chat.getId() != intent.getIntExtra(BroadcastHelper.EXTRA_CHAT_ID, 0)) {
                 return;
             }
-            boolean isTyping = intent.getBooleanExtra(DatabaseConstants.EXTRA_IS_TYPING, false);
+            boolean isTyping = intent.getBooleanExtra(BroadcastHelper.EXTRA_IS_TYPING, false);
 
             updateTypingStatus(isTyping);
 
@@ -182,7 +184,7 @@ public class ConversationFragment extends LoaderListFragment<Message> {
     public void onResume() {
         super.onResume();
         updateTypingStatus(false);
-        IntentFilter updateTypingStatusFilter = new IntentFilter(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS);
+        IntentFilter updateTypingStatusFilter = new IntentFilter(BroadcastHelper.ACTION_UPDATE_TYPING_STATUS);
         getActivity().registerReceiver(updateTypingStatusReceiver, updateTypingStatusFilter);
 
         updateReadFlag();

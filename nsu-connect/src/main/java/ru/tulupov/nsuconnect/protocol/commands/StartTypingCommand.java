@@ -1,6 +1,8 @@
 package ru.tulupov.nsuconnect.protocol.commands;
 
 import android.content.Intent;
+
+import ru.tulupov.nsuconnect.helper.BroadcastHelper;
 import ru.tulupov.nsuconnect.util.Log;
 
 import java.sql.SQLException;
@@ -19,9 +21,6 @@ public class StartTypingCommand implements Command {
 
     @Override
     public void execute(CommandContext context) {
-        context.getApplicationContext().sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS)
-                .putExtra(DatabaseConstants.EXTRA_IS_TYPING, true)
-                .putExtra(DataService.EXTRA_ID, context.getChat().getId())
-        );
+        context.getApplicationContext().sendBroadcast(BroadcastHelper.getChatTypingIntent(context.getChat().getId(), true));
     }
 }

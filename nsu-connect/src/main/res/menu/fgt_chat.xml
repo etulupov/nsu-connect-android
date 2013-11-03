@@ -16,7 +16,7 @@
     </item>
     <item
 
-        android:id="@+id/menu_close"
+        android:id="@+id/menu_exit"
         android:icon="@drawable/ic_ab_exit"
         app:showAsAction="always" />
 

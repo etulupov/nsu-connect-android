@@ -1,8 +1,10 @@
 package ru.tulupov.nsuconnect.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,8 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import ru.tulupov.nsuconnect.database.DatabaseConstants;
+import ru.tulupov.nsuconnect.helper.BroadcastHelper;
 import ru.tulupov.nsuconnect.util.Log;
 
 import android.view.LayoutInflater;
@@ -46,6 +50,7 @@ public class ChatFragment extends BaseFragment {
     private static final String ARGS_IS_ACTIVE = "chat_is_active";
     private static final String TAG = ChatFragment.class.getSimpleName();
     private File photo;
+    private boolean isChatActive;
 
     public static ChatFragment newInstance(final Context context, int chatId, boolean isChatActive) {
         final Bundle args = new Bundle();
@@ -62,18 +67,33 @@ public class ChatFragment extends BaseFragment {
     private boolean isTyping;
     private int chatId;
 
+    private BroadcastReceiver connectivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (chatId == intent.getIntExtra(BroadcastHelper.EXTRA_CHAT_ID, 0)) {
+                isChatActive = false;
+                getActivity().supportInvalidateOptionsMenu();
+                hideSendSection();
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        isChatActive = getArguments().getBoolean(ARGS_IS_ACTIVE);
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (getArguments().getBoolean(ARGS_IS_ACTIVE)) {
+
+        if (isChatActive) {
             inflater.inflate(R.menu.fgt_chat, menu);
         }
+
 
 //        SubMenu submenu = menu.addSubMenu(0, Menu.NONE, 1, "New Form").setIcon(R.drawable.ic_launcher);
 //        submenu.add("Form 1").setIcon(R.drawable.ic_launcher);
@@ -95,7 +115,13 @@ public class ChatFragment extends BaseFragment {
             case android.R.id.home:
                 closeFragment();
                 break;
+
             case R.id.menu_close:
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "close_chat", null).build());
+                closeFragment();
+                break;
+
+            case R.id.menu_exit:
                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "chat", "exit_chat", null).build());
                 DialogConfirmExitFragment dialog = DialogConfirmExitFragment.newInstance(getActivity());
                 dialog.setOnExitListener(new DialogConfirmExitFragment.OnExitListener() {
@@ -262,8 +288,7 @@ public class ChatFragment extends BaseFragment {
         try {
             chat = HelperFactory.getHelper().getChatDao().getChat(chatId);
             if (!chat.isActive()) {
-                findViewById(R.id.send_container).setVisibility(View.GONE);
-                findViewById(R.id.shadow).setVisibility(View.GONE);
+                hideSendSection();
             }
             getActivity().setTitle(chat.getName());
         } catch (SQLException e) {
@@ -271,6 +296,11 @@ public class ChatFragment extends BaseFragment {
         }
 
 
+    }
+
+    private void hideSendSection() {
+        findViewById(R.id.send_container).setVisibility(View.GONE);
+        findViewById(R.id.shadow).setVisibility(View.GONE);
     }
 
     private Runnable stopTypingRunnable = new Runnable() {
@@ -314,5 +344,16 @@ public class ChatFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter updateTypingStatusFilter = new IntentFilter(BroadcastHelper.ACTION_USER_DISCONNECTED);
+        getActivity().registerReceiver(connectivityReceiver, updateTypingStatusFilter);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(connectivityReceiver);
+    }
 }

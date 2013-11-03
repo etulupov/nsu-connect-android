@@ -3,6 +3,7 @@ package ru.tulupov.nsuconnect.protocol.commands;
 import android.content.Intent;
 
 import ru.tulupov.nsuconnect.database.DatabaseConstants;
+import ru.tulupov.nsuconnect.helper.BroadcastHelper;
 import ru.tulupov.nsuconnect.protocol.Command;
 import ru.tulupov.nsuconnect.protocol.CommandContext;
 import ru.tulupov.nsuconnect.service.DataService;
@@ -12,10 +13,7 @@ public class StopTypingCommand implements Command {
 
     @Override
     public void execute(CommandContext context) {
-        context.getApplicationContext().sendBroadcast(new Intent(DatabaseConstants.ACTION_UPDATE_TYPING_STATUS)
-                .putExtra(DatabaseConstants.EXTRA_IS_TYPING, false)
-                .putExtra(DataService.EXTRA_ID, context.getChat().getId())
-        );
+        context.getApplicationContext().sendBroadcast(BroadcastHelper.getChatTypingIntent(context.getChat().getId(), false));
 
     }
 }
