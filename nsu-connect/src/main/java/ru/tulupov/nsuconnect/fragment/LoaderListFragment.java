@@ -47,6 +47,10 @@ public abstract class LoaderListFragment<T> extends BaseFragment {
         return false;
     }
 
+    protected ListView getListView() {
+        return list;
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

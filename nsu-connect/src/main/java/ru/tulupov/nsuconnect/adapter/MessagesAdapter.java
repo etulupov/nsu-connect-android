@@ -3,8 +3,11 @@ package ru.tulupov.nsuconnect.adapter;
 
 import android.content.Context;
 import android.text.Html;
+
 import ru.tulupov.nsuconnect.util.Log;
+
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,11 +23,15 @@ import ru.tulupov.nsuconnect.model.User;
 import ru.tulupov.nsuconnect.util.DateUtils;
 import ru.tulupov.nsuconnect.util.adapter.BeanHolderAdapter;
 import ru.tulupov.nsuconnect.util.adapter.FindViewById;
+import ru.tulupov.nsuconnect.widget.CheckableRelativeLayout;
 
 public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Holder> {
     private static final String TAG = MessagesAdapter.class.getSimpleName();
 
     public static class Holder {
+        @FindViewById(R.id.layout)
+        public CheckableRelativeLayout layout;
+
         @FindViewById(R.id.text)
         public TextView text;
 
@@ -36,10 +43,14 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
 
         @FindViewById(R.id.stop)
         public ImageView stop;
+
+        @FindViewById(R.id.checkbox)
+        public CheckBox checkbox;
     }
 
     public interface OnClickListener {
         void onStop(Chat chat);
+        void onChecked(int position);
     }
 
     private OnClickListener onClickListener;
@@ -51,14 +62,22 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
 
     }
 
+    private boolean checkable;
+
+    public void setCheckable(boolean checkable) {
+        this.checkable = checkable;
+        notifyDataSetChanged();
+    }
 
     public void setOnClickListener(OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 
 
+
+
     @Override
-    protected void updateHolder(Context context, Holder holder, final Chat item, int position) {
+    protected void updateHolder(Context context, final Holder holder, final Chat item, final int position) {
 
 
         if (item.getLastMessageId() != null) {
@@ -102,6 +121,23 @@ public class MessagesAdapter extends BeanHolderAdapter<Chat, MessagesAdapter.Hol
             });
         } else {
             holder.stop.setVisibility(View.INVISIBLE);
+        }
+
+        if (checkable) {
+            holder.checkbox.setVisibility(View.VISIBLE);
+            holder.checkbox.setChecked(holder.layout.isChecked());
+            holder.checkbox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onClickListener != null) {
+                        onClickListener.onChecked(position);
+
+                    }
+                }
+            });
+        } else {
+            holder.checkbox.setVisibility(View.GONE);
+            holder.checkbox.setOnClickListener(null);
         }
     }
 

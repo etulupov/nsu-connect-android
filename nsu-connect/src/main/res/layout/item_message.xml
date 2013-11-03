@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.tulupov.nsuconnect.widget.CheckableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/item_bg"
     android:padding="10dp">
+
+    <CheckBox
+
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/date"
+        android:layout_toRightOf="@id/checkbox"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="Text"
@@ -24,6 +36,7 @@
         android:layout_below="@id/text"
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/stop"
+        android:layout_toRightOf="@id/checkbox"
         android:background="#ddd"
         android:ellipsize="end"
         android:maxLines="2"
@@ -61,4 +74,4 @@
         android:src="@drawable/ic_exit" />
 
 
-</RelativeLayout>
+</ru.tulupov.nsuconnect.widget.CheckableRelativeLayout>

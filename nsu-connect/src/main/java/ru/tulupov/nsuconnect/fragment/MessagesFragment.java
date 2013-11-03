@@ -9,17 +9,21 @@ import android.support.v4.content.Loader;
 
 import ru.tulupov.nsuconnect.util.Log;
 
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
+import android.widget.ListView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
@@ -53,9 +57,51 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
         return inflater.inflate(R.layout.fgt_messages, container, false);
     }
 
+    private MessagesAdapter adapter;
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+
+        adapter = new MessagesAdapter();
+        adapter.setOnClickListener(new MessagesAdapter.OnClickListener() {
+            @Override
+            public void onStop(final Chat chat) {
+                chat.setActive(false);
+                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_item", null).build());
+
+
+                deactivateChat(chat);
+
+
+            }
+
+            @Override
+            public void onChecked(int position) {
+
+                getListView().setItemChecked(position, true);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     @Override
     protected void onItemClick(int position, Chat item) {
-        addFragment(ChatFragment.newInstance(getActivity(), item.getId(), item.isActive()));
+        if (!isAction) {
+            addFragment(ChatFragment.newInstance(getActivity(), item.getId(), item.isActive()));
+        } else {
+            SparseBooleanArray checked = getListView().getCheckedItemPositions();
+            boolean hasCheckedElement = false;
+            for (int i = 0; i < checked.size() && !hasCheckedElement; i++) {
+                hasCheckedElement = checked.valueAt(i);
+            }
+            if (!hasCheckedElement) {
+                isAction = false;
+                updateAction();
+            }
+        }
     }
 
     @Override
@@ -68,10 +114,15 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
         return R.id.menu_messages;
     }
 
+    private boolean isAction;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fgt_messages, menu);
+        if (isAction) {
+            inflater.inflate(R.menu.fgt_messages_action, menu);
+        } else {
+            inflater.inflate(R.menu.fgt_messages, menu);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -81,6 +132,13 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
             case R.id.menu_new_conversation:
                 ChatHelper.openChatFragment(this);
                 EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "menu_new_conversation", null).build());
+                break;
+
+            case R.id.menu_delete:
+                removeChats();
+                break;
+            case R.id.menu_select_all:
+                toggleSelectAll();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -98,19 +156,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
     @Override
     protected BeanHolderAdapter<Chat, ?> getAdapter() {
-        MessagesAdapter adapter = new MessagesAdapter();
-        adapter.setOnClickListener(new MessagesAdapter.OnClickListener() {
-            @Override
-            public void onStop(final Chat chat) {
-                chat.setActive(false);
-                EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "exit_chat_item", null).build());
 
-
-                deactivateChat(chat);
-
-
-            }
-        });
         return adapter;
     }
 
@@ -136,7 +182,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
         showDialog(dialog);
     }
 
-    private void removeChat(final Chat chat) {
+    private void removeChats() {
         DialogConfirmDeletionFragment dialog = DialogConfirmDeletionFragment.newInstance(getActivity());
         dialog.setOnDeleteListener(new DialogConfirmDeletionFragment.OnDeleteListener() {
             @Override
@@ -145,37 +191,126 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
 
                 try {
-                    HelperFactory.getHelper().getChatDao().delete(chat);
+                    List<Chat> ids = new ArrayList<Chat>();
+
+                    SparseBooleanArray checked = getListView().getCheckedItemPositions();
+
+                    for (int i = 0; i < checked.size(); i++) {
+                        int position = checked.keyAt(i);
+                        if (checked.valueAt(i)) {
+                            Chat chat = adapter.getItem((int) position);
+
+                            if (chat.isActive()) {
+                                getActivity().startService(new Intent(getActivity(), DataService.class)
+                                        .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+
+                                HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
+                            }
+
+                            ids.add(adapter.getItem((int) position));
+                        }
+                    }
+
+
+                    HelperFactory.getHelper().getChatDao().delete(ids);
                     ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
                 } catch (SQLException e) {
                     Log.e(TAG, "error removing chat", e);
                 }
+                isAction = false;
+                updateAction();
             }
         });
         showDialog(dialog);
     }
 
-    @Override
-    protected boolean onItemLongPress(int position, final Chat item) {
-        if (item.isActive()) {
-            return false;
+    private void clearCheckedItems() {
+        for (int i = 0; i < getListView().getCount(); i++) {
+            if (getListView().getChildAt(i) instanceof Checkable) {
+                ((Checkable) getListView().getChildAt(i)).setChecked(false);
+            }
+            getListView().setItemChecked(i, false);
+        }
+        for (int i = 0; i < getListView().getChildCount(); i++) {
+            if (getListView().getChildAt(i) instanceof Checkable) {
+                ((Checkable) getListView().getChildAt(i)).setChecked(false);
+            }
+        }
+    }
+
+    private boolean isAllSelected;
+
+    private void toggleSelectAll() {
+        isAllSelected = !isAllSelected;
+        for (int i = 0; i < getListView().getCount(); i++) {
+
+            getListView().setItemChecked(i, isAllSelected);
+        }
+    }
+
+    private void updateAction() {
+
+        if (isAction) {
+            getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        } else {
+
+            clearCheckedItems();
+
+            getListView().setChoiceMode(ListView.CHOICE_MODE_NONE);
         }
 
-        DialogItemListFragment dialogItemList = DialogItemListFragment.newInstance(getActivity(), R.array.messages_chat_actions);
+        isAllSelected = false;
+//        adapter.setCheckable(isAction);
+//        adapter.notifyDataSetChanged();
+        getActivity().supportInvalidateOptionsMenu();
+    }
 
-        dialogItemList.setOnItemClickListener(new DialogItemListFragment.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                switch (position) {
-                    case 0:
-                        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "delete_chat", null).build());
+    @Override
+    protected boolean onItemLongPress(int position, final Chat item) {
+        isAction = !isAction;
+        updateAction();
+        if (isAction) {
+            getListView().setItemChecked(position, true);
+        }
 
-                        removeChat(item);
-                        return;
-                }
-            }
-        });
-        showDialog(dialogItemList);
+//        SparseBooleanArray checked = getListView().getCheckedItemPositions();
+//        boolean hasCheckedElement = false;
+//        for (int i = 0; i < checked.size() && !hasCheckedElement; i++) {
+//            hasCheckedElement = checked.valueAt(i);
+//        }
+
+
+//
+//        if (item.isActive()) {
+//            return false;
+//        }
+//
+//        DialogItemListFragment dialogItemList = DialogItemListFragment.newInstance(getActivity(), R.array.messages_chat_actions);
+//
+//        dialogItemList.setOnItemClickListener(new DialogItemListFragment.OnItemClickListener() {
+//            @Override
+//            public void onClick(int position) {
+//                switch (position) {
+//                    case 0:
+//                        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "delete_chat", null).build());
+//
+//                        removeChat(item);
+//                        return;
+//                }
+//            }
+//        });
+//        showDialog(dialogItemList);
         return true;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (isAction) {
+            isAction = !isAction;
+            updateAction();
+            return true;
+        }
+        return false;
     }
 }

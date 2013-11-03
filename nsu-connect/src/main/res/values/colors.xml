@@ -2,6 +2,10 @@
 <resources>
     <color name="light_gray">#ddd</color>
     <color name="black">#000</color>
+    <color name="white">#fff</color>
+    <color name="item_checked">#9BE2FA</color>
+    <color name="item_pressed">#9BE2FA</color>
+    <color name="item_normal">#fff</color>
     <color name="sliding_menu_background">#222</color>
     <color name="sliding_menu_background_2">#333</color>
     <color name="sliding_menu_background_3">#202020</color>
