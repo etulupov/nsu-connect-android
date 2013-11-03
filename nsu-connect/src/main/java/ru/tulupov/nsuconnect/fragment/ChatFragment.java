@@ -92,6 +92,8 @@ public class ChatFragment extends BaseFragment {
 
         if (isChatActive) {
             inflater.inflate(R.menu.fgt_chat, menu);
+        } else {
+            inflater.inflate(R.menu.fgt_chat_2, menu);
         }
 
 
