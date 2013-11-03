@@ -10,15 +10,19 @@ import java.io.IOException;
 
 public class VibrateHelper {
     private static Vibrator VIBRATOR;
-    private static long[] PATTERN = {50, 100, 75, 100};
+    private static long[] PATTERN = {50, 150, 100, 150};
+    private static AudioManager AUDIO_MANAGER;
 
     public static void init(Context context) {
         VIBRATOR = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        AUDIO_MANAGER = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     public static void vibrate() {
-        if (VIBRATOR != null) {
-            VIBRATOR.vibrate(PATTERN, -1);
+        if (VIBRATOR != null && AUDIO_MANAGER != null) {
+            if (AUDIO_MANAGER.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                VIBRATOR.vibrate(PATTERN, -1);
+            }
         }
     }
 }
