@@ -85,6 +85,7 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
         });
 
         super.onViewCreated(view, savedInstanceState);
+        getListView().setEmptyView(findViewById(R.id.empty));
     }
 
     @Override

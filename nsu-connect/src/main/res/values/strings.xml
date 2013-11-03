@@ -31,6 +31,7 @@
     <string name="dialog_no">Нет</string>
 
     <string name="messages_image_type">Изображение</string>
+    <string name="messages_empty">Список диалогов пуст.\nЧтобы начать беседу,\nнажмите кнопку \'+\'.</string>
     <string name="menu_attach_take_photo">Сделать снимок</string>
     <string name="menu_attach_import_photo">Выбрать из галереи</string>
     <string name="dialog__items_title">Выберите</string>
