@@ -29,11 +29,14 @@ import ru.tulupov.nsuconnect.widget.CustomViewPager;
 
 
 public class WelcomeFragment extends BaseFragment {
-    protected static final int PAGE_YOUR_GENDER = 0;
-    protected static final int PAGE_TARGET_GENDER = 1;
-    protected static final int PAGE_YOUR_AGE = 2;
-    protected static final int PAGE_TARGET_AGE = 3;
-    protected static final int PAGE_FINISH = 4;
+    public enum Page {
+        YOUR_UNIVERSITY,
+        YOUR_GENDER,
+        TARGET_GENDER,
+        YOUR_AGE,
+        TARGET_AGE,
+        FINISH,
+    }
 
 
     public static WelcomeFragment newInstance(final Context context) {
@@ -56,8 +59,9 @@ public class WelcomeFragment extends BaseFragment {
     }
 
     private CustomViewPager pager;
-    private List<Integer> pagesBackStack;
+    private List<Page> pagesBackStack;
 
+    private SearchSettingsFragment yourUniversityFragment;
     private SearchSettingsFragment yourGenderFragment;
     private SearchSettingsFragment targetGenderFragment;
     private SearchSettingsFragment yourAgeFragment;
@@ -67,38 +71,45 @@ public class WelcomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        pagesBackStack = new ArrayList<Integer>();
-        pagesBackStack.add(PAGE_YOUR_GENDER);
+        pagesBackStack = new ArrayList<Page>();
+        pagesBackStack.add(Page.YOUR_UNIVERSITY);
         pager = (CustomViewPager) view.findViewById(R.id.pager);
         pager.setPagingEnabled(false);
         PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
 
+        yourUniversityFragment = YourUniversitySettingsFragment.newInstance(getActivity());
         yourGenderFragment = YourGenderSettingsFragment.newInstance(getActivity());
         targetGenderFragment = TargetGenderSettingsFragment.newInstance(getActivity());
         yourAgeFragment = YourAgeSettingsFragment.newInstance(getActivity());
         targetAgeFragment = TargetAgeSettingsFragment.newInstance(getActivity());
         finishFragment = SearchSettingFinishFragment.newInstance(getActivity());
 
-        adapter.setFragments(Arrays.asList(yourGenderFragment, targetGenderFragment, yourAgeFragment, targetAgeFragment, finishFragment));
+        adapter.setFragments(Arrays.asList(yourUniversityFragment, yourGenderFragment, targetGenderFragment, yourAgeFragment, targetAgeFragment, finishFragment));
 
         pager.setAdapter(adapter);
 
+        yourUniversityFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+            @Override
+            public void onSelect(List<Integer> selected) {
+                navigate(Page.YOUR_GENDER);
+            }
+        });
         yourGenderFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 int position = selected.get(0);
                 if (position == 0) {
                     targetGenderFragment.clearSelection();
-                    navigate(PAGE_YOUR_AGE);
+                    navigate(Page.YOUR_AGE);
                 } else {
-                    navigate(PAGE_TARGET_GENDER);
+                    navigate(Page.TARGET_GENDER);
                 }
             }
         });
         targetGenderFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
-                navigate(PAGE_YOUR_AGE);
+                navigate(Page.YOUR_AGE);
             }
         });
         yourAgeFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
@@ -107,16 +118,16 @@ public class WelcomeFragment extends BaseFragment {
                 int position = selected.get(0);
                 if (position == 0) {
                     targetAgeFragment.clearSelection();
-                    navigate(PAGE_FINISH);
+                    navigate(Page.FINISH);
                 } else {
-                    navigate(PAGE_TARGET_AGE);
+                    navigate(Page.TARGET_AGE);
                 }
             }
         });
         targetAgeFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
-                navigate(PAGE_FINISH);
+                navigate(Page.FINISH);
             }
         });
 
@@ -134,6 +145,14 @@ public class WelcomeFragment extends BaseFragment {
     protected void saveSettings() {
         SearchParameters searchParameters = new SearchParameters();
 
+        String[] universityIds = getResources().getStringArray(R.array.search_your_university_ids);
+
+        List<Integer> university = new ArrayList<Integer>();
+        for (Integer position : yourUniversityFragment.getSelectedItems()) {
+            university.add(Integer.valueOf(universityIds[position]));
+        }
+
+        searchParameters.setYourUniversity(university);
         searchParameters.setYourGender(yourGenderFragment.getSelectedItems());
         searchParameters.setTargetGender(targetGenderFragment.getSelectedItems());
         searchParameters.setYourAge(yourAgeFragment.getSelectedItems());
@@ -148,9 +167,9 @@ public class WelcomeFragment extends BaseFragment {
 
     }
 
-    protected void navigate(int page) {
+    protected void navigate(Page page) {
         pagesBackStack.add(page);
-        pager.setCurrentItem(page, true);
+        pager.setCurrentItem(page.ordinal(), true);
     }
 
     @Override
@@ -159,7 +178,7 @@ public class WelcomeFragment extends BaseFragment {
             return false;
         }
         pagesBackStack.remove(pagesBackStack.size() - 1);
-        int lastPage = pagesBackStack.get(pagesBackStack.size() - 1);
+        int lastPage = pagesBackStack.get(pagesBackStack.size() - 1).ordinal();
 
         pager.setCurrentItem(lastPage);
         return true;

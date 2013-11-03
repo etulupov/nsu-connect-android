@@ -53,4 +53,4 @@ Fix crash in chat (click on footer)
 Fix volley out of memory error
 Deactivate chat after disconnect
 Add progress indicator in chat
-
+Add search by university

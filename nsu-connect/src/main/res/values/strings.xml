@@ -50,6 +50,7 @@
     <string name="typing_message">набирается сообщение...</string>
     <string name="send_button">Отпр.</string>
     <string name="send_hint">Введите сообщение</string>
+    <string name="search_enter_your_university">Выберите Ваш университет</string>
     <string name="search_enter_your_age">Выберите Ваш возраст</string>
     <string name="search_enter_your_gender">Выберите Ваш пол</string>
     <string name="search_enter_target_gender">Выберите искомый пол</string>
@@ -81,5 +82,26 @@
         <item>От 19 до 21</item>
         <item>От 22 до 25</item>
         <item>От 26 и выше</item>
+    </string-array>
+
+    <string-array name="search_your_university">
+        <item>Не важно</item>
+        <item>НГУ</item>
+        <item>НГУЭУ</item>
+        <item>СибАГС</item>
+        <item>ТГУ</item>
+        <item>ТПУ</item>
+        <item>ОмГТУ</item>
+        <item>КузГТУ</item>
+    </string-array>
+    <string-array name="search_your_university_ids">
+        <item>0</item>
+        <item>1</item>
+        <item>8</item>
+        <item>6</item>
+        <item>4</item>
+        <item>5</item>
+        <item>10</item>
+        <item>9</item>
     </string-array>
 </resources>

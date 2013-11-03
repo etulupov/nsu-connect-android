@@ -4,10 +4,19 @@ package ru.tulupov.nsuconnect.model;
 import java.util.List;
 
 public class SearchParameters {
+    private List<Integer> yourUniversity;
     private List<Integer> yourGender;
     private List<Integer> targetGender;
     private List<Integer> yourAge;
     private List<Integer> targetAge;
+
+    public List<Integer> getYourUniversity() {
+        return yourUniversity;
+    }
+
+    public void setYourUniversity(List<Integer> yourUniversity) {
+        this.yourUniversity = yourUniversity;
+    }
 
     public List<Integer> getYourGender() {
         return yourGender;
@@ -43,6 +52,6 @@ public class SearchParameters {
 
     @Override
     public String toString() {
-        return String.format("%s; %s; %s; %s", yourGender, targetGender, yourAge, targetGender);
+        return String.format("%s; %s; %s; %s; %s", yourUniversity, yourGender, targetGender, yourAge, targetGender);
     }
 }

@@ -30,6 +30,13 @@ public class SearchSettingHelper {
         return "0";
     }
 
+    private static String encodeYourUniversity(List<Integer> list) {
+        if (!list.isEmpty()) {
+            return String.valueOf(list.get(0));
+        }
+        return "0";
+    }
+
     private static String encodeTargetGender(List<Integer> list) {
         List<String> flags = new ArrayList<String>();
         for (int i = 0; i < 2; i++) {
@@ -74,7 +81,7 @@ public class SearchSettingHelper {
         params.put(PARAMS_CITY_ID, "0");
         params.put(PARAMS_NSU_DEPARTMENT, "0");
         params.put(PARAMS_SEARCH_NSU_DEPARTMENT, "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0");
-        params.put(PARAMS_PROVIDER, "1"); // provider=nsu
+        params.put(PARAMS_PROVIDER, encodeYourUniversity(searchParameters.getYourUniversity()));
 
         List<String> encoded = new ArrayList<String>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
