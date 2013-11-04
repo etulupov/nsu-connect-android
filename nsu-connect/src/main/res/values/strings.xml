@@ -94,6 +94,9 @@
         <item>ТПУ</item>
         <item>ОмГТУ</item>
         <item>КузГТУ</item>
+        <item>НИУ ИТМО</item>
+        <item>НГМУ</item>
+        <item>СибГМУ</item>
     </string-array>
     <string-array name="search_your_university_ids">
         <item>0</item>
@@ -104,5 +107,8 @@
         <item>5</item>
         <item>10</item>
         <item>9</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
     </string-array>
 </resources>
