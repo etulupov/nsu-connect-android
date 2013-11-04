@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">NSU connect</string>
+    <string name="app_name">IncTalk</string>
 
     <!-- Menu items -->
     <string name="menu_start_chat">Начать беседу</string>
@@ -11,7 +11,7 @@
 
     <!-- about -->
     <string name="about_title">О приложении</string>
-    <string name="about_app_name_formatter">NSU connect %1$s</string>
+    <string name="about_app_name_formatter">IncTalk %1$s</string>
 
     <string name="about_rate">Оценить приложение</string>
     <string name="about_update">Проверить обновления</string>
