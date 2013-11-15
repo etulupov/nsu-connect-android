@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.+'
-    }
-}
 apply plugin: 'android'
 
 repositories {
@@ -28,9 +20,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.j256.ormlite:ormlite-android:4.0@jar'
-    compile project(':sliding-menu-library')
-    compile project(':app-rater-library')
-    compile project(':update-checker-library')
-    compile project(":android-styled-dialogs-library")
-    compile project(":volley-library")
+    compile project(':libs:sliding-menu')
+    compile project(':libs:app-rater')
+    compile project(':libs:update-checker')
+    compile project(":libs:android-styled-dialogs")
+    compile project(":libs:volley")
 }
