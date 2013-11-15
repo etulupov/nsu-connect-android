@@ -82,6 +82,15 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
+        BaseFragment topFragment = getTopFragment();
+        if (topFragment != null) {
+            if (topFragment.onOptionsItemSelected(item)) {
+                return true;
+            }
+        }
+
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 toggle();
@@ -89,7 +98,7 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
         }
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     protected void onMenuItemClick(int id) {

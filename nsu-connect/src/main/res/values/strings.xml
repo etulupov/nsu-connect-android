@@ -48,6 +48,7 @@
 
     <string name="conversations_title">Диалоги</string>
     <string name="fgt_welcome_title">Настройки</string>
+    <string name="fgt_welcome_back">Назад</string>
     <string name="typing_message">набирается сообщение...</string>
     <string name="send_button">Отпр.</string>
     <string name="send_hint">Введите сообщение</string>

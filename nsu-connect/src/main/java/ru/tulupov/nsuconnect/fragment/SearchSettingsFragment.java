@@ -30,9 +30,6 @@ public abstract class SearchSettingsFragment extends BaseFragment {
 
     private static final String PREFERENCES_NAME = "search_settings_2";
 
-    public List<Integer> getSelectedItemIds() {
-        return null;
-    }
 
     public interface OnSelectListener {
         void onSelect(List<Integer> selected);
@@ -94,8 +91,10 @@ public abstract class SearchSettingsFragment extends BaseFragment {
         String[] sports = getItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, sports);
         list.setAdapter(adapter);
-        getView().findViewById(R.id.container).setVisibility(View.VISIBLE);
-        getView().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        if (getView() != null) {
+            getView().findViewById(R.id.container).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        }
         restoreState();
     }
 

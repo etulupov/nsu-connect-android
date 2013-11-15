@@ -62,7 +62,9 @@ Change app name to IncTalk
 Add new university
 
 1.2.2
-Changed splash logo
+Change splash logo
 
 1.3.0
 Load universities from backend
+Refactor project structure
+Add ViewPagerIndicator for search settings

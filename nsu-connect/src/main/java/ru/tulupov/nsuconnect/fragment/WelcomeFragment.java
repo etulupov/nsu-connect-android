@@ -4,8 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,6 +16,7 @@ import android.widget.ListView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +53,17 @@ public class WelcomeFragment extends BaseFragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public int getTitleId() {
         return R.string.fgt_welcome_title;
     }
@@ -59,9 +74,10 @@ public class WelcomeFragment extends BaseFragment {
     }
 
     private CustomViewPager pager;
+    private CirclePageIndicator indicator;
     private List<Page> pagesBackStack;
 
-    private SearchSettingsFragment yourUniversityFragment;
+    private YourUniversitySettingsFragment yourUniversityFragment;
     private SearchSettingsFragment yourGenderFragment;
     private SearchSettingsFragment targetGenderFragment;
     private SearchSettingsFragment yourAgeFragment;
@@ -75,6 +91,8 @@ public class WelcomeFragment extends BaseFragment {
         pagesBackStack.add(Page.YOUR_UNIVERSITY);
         pager = (CustomViewPager) view.findViewById(R.id.pager);
         pager.setPagingEnabled(false);
+
+
         PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
 
         yourUniversityFragment = YourUniversitySettingsFragment.newInstance(getActivity());
@@ -141,7 +159,36 @@ public class WelcomeFragment extends BaseFragment {
                 getActivity().finish();
             }
         });
+
+        indicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+                if (i == 0) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setDisplayShowHomeEnabled(true);
+//                    actionBar.setTitle(R.string.fgt_welcome_title);
+                } else {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setDisplayShowHomeEnabled(false);
+//                    actionBar.setTitle(R.string.fgt_welcome_back);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
+
 
     protected void saveSettings() {
         SearchParameters searchParameters = new SearchParameters();
@@ -169,8 +216,20 @@ public class WelcomeFragment extends BaseFragment {
     }
 
     @Override
+    public void onDestroy() {
+        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        super.onDestroy();
+
+    }
+
+    @Override
     public boolean onBackPressed() {
         if (pagesBackStack.size() == 1) {
+
+
             return false;
         }
         pagesBackStack.remove(pagesBackStack.size() - 1);

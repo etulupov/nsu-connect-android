@@ -25,4 +25,5 @@ dependencies {
     compile project(':libs:update-checker')
     compile project(":libs:android-styled-dialogs")
     compile project(":libs:volley")
+    compile project(":libs:viewpagerindicator")
 }

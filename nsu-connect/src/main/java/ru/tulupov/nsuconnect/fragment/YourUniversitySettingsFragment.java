@@ -53,7 +53,8 @@ public class YourUniversitySettingsFragment extends SearchSettingsFragment {
             requestQueue.add(new GetProviderRequest(new Response.Listener<ProviderResult>() {
                 @Override
                 public void onResponse(ProviderResult response) {
-
+                    strings.clear();
+                    ids.clear();
                     strings.addAll(Arrays.asList(getResources().getStringArray(R.array.search_your_university)));
                     for (int id : getResources().getIntArray(R.array.search_your_university_ids)) {
                         ids.add(id);
@@ -112,8 +113,12 @@ public class YourUniversitySettingsFragment extends SearchSettingsFragment {
         return ListView.CHOICE_MODE_SINGLE;
     }
 
-    @Override
+
     public List<Integer> getSelectedItemIds() {
-        return ids;
+        List<Integer> list = new ArrayList<Integer>();
+        for (int position : getSelectedItems()) {
+            list.add(ids.get(position));
+        }
+        return list;
     }
 }
