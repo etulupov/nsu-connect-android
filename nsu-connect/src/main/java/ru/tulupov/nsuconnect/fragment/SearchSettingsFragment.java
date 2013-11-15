@@ -28,7 +28,11 @@ public abstract class SearchSettingsFragment extends BaseFragment {
 
     private static final String PREFS_STATE_FORMATTER = "state_%s";
 
-    private static final String PREFERENCES_NAME = "search_settings";
+    private static final String PREFERENCES_NAME = "search_settings_2";
+
+    public List<Integer> getSelectedItemIds() {
+        return null;
+    }
 
     public interface OnSelectListener {
         void onSelect(List<Integer> selected);
@@ -58,11 +62,10 @@ public abstract class SearchSettingsFragment extends BaseFragment {
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(getTitleTextId());
         list = (ListView) view.findViewById(R.id.list);
-
-        String[] sports = getResources().getStringArray(getItemsArrayId());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, sports);
         list.setChoiceMode(getListChoiceMode());
-        list.setAdapter(adapter);
+
+        initAdapter();
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -77,7 +80,6 @@ public abstract class SearchSettingsFragment extends BaseFragment {
                 if (selected.isEmpty()) {
                     Toast.makeText(getActivity(), getErrorTextId(), Toast.LENGTH_LONG).show();
                 } else {
-
                     if (onSelectListener != null) {
                         onSelectListener.onSelect(selected);
                     }
@@ -85,7 +87,20 @@ public abstract class SearchSettingsFragment extends BaseFragment {
             }
         });
 
+
+    }
+
+    protected void initAdapter() {
+        String[] sports = getItems();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, sports);
+        list.setAdapter(adapter);
+        getView().findViewById(R.id.container).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.progress_bar).setVisibility(View.GONE);
         restoreState();
+    }
+
+    public String[] getItems() {
+        return getResources().getStringArray(getItemsArrayId());
     }
 
     public List<Integer> getSelectedItems() {
@@ -138,7 +153,9 @@ public abstract class SearchSettingsFragment extends BaseFragment {
             List<Integer> selected = gson.fromJson(preferences.getString(String.format(PREFS_STATE_FORMATTER, getClassName()), ""), listType);
             if (selected != null) {
                 for (Integer position : selected) {
-                    list.setItemChecked(position, true);
+                    if (position < list.getCount()) {
+                        list.setItemChecked(position, true);
+                    }
                 }
             }
         }

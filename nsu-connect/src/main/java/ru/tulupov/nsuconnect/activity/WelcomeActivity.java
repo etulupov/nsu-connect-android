@@ -1,6 +1,8 @@
 package ru.tulupov.nsuconnect.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
 
 import org.codechimp.apprater.AppRater;
 
@@ -16,10 +18,17 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
 
+
         showFragment(WelcomeFragment.newInstance(getApplicationContext()));
-
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 }

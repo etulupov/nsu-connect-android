@@ -88,6 +88,7 @@ public class WelcomeFragment extends BaseFragment {
 
         pager.setAdapter(adapter);
 
+
         yourUniversityFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
@@ -145,14 +146,8 @@ public class WelcomeFragment extends BaseFragment {
     protected void saveSettings() {
         SearchParameters searchParameters = new SearchParameters();
 
-        String[] universityIds = getResources().getStringArray(R.array.search_your_university_ids);
 
-        List<Integer> university = new ArrayList<Integer>();
-        for (Integer position : yourUniversityFragment.getSelectedItems()) {
-            university.add(Integer.valueOf(universityIds[position]));
-        }
-
-        searchParameters.setYourUniversity(university);
+        searchParameters.setYourUniversity(yourUniversityFragment.getSelectedItemIds());
         searchParameters.setYourGender(yourGenderFragment.getSelectedItems());
         searchParameters.setTargetGender(targetGenderFragment.getSelectedItems());
         searchParameters.setYourAge(yourAgeFragment.getSelectedItems());
@@ -168,6 +163,7 @@ public class WelcomeFragment extends BaseFragment {
     }
 
     protected void navigate(Page page) {
+
         pagesBackStack.add(page);
         pager.setCurrentItem(page.ordinal(), true);
     }

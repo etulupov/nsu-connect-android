@@ -60,6 +60,7 @@
     <string name="search_finish">Начать беседу</string>
     <string name="search_finish_hint">Теперь можно приступить к общению.\n<i>Параметры поиска Вы можете изменить в разделе "Настройки".</i></string>
     <string name="search_nothing_selected">Пожалуйста выберите какой-либо вариант</string>
+    <string name="search_university_error">Во время загрузки списка университетов произошла ошибка</string>
     <string-array name="search_your_gender">
         <item>Не важно</item>
         <item>Мужской</item>
@@ -87,28 +88,8 @@
 
     <string-array name="search_your_university">
         <item>Не важно</item>
-        <item>НГУ</item>
-        <item>НГУЭУ</item>
-        <item>СибАГС</item>
-        <item>ТГУ</item>
-        <item>ТПУ</item>
-        <item>ОмГТУ</item>
-        <item>КузГТУ</item>
-        <item>НИУ ИТМО</item>
-        <item>НГМУ</item>
-        <item>СибГМУ</item>
     </string-array>
-    <string-array name="search_your_university_ids">
+    <integer-array name="search_your_university_ids">
         <item>0</item>
-        <item>1</item>
-        <item>8</item>
-        <item>6</item>
-        <item>4</item>
-        <item>5</item>
-        <item>10</item>
-        <item>9</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-    </string-array>
+    </integer-array>
 </resources>

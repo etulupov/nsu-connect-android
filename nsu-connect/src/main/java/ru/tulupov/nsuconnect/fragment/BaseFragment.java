@@ -3,6 +3,7 @@ package ru.tulupov.nsuconnect.fragment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
@@ -78,6 +79,12 @@ public abstract class BaseFragment extends Fragment implements BaseActivityInter
     public void showDialog(DialogFragment fragment) {
         if (getBaseActivity() != null) {
             getBaseActivity().showDialog(fragment);
+        }
+    }
+
+    public void showToast(int id) {
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), id, Toast.LENGTH_LONG).show();
         }
     }
 }
