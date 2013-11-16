@@ -82,10 +82,14 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        }
 
         BaseFragment topFragment = getTopFragment();
         if (topFragment != null) {
-            if (topFragment.onOptionsItemSelected(item)) {
+
+            if (item.getItemId() == android.R.id.home && topFragment.onOptionsItemSelected(item)) {
                 return true;
             }
         }
