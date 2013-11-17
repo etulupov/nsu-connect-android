@@ -19,15 +19,23 @@ public class CustomViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (onPagingListener != null && onPagingListener.allowPaging()) {
+            return super.onTouchEvent(event);
+        }
+
         if (enabled) {
             return super.onTouchEvent(event);
         }
+
 
         return false;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (onPagingListener != null && onPagingListener.allowPaging()) {
+            return super.onInterceptTouchEvent(event);
+        }
         if (enabled) {
             return super.onInterceptTouchEvent(event);
         }
@@ -37,5 +45,15 @@ public class CustomViewPager extends ViewPager {
 
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    private OnPagingListener onPagingListener;
+
+    public void setOnPagingListener(OnPagingListener onPagingListener) {
+        this.onPagingListener = onPagingListener;
+    }
+
+    public interface OnPagingListener {
+        boolean allowPaging();
     }
 }

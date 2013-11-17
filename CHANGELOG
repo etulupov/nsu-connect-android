@@ -68,4 +68,5 @@ Change splash logo
 Load universities from backend
 Refactor project structure
 Add ViewPagerIndicator for search settings
-Added target university
+Add target university
+Change design of search params screen

@@ -7,7 +7,7 @@ import android.widget.ListView;
 import ru.tulupov.nsuconnect.R;
 
 
-public class YourAgeSettingsFragment extends SearchSettingsFragment {
+public class YourAgeSettingsFragment extends BaseSearchSettingsFragment {
     public static YourAgeSettingsFragment newInstance(final Context context) {
         return (YourAgeSettingsFragment) Fragment.instantiate(context, YourAgeSettingsFragment.class.getName());
     }

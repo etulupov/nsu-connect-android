@@ -10,8 +10,9 @@ import java.util.List;
 public class PagerAdapter extends FragmentPagerAdapter {
     private List<? extends Fragment> fragments;
 
-    public PagerAdapter(FragmentManager fm) {
+    public PagerAdapter(FragmentManager fm, List<? extends Fragment> fragments) {
         super(fm);
+        this.fragments = fragments;
     }
 
     @Override
@@ -24,8 +25,5 @@ public class PagerAdapter extends FragmentPagerAdapter {
         return fragments.size();
     }
 
-    public void setFragments(List<? extends Fragment> fragments) {
-        this.fragments = fragments;
-        notifyDataSetChanged();
-    }
+
 }

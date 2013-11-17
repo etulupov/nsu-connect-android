@@ -10,6 +10,10 @@ public class SettingsFragment extends WelcomeFragment {
         return (SettingsFragment) Fragment.instantiate(context, SettingsFragment.class.getName());
     }
 
+    public SettingsFragment() {
+        super(false);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,13 +21,4 @@ public class SettingsFragment extends WelcomeFragment {
 
     }
 
-    @Override
-    protected void navigate(Page page) {
-        if (page == Page.FINISH) {
-            saveSettings();
-            closeFragment();
-            return;
-        }
-        super.navigate(page);
-    }
 }

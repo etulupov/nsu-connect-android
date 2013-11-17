@@ -1,9 +1,7 @@
 package ru.tulupov.nsuconnect.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
@@ -24,7 +21,7 @@ import ru.tulupov.nsuconnect.model.ProviderResult;
 import ru.tulupov.nsuconnect.request.GetProviderRequest;
 
 
-public abstract class BaseUniversitySettingsFragment extends SearchSettingsFragment {
+public abstract class BaseUniversitySettingsFragment extends BaseSearchSettingsFragment {
     private static final long DELAY = 1000;
 
     private List<String> strings = new ArrayList<String>();

@@ -6,25 +6,24 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.IconPageIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import ru.tulupov.nsuconnect.R;
-import ru.tulupov.nsuconnect.activity.MainActivity;
-import ru.tulupov.nsuconnect.adapter.PagerAdapter;
+import ru.tulupov.nsuconnect.activity.BaseActivityInterface;
+import ru.tulupov.nsuconnect.adapter.IconPagerAdapter;
+import ru.tulupov.nsuconnect.helper.ChatHelper;
 import ru.tulupov.nsuconnect.helper.IntentActionHelper;
 import ru.tulupov.nsuconnect.helper.SettingsHelper;
 import ru.tulupov.nsuconnect.model.SearchParameters;
@@ -43,6 +42,17 @@ public class WelcomeFragment extends BaseFragment {
         FINISH,
     }
 
+    protected boolean flagFirstRun;
+
+    private List<Boolean> activePages;
+
+    public WelcomeFragment() {
+        this(true);
+    }
+
+    public WelcomeFragment(boolean flagFirstRun) {
+        this.flagFirstRun = flagFirstRun;
+    }
 
     public static WelcomeFragment newInstance(final Context context) {
         return (WelcomeFragment) Fragment.instantiate(context, WelcomeFragment.class.getName());
@@ -75,27 +85,27 @@ public class WelcomeFragment extends BaseFragment {
     }
 
     private CustomViewPager pager;
-    private CirclePageIndicator indicator;
-    private List<Page> pagesBackStack;
+    private IconPageIndicator indicator;
 
+    private IconPagerAdapter adapter;
     private YourUniversitySettingsFragment yourUniversityFragment;
     private TargetUniversitySettingsFragment targerUniversityFragment;
-    private SearchSettingsFragment yourGenderFragment;
-    private SearchSettingsFragment targetGenderFragment;
-    private SearchSettingsFragment yourAgeFragment;
-    private SearchSettingsFragment targetAgeFragment;
+    private BaseSearchSettingsFragment yourGenderFragment;
+    private BaseSearchSettingsFragment targetGenderFragment;
+    private BaseSearchSettingsFragment yourAgeFragment;
+    private BaseSearchSettingsFragment targetAgeFragment;
     private SearchSettingFinishFragment finishFragment;
+    private SearchSettingSaveFinishFragment saveFinishFragment;
+
+    private int FIRST_ITEM_POSITION = 0;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        pagesBackStack = new ArrayList<Page>();
-        pagesBackStack.add(Page.YOUR_UNIVERSITY);
+
         pager = (CustomViewPager) view.findViewById(R.id.pager);
         pager.setPagingEnabled(false);
 
-
-        PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
 
         yourUniversityFragment = YourUniversitySettingsFragment.newInstance(getActivity());
         targerUniversityFragment = TargetUniversitySettingsFragment.newInstance(getActivity());
@@ -104,36 +114,71 @@ public class WelcomeFragment extends BaseFragment {
         yourAgeFragment = YourAgeSettingsFragment.newInstance(getActivity());
         targetAgeFragment = TargetAgeSettingsFragment.newInstance(getActivity());
         finishFragment = SearchSettingFinishFragment.newInstance(getActivity());
+        saveFinishFragment = SearchSettingSaveFinishFragment.newInstance(getActivity());
+        List<BaseFragment> fragments = new ArrayList<BaseFragment>();
 
-        adapter.setFragments(Arrays.asList(yourUniversityFragment, targerUniversityFragment,
+        fragments.addAll(Arrays.asList(yourUniversityFragment, targerUniversityFragment,
                 yourGenderFragment, targetGenderFragment, yourAgeFragment,
-                targetAgeFragment, finishFragment));
+                targetAgeFragment));
+
+        if (flagFirstRun) {
+            fragments.add(finishFragment);
+        } else {
+            fragments.add(saveFinishFragment);
+        }
+
+        List<Integer> icons = new ArrayList<Integer>();
+        icons.addAll(Arrays.asList(
+                R.drawable.ic_settings_university,
+                R.drawable.ic_settings_university,
+                R.drawable.ic_settings_gender,
+                R.drawable.ic_settings_gender,
+                R.drawable.ic_settings_birthday,
+                R.drawable.ic_settings_birthday
+        ));
+
+
+        icons.add(R.drawable.ic_settings_close);
+
+
+        adapter = new IconPagerAdapter(getChildFragmentManager(), fragments, icons);
+
+        activePages = new ArrayList<Boolean>();
+        for (int i = 0; i < fragments.size(); i++) {
+            activePages.add(true);
+        }
+        updateActivePages();
 
         pager.setAdapter(adapter);
 
-
-        yourUniversityFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+        pager.setOnPagingListener(new CustomViewPager.OnPagingListener() {
+            @Override
+            public boolean allowPaging() {
+                return isPageFilled(pager.getCurrentItem());
+            }
+        });
+        yourUniversityFragment.setOnSelectListener(new BaseSearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 int position = selected.get(0);
-                if (position == 0) {
+                if (position == FIRST_ITEM_POSITION) {
                     navigate(Page.YOUR_GENDER);
                 } else {
                     navigate(Page.TARGET_UNIVERSITY);
                 }
             }
         });
-        targerUniversityFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+        targerUniversityFragment.setOnSelectListener(new BaseSearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 navigate(Page.YOUR_GENDER);
             }
         });
-        yourGenderFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+        yourGenderFragment.setOnSelectListener(new BaseSearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 int position = selected.get(0);
-                if (position == 0) {
+                if (position == FIRST_ITEM_POSITION) {
                     targetGenderFragment.clearSelection();
                     navigate(Page.YOUR_AGE);
                 } else {
@@ -141,17 +186,17 @@ public class WelcomeFragment extends BaseFragment {
                 }
             }
         });
-        targetGenderFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+        targetGenderFragment.setOnSelectListener(new BaseSearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 navigate(Page.YOUR_AGE);
             }
         });
-        yourAgeFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+        yourAgeFragment.setOnSelectListener(new BaseSearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 int position = selected.get(0);
-                if (position == 0) {
+                if (position == FIRST_ITEM_POSITION) {
                     targetAgeFragment.clearSelection();
                     navigate(Page.FINISH);
                 } else {
@@ -159,7 +204,7 @@ public class WelcomeFragment extends BaseFragment {
                 }
             }
         });
-        targetAgeFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+        targetAgeFragment.setOnSelectListener(new BaseSearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 navigate(Page.FINISH);
@@ -176,9 +221,27 @@ public class WelcomeFragment extends BaseFragment {
             }
         });
 
-        indicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        saveFinishFragment.setOnClickListener(new SearchSettingSaveFinishFragment.OnClickListener() {
+            @Override
+            public void onSaveClick() {
+                saveSettings();
+                closeFragment();
+            }
+
+            @Override
+            public void onStartClick() {
+                BaseActivityInterface activity = (BaseActivityInterface) getActivity();
+                saveSettings();
+                closeFragment();
+                ChatHelper.openChatFragment(activity);
+            }
+        });
+
+        indicator = (IconPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(pager);
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int lastPage = 0;
+
             @Override
             public void onPageScrolled(int i, float v, int i2) {
 
@@ -186,6 +249,28 @@ public class WelcomeFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int i) {
+
+
+                updateActivePages();
+
+                if (!activePages.get(i)) {
+
+                    clearSelection(i);
+
+                    if (lastPage < i) {
+                        setCurrentItem(i + 1);
+                    } else if (lastPage > i) {
+                        setCurrentItem(i - 1);
+                    }
+                    return;
+                }
+
+//                if (lastPage < i) {
+//                    pagesBackStack.add(Page.values()[lastPage]);
+//                } else if (lastPage > i) {
+//                    pagesBackStack.remove(pagesBackStack.size() - 1);
+//                }
+
                 ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
                 if (i == 0) {
                     actionBar.setDisplayHomeAsUpEnabled(true);
@@ -196,6 +281,8 @@ public class WelcomeFragment extends BaseFragment {
                     actionBar.setDisplayShowHomeEnabled(false);
 //                    actionBar.setTitle(R.string.fgt_welcome_back);
                 }
+
+                lastPage = i;
             }
 
             @Override
@@ -203,6 +290,61 @@ public class WelcomeFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private void clearSelection(int page) {
+        Fragment fragment = adapter.getItem(page);
+
+
+        if (fragment instanceof BaseSearchSettingsFragment) {
+            ((BaseSearchSettingsFragment) fragment).clearSelection();
+        }
+    }
+
+
+    private void setCurrentItem(int i) {
+        if (i < pager.getAdapter().getCount()) {
+            pager.setCurrentItem(i);
+            return;
+        }
+
+
+    }
+
+    private int getFirstItem(List<Integer> list) {
+        if (list.isEmpty()) {
+            return -1;
+        }
+        return list.get(0);
+    }
+
+    private void setActivePage(Page page, boolean state) {
+        activePages.set(page.ordinal(), state);
+    }
+
+
+    private boolean isPageFilled(int page) {
+        Fragment fragment = adapter.getItem(page);
+
+
+        if (fragment instanceof BaseSearchSettingsFragment) {
+
+            return !((BaseSearchSettingsFragment) fragment).getSelectedItems().isEmpty();
+        }
+
+        if (fragment instanceof SearchSettingFinishFragment
+                || fragment instanceof SearchSettingSaveFinishFragment) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void updateActivePages() {
+        setActivePage(Page.TARGET_UNIVERSITY, getFirstItem(yourUniversityFragment.getSelectedItemIds()) != FIRST_ITEM_POSITION);
+        setActivePage(Page.TARGET_GENDER, getFirstItem(yourGenderFragment.getSelectedItems()) != FIRST_ITEM_POSITION);
+        setActivePage(Page.TARGET_AGE, getFirstItem(yourAgeFragment.getSelectedItems()) != FIRST_ITEM_POSITION);
+
     }
 
 
@@ -228,7 +370,7 @@ public class WelcomeFragment extends BaseFragment {
 
     protected void navigate(Page page) {
 
-        pagesBackStack.add(page);
+
         pager.setCurrentItem(page.ordinal(), true);
     }
 
@@ -242,17 +384,28 @@ public class WelcomeFragment extends BaseFragment {
 
     }
 
+    private int getPrevPage() {
+        updateActivePages();
+        for (int i = pager.getCurrentItem() - 1; i >= 0; i--) {
+            if (activePages.get(i)) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
     @Override
     public boolean onBackPressed() {
-        if (pagesBackStack.size() == 1) {
+
+
+        if (pager.getCurrentItem() == 0) {
 
 
             return false;
         }
-        pagesBackStack.remove(pagesBackStack.size() - 1);
-        int lastPage = pagesBackStack.get(pagesBackStack.size() - 1).ordinal();
 
-        pager.setCurrentItem(lastPage);
+        pager.setCurrentItem(getPrevPage());
         return true;
     }
 }

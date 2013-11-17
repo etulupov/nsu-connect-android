@@ -2,24 +2,23 @@
 
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <com.viewpagerindicator.CirclePageIndicator
-        android:id="@+id/indicator"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:fillColor="@color/pager_circle"
-        app:pageColor="@color/light_gray"
-        app:radius="4dp"
-        android:padding="5dp"
-        app:strokeColor="@color/pager_circle_border" />
 
     <ru.tulupov.nsuconnect.widget.CustomViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <com.viewpagerindicator.IconPageIndicator
+        android:id="@+id/indicator"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="10dp"
+        android:layout_weight="0"
+        android:background="@drawable/bg_settings_indicator"
+        android:padding="5dp" />
 
 </FrameLayout>
