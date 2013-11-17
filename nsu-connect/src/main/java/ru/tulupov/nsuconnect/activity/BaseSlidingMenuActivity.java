@@ -23,6 +23,7 @@ import ru.tulupov.nsuconnect.fragment.SettingsFragment;
 import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
 import ru.tulupov.nsuconnect.helper.ChatHelper;
 import ru.tulupov.nsuconnect.slidingmenu.SlidingMenuFragment;
+import ru.tulupov.nsuconnect.util.FragmentUtils;
 
 
 public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements BaseActivityInterface {
@@ -136,7 +137,9 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
     @Override
     public void addFragment(BaseFragment fragment) {
         String tag = ((Object) fragment).getClass().getSimpleName();
-        setTitle(fragment.getTitleId());
+        if (fragment.getTitleId() != 0) {
+            getSupportActionBar().setTitle(fragment.getTitleId());
+        }
         setCurrentItemId(fragment.getMenuItemId());
         getSupportFragmentManager()
                 .beginTransaction()
@@ -148,7 +151,7 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
 
     @Override
     public void showFragment(BaseFragment fragment) {
-        clearBackStack();
+        FragmentUtils.clearBackStack(getSupportFragmentManager());
         addFragment(fragment);
     }
 
@@ -157,11 +160,6 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
         fragment.show(getSupportFragmentManager(), null);
     }
 
-    private void clearBackStack() {
-        for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
-            getSupportFragmentManager().popBackStack();
-        }
-    }
 
     private BaseFragment getTopFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -249,7 +247,9 @@ public class BaseSlidingMenuActivity extends SlidingFragmentActivity implements 
             }
 
             BaseFragment topFragment = getTopFragment();
-            setTitle(topFragment.getTitleId());
+            if (topFragment.getTitleId() != 0) {
+                getSupportActionBar().setTitle(topFragment.getTitleId());
+            }
             setCurrentItemId(topFragment.getMenuItemId());
 
 

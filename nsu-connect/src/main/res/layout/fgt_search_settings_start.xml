@@ -17,29 +17,27 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="20dp"
-            android:src="@drawable/ic_finish" />
+            android:src="@drawable/ic_start" />
 
         <TextView
-            android:id="@+id/title"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/search_finish_hint"
+            android:text="@string/search_start_hint"
             android:textSize="20dp" />
-
         <TextView
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/search_finish_hint_2"
+            android:text="@string/search_start_hint_2"
             android:textSize="15dp" />
-
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/search_finish" />
+            android:text="@string/search_start" />
     </LinearLayout>
 </FrameLayout>

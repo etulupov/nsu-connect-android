@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import org.codechimp.apprater.AppRater;
 
 import ru.tulupov.nsuconnect.fragment.MessagesFragment;
+import ru.tulupov.nsuconnect.fragment.SearchSettingStartFragment;
 import ru.tulupov.nsuconnect.fragment.WelcomeFragment;
 import ru.tulupov.nsuconnect.helper.ChatHelper;
 
@@ -19,7 +20,7 @@ public class WelcomeActivity extends BaseActivity {
 
 
 
-        showFragment(WelcomeFragment.newInstance(getApplicationContext()));
+        showFragment(SearchSettingStartFragment.newInstance(getApplicationContext()));
     }
 
     @Override

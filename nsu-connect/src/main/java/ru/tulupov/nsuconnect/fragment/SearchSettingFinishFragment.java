@@ -44,7 +44,7 @@ public class SearchSettingFinishFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.menu_finish) {
+        if (item.getItemId() == R.id.menu_finish) {
             onFinishClick();
             return true;
         }
@@ -68,7 +68,17 @@ public class SearchSettingFinishFragment extends BaseFragment {
         return inflater.inflate(R.layout.fgt_search_settings_finish, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFinishClick();
+            }
+        });
+    }
 
 
 }

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 
@@ -292,7 +293,8 @@ public class ChatFragment extends BaseFragment {
             if (!chat.isActive()) {
                 hideSendSection();
             }
-            getActivity().setTitle(chat.getName());
+            ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(chat.getName());
+
         } catch (SQLException e) {
             Log.e(TAG, "cannot load chat entity", e);
         }

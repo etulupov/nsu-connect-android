@@ -4,7 +4,8 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
+    android:background="@drawable/bg_list_item"
     android:gravity="center"
-   android:padding="10dp"
-    />
+    android:padding="10dp"
+    android:textColor="@color/item_search_params"
+    android:textSize="18dp" />

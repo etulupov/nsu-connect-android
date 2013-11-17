@@ -4,6 +4,7 @@
     <color name="pager_circle_border">#999</color>
     <color name="light_gray">#ddd</color>
     <color name="dark_gray">#555</color>
+    <color name="darker_gray">#222</color>
     <color name="black">#000</color>
     <color name="white">#fff</color>
     <color name="item_checked">#9BE2FA</color>
@@ -13,7 +14,7 @@
     <color name="sliding_menu_background_2">#333</color>
     <color name="sliding_menu_background_3">#202020</color>
     <color name="sliding_menu_text">#ddd</color>
-    <color name="sliding_menu_header_text">#aaa</color>
+    <color name="sliding_menu_header_text">#ccc</color>
 
 
 </resources>

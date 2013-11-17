@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import ru.tulupov.nsuconnect.helper.VolleyHelper;
 import ru.tulupov.nsuconnect.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,7 @@ public class SlidingMenuFragment extends ListFragment {
 
         updateCounter();
 
-
+        getListView().setSelector(android.R.color.transparent);
         getListView().addHeaderView(header);
         setListAdapter(adapter);
         parseXml(resourceId);

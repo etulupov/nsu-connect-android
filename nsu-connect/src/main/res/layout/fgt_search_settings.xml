@@ -6,20 +6,32 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-<!--style="@style/ClearListView"-->
-        <ListView
-
-            android:id="@+id/list"
-            android:layout_width="match_parent"
+        <View
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="3dp"
+            android:listSelector="@android:color/transparent"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 
 

@@ -12,7 +12,7 @@ import ru.tulupov.nsuconnect.model.Settings;
 public class SettingsHelper {
     private static final String PREFERENCES_NAME = "preferences";
     private static final String SETTINGS = "settings_v2";
-    private static final String IS_FIRST_RUN = "is_first_run_v4";
+    private static final String IS_FIRST_RUN = "is_first_run_v5";
 
 
     public SettingsHelper() {

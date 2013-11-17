@@ -1,17 +1,6 @@
 <resources>
 
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="sdlDialogStyle">@style/DialogStyleLight</item>
-    </style>
-
-
-    <style name="AppTheme.NoTitle" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
     <style name="ClearListView">
         <item name="android:cacheColorHint">#00000000</item>
         <item name="android:listSelector">#00000000</item>

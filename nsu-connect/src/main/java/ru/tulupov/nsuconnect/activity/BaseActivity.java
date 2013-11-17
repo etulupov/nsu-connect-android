@@ -11,6 +11,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import ru.tulupov.nsuconnect.R;
 import ru.tulupov.nsuconnect.fragment.BaseFragment;
+import ru.tulupov.nsuconnect.util.FragmentUtils;
 
 
 public class BaseActivity extends ActionBarActivity implements BaseActivityInterface {
@@ -37,19 +38,22 @@ public class BaseActivity extends ActionBarActivity implements BaseActivityInter
 
     @Override
     public void addFragment(BaseFragment fragment) {
-
-    }
-
-    @Override
-    public void showFragment(BaseFragment fragment) {
         String tag = ((Object) fragment).getClass().getSimpleName();
-        setTitle(fragment.getTitleId());
+        if (fragment.getTitleId() != 0) {
+            getSupportActionBar().setTitle(fragment.getTitleId());
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment, tag)
                 .addToBackStack(tag)
                 .commit();
+    }
+
+    @Override
+    public void showFragment(BaseFragment fragment) {
+        FragmentUtils.clearBackStack(getSupportFragmentManager());
+        addFragment(fragment);
 
     }
 
@@ -71,7 +75,6 @@ public class BaseActivity extends ActionBarActivity implements BaseActivityInter
 
     @Override
     public void onBackPressed() {
-
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();

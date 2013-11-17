@@ -31,7 +31,7 @@ public abstract class BaseSearchSettingsFragment extends BaseFragment {
 
     private static final String PREFS_STATE_FORMATTER = "state_%s";
 
-    private static final String PREFERENCES_NAME = "search_settings_5";
+    private static final String PREFERENCES_NAME = "search_settings_v5";
 
 
     public interface OnSelectListener {
@@ -109,6 +109,10 @@ public abstract class BaseSearchSettingsFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 saveState();
+
+                if (onSelectListener != null && getListChoiceMode() == ListView.CHOICE_MODE_SINGLE) {
+                    onSelectListener.onSelect(getSelectedItems());
+                }
             }
         });
 
@@ -117,8 +121,8 @@ public abstract class BaseSearchSettingsFragment extends BaseFragment {
 
     protected void initAdapter() {
         String[] sports = getItems();
-        // R.layout.item_search_param
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, sports);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_search_param, sports);
         list.setAdapter(adapter);
 
         restoreState();

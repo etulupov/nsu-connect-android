@@ -275,11 +275,11 @@ public class WelcomeFragment extends BaseFragment {
                 if (i == 0) {
                     actionBar.setDisplayHomeAsUpEnabled(true);
                     actionBar.setDisplayShowHomeEnabled(true);
-//                    actionBar.setTitle(R.string.fgt_welcome_title);
+                    actionBar.setTitle(R.string.fgt_welcome_title);
                 } else {
                     actionBar.setDisplayHomeAsUpEnabled(true);
                     actionBar.setDisplayShowHomeEnabled(false);
-//                    actionBar.setTitle(R.string.fgt_welcome_back);
+                    actionBar.setTitle(R.string.fgt_welcome_back);
                 }
 
                 lastPage = i;
