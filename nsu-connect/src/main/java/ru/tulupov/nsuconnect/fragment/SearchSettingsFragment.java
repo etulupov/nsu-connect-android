@@ -91,10 +91,7 @@ public abstract class SearchSettingsFragment extends BaseFragment {
         String[] sports = getItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, sports);
         list.setAdapter(adapter);
-        if (getView() != null) {
-            getView().findViewById(R.id.container).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.progress_bar).setVisibility(View.GONE);
-        }
+
         restoreState();
     }
 

@@ -5,10 +5,19 @@ import java.util.List;
 
 public class SearchParameters {
     private List<Integer> yourUniversity;
+    private List<Integer> targetUniversity;
     private List<Integer> yourGender;
     private List<Integer> targetGender;
     private List<Integer> yourAge;
     private List<Integer> targetAge;
+
+    public List<Integer> getTargetUniversity() {
+        return targetUniversity;
+    }
+
+    public void setTargetUniversity(List<Integer> targetUniversity) {
+        this.targetUniversity = targetUniversity;
+    }
 
     public List<Integer> getYourUniversity() {
         return yourUniversity;

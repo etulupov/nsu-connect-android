@@ -35,6 +35,7 @@ import ru.tulupov.nsuconnect.widget.CustomViewPager;
 public class WelcomeFragment extends BaseFragment {
     public enum Page {
         YOUR_UNIVERSITY,
+        TARGET_UNIVERSITY,
         YOUR_GENDER,
         TARGET_GENDER,
         YOUR_AGE,
@@ -78,6 +79,7 @@ public class WelcomeFragment extends BaseFragment {
     private List<Page> pagesBackStack;
 
     private YourUniversitySettingsFragment yourUniversityFragment;
+    private TargetUniversitySettingsFragment targerUniversityFragment;
     private SearchSettingsFragment yourGenderFragment;
     private SearchSettingsFragment targetGenderFragment;
     private SearchSettingsFragment yourAgeFragment;
@@ -96,18 +98,32 @@ public class WelcomeFragment extends BaseFragment {
         PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
 
         yourUniversityFragment = YourUniversitySettingsFragment.newInstance(getActivity());
+        targerUniversityFragment = TargetUniversitySettingsFragment.newInstance(getActivity());
         yourGenderFragment = YourGenderSettingsFragment.newInstance(getActivity());
         targetGenderFragment = TargetGenderSettingsFragment.newInstance(getActivity());
         yourAgeFragment = YourAgeSettingsFragment.newInstance(getActivity());
         targetAgeFragment = TargetAgeSettingsFragment.newInstance(getActivity());
         finishFragment = SearchSettingFinishFragment.newInstance(getActivity());
 
-        adapter.setFragments(Arrays.asList(yourUniversityFragment, yourGenderFragment, targetGenderFragment, yourAgeFragment, targetAgeFragment, finishFragment));
+        adapter.setFragments(Arrays.asList(yourUniversityFragment, targerUniversityFragment,
+                yourGenderFragment, targetGenderFragment, yourAgeFragment,
+                targetAgeFragment, finishFragment));
 
         pager.setAdapter(adapter);
 
 
         yourUniversityFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
+            @Override
+            public void onSelect(List<Integer> selected) {
+                int position = selected.get(0);
+                if (position == 0) {
+                    navigate(Page.YOUR_GENDER);
+                } else {
+                    navigate(Page.TARGET_UNIVERSITY);
+                }
+            }
+        });
+        targerUniversityFragment.setOnSelectListener(new SearchSettingsFragment.OnSelectListener() {
             @Override
             public void onSelect(List<Integer> selected) {
                 navigate(Page.YOUR_GENDER);
@@ -195,6 +211,7 @@ public class WelcomeFragment extends BaseFragment {
 
 
         searchParameters.setYourUniversity(yourUniversityFragment.getSelectedItemIds());
+        searchParameters.setTargetUniversity(targerUniversityFragment.getSelectedItemIds());
         searchParameters.setYourGender(yourGenderFragment.getSelectedItems());
         searchParameters.setTargetGender(targetGenderFragment.getSelectedItems());
         searchParameters.setYourAge(yourAgeFragment.getSelectedItems());

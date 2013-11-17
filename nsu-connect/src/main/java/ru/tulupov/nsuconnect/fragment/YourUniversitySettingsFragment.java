@@ -21,74 +21,13 @@ import ru.tulupov.nsuconnect.model.ProviderResult;
 import ru.tulupov.nsuconnect.request.GetProviderRequest;
 
 
-public class YourUniversitySettingsFragment extends SearchSettingsFragment {
-    private static final long DELAY = 2000;
+public class YourUniversitySettingsFragment extends BaseUniversitySettingsFragment {
+
 
     public static YourUniversitySettingsFragment newInstance(final Context context) {
         return (YourUniversitySettingsFragment) Fragment.instantiate(context, YourUniversitySettingsFragment.class.getName());
     }
 
-    private RequestQueue requestQueue;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestQueue = VolleyHelper.newRequestQueue(getActivity());
-    }
-
-    @Override
-    public void onDestroy() {
-        requestQueue.stop();
-        handler.removeCallbacks(loadListRunnable);
-        super.onDestroy();
-    }
-
-    private Handler handler = new Handler();
-    private boolean once;
-
-    private Runnable loadListRunnable = new Runnable() {
-        @Override
-        public void run() {
-            requestQueue.add(new GetProviderRequest(new Response.Listener<ProviderResult>() {
-                @Override
-                public void onResponse(ProviderResult response) {
-                    strings.clear();
-                    ids.clear();
-                    strings.addAll(Arrays.asList(getResources().getStringArray(R.array.search_your_university)));
-                    for (int id : getResources().getIntArray(R.array.search_your_university_ids)) {
-                        ids.add(id);
-                    }
-
-
-                    if (response != null) {
-                        for (Provider provider : response.getProviders()) {
-                            strings.add(provider.getName());
-                            ids.add(provider.getId());
-                        }
-                    }
-
-                    YourUniversitySettingsFragment.super.initAdapter();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (!once) {
-                        once = true;
-                        showToast(R.string.search_university_error);
-                    }
-                    handler.postDelayed(loadListRunnable, DELAY);
-                }
-            }
-            ));
-        }
-    };
-
-    @Override
-    protected void initAdapter() {
-        handler.post(loadListRunnable);
-
-    }
 
     @Override
     protected int getTitleTextId() {
@@ -96,29 +35,10 @@ public class YourUniversitySettingsFragment extends SearchSettingsFragment {
     }
 
     @Override
-    protected int getItemsArrayId() {
-        return 0;
-    }
-
-    private List<String> strings = new ArrayList<String>();
-    private List<Integer> ids = new ArrayList<Integer>();
-
-    @Override
-    public String[] getItems() {
-        return strings.toArray(new String[strings.size()]);
-    }
-
-    @Override
-    protected int getListChoiceMode() {
-        return ListView.CHOICE_MODE_SINGLE;
-    }
-
-
-    public List<Integer> getSelectedItemIds() {
-        List<Integer> list = new ArrayList<Integer>();
-        for (int position : getSelectedItems()) {
-            list.add(ids.get(position));
+    protected void preprocessUniversitiesList(List<String> strings, List<Integer> ids) {
+        strings.addAll(Arrays.asList(getResources().getStringArray(R.array.search_your_university)));
+        for (int id : getResources().getIntArray(R.array.search_your_university_ids)) {
+            ids.add(id);
         }
-        return list;
     }
 }
