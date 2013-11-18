@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.ListView;
 
+import com.example.android.swipedismiss.SwipeDismissListViewTouchListener;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 
@@ -86,6 +87,59 @@ public class MessagesFragment extends LoaderListFragment<Chat> {
 
         super.onViewCreated(view, savedInstanceState);
         getListView().setEmptyView(findViewById(R.id.empty));
+
+
+        SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                        getListView(),
+                        new SwipeDismissListViewTouchListener.OnDismissCallback() {
+                            @Override
+                            public void onDismiss(ListView listView, final int[] reverseSortedPositions) {
+                                DialogConfirmDeletionFragment dialog = DialogConfirmDeletionFragment.newInstance(getActivity());
+                                dialog.setOnDeleteListener(new DialogConfirmDeletionFragment.OnDeleteListener() {
+                                    @Override
+                                    public void onDelete() {
+                                        EasyTracker.getInstance(getActivity()).send(MapBuilder.createEvent("UX", "messages", "delete_chat_yes", null).build());
+
+
+                                        try {
+                                            List<Chat> ids = new ArrayList<Chat>();
+
+
+
+                                            for (int position : reverseSortedPositions) {
+
+
+                                                Chat chat = adapter.getItem((int) position);
+
+                                                if (chat.isActive()) {
+                                                    getActivity().startService(new Intent(getActivity(), DataService.class)
+                                                            .setAction(DataService.ACTION_DESTROY_SESSION).putExtra(DataService.EXTRA_ID, chat.getId()));
+
+                                                    HelperFactory.getHelper().getChatDao().deactivateChat(chat.getId());
+                                                }
+
+                                                ids.add(adapter.getItem((int) position));
+
+                                            }
+
+
+                                            HelperFactory.getHelper().getChatDao().delete(ids);
+                                            ContentUriHelper.notifyChange(getActivity(), ContentUriHelper.getChatUri());
+                                        } catch (SQLException e) {
+                                            Log.e(TAG, "error removing chat", e);
+                                        }
+
+                                    }
+                                });
+                                showDialog(dialog);
+                            }
+                        });
+        getListView().setOnTouchListener(touchListener);
+
+        getListView().setOnScrollListener(touchListener.makeScrollListener());
+
+
     }
 
     @Override

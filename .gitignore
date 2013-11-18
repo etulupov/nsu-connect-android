@@ -1,6 +1,10 @@
+# Android
+local.properties
+
+# Gradle
 .gradle
-/local.properties
-/.idea/workspace.xml
-.DS_Store
+build
+
+# IntelliJ Idea
 .idea
 *.iml

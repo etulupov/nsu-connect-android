@@ -26,4 +26,5 @@ dependencies {
     compile project(":libs:android-styled-dialogs")
     compile project(":libs:volley")
     compile project(":libs:viewpagerindicator")
+    compile project(":libs:SwipeToDismissNOA")
 }
